@@ -1,0 +1,246 @@
+openapi: 3.0.0
+info:
+  title: student help
+  version: '1.0'
+  license:
+    name: AGPL
+  description: Student to student help providing API
+  contact:
+    name: Student Help API
+    email: contact@ecam.be
+servers:
+  - url: 'https://api.ecam.be/student-help'
+    description: Production
+paths:
+  '/messages/{messageId}':
+    parameters:
+      - schema:
+          type: string
+          format: uuid
+        name: messageId
+        in: path
+        required: true
+        description: Id of an existing message.
+    get:
+      summary: Get Message Info by Message ID
+      tags: []
+      responses:
+        '200':
+          description: Message Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+              examples: {}
+        '404':
+          description: Message Not Found
+      operationId: get-messages-messageId
+      description: Retrieve the information of the message with the matching message ID.
+    patch:
+      summary: Update Message Information
+      operationId: patch-messages-messageId
+      responses:
+        '200':
+          description: Message Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Message Not Found
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                required:
+                  - message
+              examples:
+                Content was empty:
+                  value:
+                    message: Content may not be empty
+      description: Update the information of an existing message.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+        description: Patch message content to update.
+    delete:
+      summary: ''
+      operationId: delete-messages-messageId
+      responses:
+        '204':
+          description: Message was successfully deleted
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                required:
+                  - message
+                x-examples:
+                  example-1:
+                    message: huskjndknlj
+              examples:
+                Not your message:
+                  value:
+                    message: 'This message does not belong to you, you cannot delete it'
+      description: Delete an existing message
+  /messages:
+    post:
+      summary: Create New Message
+      operationId: post-messages
+      responses:
+        '200':
+          description: Message Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: Missing Required Information
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+                - content
+        description: Post the necessary fields for the API to create a new message.
+      description: Create a new message.
+  /threads:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: Found threads
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  threads:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Thread'
+      operationId: get-threads
+      description: Get a list of published threads
+components:
+  schemas:
+    Message:
+      description: A sent message
+      type: object
+      title: Message
+      x-examples: {}
+      properties:
+        id:
+          type: string
+          minLength: 1
+          format: uuid
+          readOnly: true
+        content:
+          type: string
+          minLength: 1
+        upvotes:
+          type: number
+          minimum: 0
+          readOnly: true
+        downvotes:
+          type: number
+          minimum: 0
+          readOnly: true
+        datePosted:
+          type: string
+          minLength: 1
+          format: date-time
+          readOnly: true
+        dateModified:
+          type: string
+          minLength: 1
+          format: date-time
+          readOnly: true
+        authorId:
+          type: string
+          minLength: 1
+          format: uuid
+          readOnly: true
+        parent:
+          type: string
+          format: uuid
+          description: The parent message or thread
+          readOnly: true
+        children:
+          type: array
+          uniqueItems: true
+          description: |-
+            The responses
+
+            The children will have their `parent` field set to the `id` of this message
+          items:
+            type: string
+            format: uuid
+            readOnly: true
+          readOnly: true
+      required:
+        - id
+        - content
+        - upvotes
+        - downvotes
+        - datePosted
+        - dateModified
+        - authorId
+        - children
+    Thread:
+      title: Thread
+      type: object
+      description: ''
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+        message:
+          $ref: '#/components/schemas/Message'
+        tags:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+      required:
+        - id
+        - title
+        - message
+  securitySchemes:
+    Global JWT:
+      type: oauth2
+      flows:
+        implicit:
+          scopes:
+            student-help.post: Post messages
+            student-help.rate: Vote on messages
+            student-help.thread: Create new threads
+          authorizationUrl: 'https://api.ecam.be/oauth2/authorize'
+security:
+  - API Key - 1: []
