@@ -40,6 +40,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/Not-Found'
         '406':
@@ -67,10 +69,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                content:
-                  type: string
+              $ref: '#/components/schemas/Message'
         description: Patch message content to update.
     delete:
       summary: ''
@@ -79,25 +78,7 @@ paths:
         '204':
           description: Message was successfully deleted
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                description: ''
-                type: object
-                properties:
-                  message:
-                    type: string
-                    minLength: 1
-                required:
-                  - message
-                x-examples:
-                  example-1:
-                    message: huskjndknlj
-              examples:
-                Not your message:
-                  value:
-                    message: 'This message does not belong to you, you cannot delete it'
+          $ref: '#/components/responses/Unauthorized'
       description: |-
         Delete an existing message
 
@@ -376,5 +357,17 @@ components:
               message: Message not found
             Thread:
               message: Thread not found
+    Unauthorized:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          examples:
+            Unauthorized:
+              message: You are not authorized to do this action
 security:
   - API Key - 1: []
