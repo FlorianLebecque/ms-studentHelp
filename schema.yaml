@@ -59,7 +59,10 @@ paths:
                 Content was empty:
                   value:
                     message: Content may not be empty
-      description: Update the information of an existing message.
+      description: |-
+        Update the information of an existing message.
+
+        This method is not idempotent, `dateModified` will be updated to the current time
       requestBody:
         content:
           application/json:
@@ -95,8 +98,10 @@ paths:
                 Not your message:
                   value:
                     message: 'This message does not belong to you, you cannot delete it'
-      description: Delete an existing message
+      description: |-
         Delete an existing message
+
+        This method is idempotent, it will not return 404 Not Found, as if a message cannot be fount, it is deleted (or had never been created, which is equivalent)
   '/messages/{messageId}/answers':
     post:
       summary: Create New Answer
