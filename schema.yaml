@@ -130,6 +130,34 @@ paths:
         in: path
         required: true
         description: Id of an existing message.
+    get:
+      summary: Get answers
+      operationId: get-messages-messageId-answers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  answers:
+                    type: array
+                    minItems: 0
+                    items:
+                      $ref: '#/components/schemas/Message'
+                    readOnly: true
+                required:
+                  - answers
+        '404':
+          $ref: '#/components/responses/Not-Found'
+      description: |-
+        Get all answers for a message
+
+        Returns a list of all messages in the `children` array for the specified `messageId`.
+        Therefore, all messages returned will have the same `parent`. 
+
+        If there are no answers, returns an empty list.
   /threads:
     get:
       summary: Threads list
