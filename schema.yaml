@@ -105,7 +105,7 @@ paths:
   '/messages/{messageId}/answers':
     post:
       summary: Create New Answer
-      operationId: post-messages
+      operationId: post-messages-messageId-answers
       responses:
         '200':
           description: The newly created message
