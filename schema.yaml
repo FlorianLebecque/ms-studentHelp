@@ -180,6 +180,20 @@ paths:
   '/threads/{threadId}':
     parameters:
       - $ref: '#/components/parameters/threadId'
+    get:
+      summary: Get thread
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+        '404':
+          $ref: '#/components/responses/Not-Found'
+      operationId: get-threads-threadId
+      description: ''
     patch:
       summary: Edit thread
       operationId: patch-threads-threadId
