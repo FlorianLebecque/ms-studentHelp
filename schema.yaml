@@ -318,7 +318,6 @@ components:
         - first_message
         - tags
         - category
-        - answered
       x-examples:
         Thread with no answers:
           id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
