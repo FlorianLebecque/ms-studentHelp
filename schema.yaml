@@ -96,13 +96,14 @@ paths:
                   value:
                     message: 'This message does not belong to you, you cannot delete it'
       description: Delete an existing message
-  /messages:
+        Delete an existing message
+  '/messages/{messageId}/answers':
     post:
-      summary: Create New Message
+      summary: Create New Answer
       operationId: post-messages
       responses:
         '200':
-          description: Message Created
+          description: The newly created message
           content:
             application/json:
               schema:
@@ -115,14 +116,20 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                content:
-                  type: string
-              required:
-                - content
+              $ref: '#/components/schemas/Message'
         description: Post the necessary fields for the API to create a new message.
-      description: Create a new message.
+      description: |-
+        Create a new message, as an answer to the specified message
+
+        This method is not idempotent, a new message will be created for each call
+    parameters:
+      - schema:
+          type: string
+          format: uuid
+        name: messageId
+        in: path
+        required: true
+        description: Id of an existing message.
   /threads:
     get:
       summary: Your GET endpoint
