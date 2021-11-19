@@ -212,7 +212,10 @@ components:
         parent:
           type: string
           format: uuid
-          description: The parent message or thread
+          description: |-
+            The parent message id, if it has a parent.
+
+            If not specified, the message can be assumed to be the first message of a thread.
           readOnly: true
         children:
           type: array
