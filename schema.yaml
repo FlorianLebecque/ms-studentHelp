@@ -14,13 +14,7 @@ servers:
 paths:
   '/messages/{messageId}':
     parameters:
-      - schema:
-          type: string
-          format: uuid
-        name: messageId
-        in: path
-        required: true
-        description: Id of an existing message.
+      - $ref: '#/components/parameters/messageId'
     get:
       summary: Get Message Info by Message ID
       tags: []
@@ -242,5 +236,14 @@ components:
             student-help.rate: Vote on messages
             student-help.thread: Create new threads
           authorizationUrl: 'https://api.ecam.be/oauth2/authorize'
+  parameters:
+    messageId:
+      schema:
+        type: string
+        format: uuid
+      name: messageId
+      in: path
+      required: true
+      description: Id of an existing message.
 security:
   - API Key - 1: []
