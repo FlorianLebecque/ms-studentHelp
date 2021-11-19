@@ -12,34 +12,34 @@ servers:
   - url: 'https://api.ecam.be/student-help'
     description: Production
 paths:
-  '/messages/{messageId}':
+  '/posts/{postId}':
     parameters:
-      - $ref: '#/components/parameters/messageId'
+      - $ref: '#/components/parameters/postId'
     get:
-      summary: Get Message Info by Message ID
+      summary: Get Post Info by Post ID
       tags: []
       responses:
         '200':
-          description: Message Found
+          description: Post Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Message'
+                $ref: '#/components/schemas/Post'
               examples: {}
         '404':
           $ref: '#/components/responses/Not-Found'
-      operationId: get-messages-messageId
-      description: Retrieve the information of the message with the matching message ID.
+      operationId: get-posts-postId
+      description: Retrieve the information of the post with the matching post ID.
     patch:
-      summary: Update Message Information
-      operationId: patch-messages-messageId
+      summary: Update Post Information
+      operationId: patch-posts-postId
       responses:
         '200':
-          description: Message Updated
+          description: Post Updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Message'
+                $ref: '#/components/schemas/Post'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -62,38 +62,38 @@ paths:
                   value:
                     message: Content may not be empty
       description: |-
-        Update the information of an existing message.
+        Update the information of an existing post.
 
         This method is not idempotent, `dateModified` will be updated to the current time
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Message'
-        description: Patch message content to update.
+              $ref: '#/components/schemas/Post'
+        description: Patch post content to update.
     delete:
       summary: ''
-      operationId: delete-messages-messageId
+      operationId: delete-posts-postId
       responses:
         '204':
-          description: Message was successfully deleted
+          description: Post was successfully deleted
         '401':
           $ref: '#/components/responses/Unauthorized'
       description: |-
-        Delete an existing message
+        Delete an existing post
 
-        This method is idempotent, it will not return 404 Not Found, as if a message cannot be fount, it is deleted (or had never been created, which is equivalent)
-  '/messages/{messageId}/answers':
+        This method is idempotent, it will not return 404 Not Found, as if a post cannot be fount, it is deleted (or had never been created, which is equivalent)
+  '/posts/{postId}/answers':
     post:
       summary: Create New Answer
-      operationId: post-messages-messageId-answers
+      operationId: post-posts-postId-answers
       responses:
         '200':
-          description: The newly created message
+          description: The newly created post
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Message'
+                $ref: '#/components/schemas/Post'
         '400':
           description: Missing Required Information
         '404':
@@ -102,23 +102,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Message'
-        description: Post the necessary fields for the API to create a new message.
+              $ref: '#/components/schemas/Post'
+        description: Post the necessary fields for the API to create a new post.
       description: |-
-        Create a new message, as an answer to the specified message
+        Create a new post, as an answer to the specified post
 
-        This method is not idempotent, a new message will be created for each call
+        This method is not idempotent, a new post will be created for each call
     parameters:
       - schema:
           type: string
           format: uuid
-        name: messageId
+        name: postId
         in: path
         required: true
-        description: Id of an existing message.
+        description: Id of an existing post.
     get:
       summary: Get answers
-      operationId: get-messages-messageId-answers
+      operationId: get-posts-postId-answers
       responses:
         '200':
           description: OK
@@ -131,17 +131,17 @@ paths:
                     type: array
                     minItems: 0
                     items:
-                      $ref: '#/components/schemas/Message'
+                      $ref: '#/components/schemas/Post'
                     readOnly: true
                 required:
                   - answers
         '404':
           $ref: '#/components/responses/Not-Found'
       description: |-
-        Get all answers for a message
+        Get all answers for a post
 
-        Returns a list of all messages in the `children` array for the specified `messageId`.
-        Therefore, all messages returned will have the same `parent`. 
+        Returns a list of all posts in the `children` array for the specified `postId`.
+        Therefore, all posts returned will have the same `parent`.
 
         If there are no answers, returns an empty list.
   /threads:
@@ -228,10 +228,10 @@ paths:
       description: Allows edition of your own threads
 components:
   schemas:
-    Message:
-      description: A sent message
+    Post:
+      description: A sent post
       type: object
-      title: Message
+      title: Post
       x-examples:
         An answer to a preexisting question:
           id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
@@ -266,7 +266,7 @@ components:
         content:
           type: string
           minLength: 1
-          description: 'The message content, in MarkDown'
+          description: 'The post content, in MarkDown'
         upvotes:
           type: number
           minimum: 0
@@ -291,9 +291,9 @@ components:
           type: string
           format: uuid
           description: |-
-            The parent message id, if it has a parent.
+            The parent post id, if it has a parent.
 
-            If not specified, the message can be assumed to be the first message of a thread.
+            If not specified, the post can be assumed to be the first post of a thread.
           readOnly: true
         children:
           type: array
@@ -301,7 +301,7 @@ components:
           description: |-
             The responses
 
-            The children will have their `parent` field set to the `id` of this message
+            The children will have their `parent` field set to the `id` of this post
           items:
             type: string
             format: uuid
@@ -319,7 +319,7 @@ components:
     Thread:
       title: Thread
       type: object
-      description: The beginning of a serie of messages
+      description: The beginning of a serie of posts
       properties:
         id:
           type: string
@@ -328,8 +328,8 @@ components:
         title:
           type: string
           description: The thread title
-        first_message:
-          $ref: '#/components/schemas/Message'
+        first_post:
+          $ref: '#/components/schemas/Post'
         tags:
           type: array
           uniqueItems: true
@@ -345,14 +345,14 @@ components:
       required:
         - id
         - title
-        - first_message
+        - first_post
         - tags
         - category
       x-examples:
         Thread with no answers:
           id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
           title: Montage amplificateur inverseur
-          first_message:
+          first_post:
             id: 12346eca-6276-4993-bfeb-53cbbbba6f08
             content: Est-ce que quelqu'un peut me rappeler la formule de calcul pour un montage AOP en amplifiacteur inverseur?
             upvotes: 2
@@ -398,19 +398,19 @@ components:
       flows:
         implicit:
           scopes:
-            student-help.post: Post messages
-            student-help.rate: Vote on messages
+            student-help.post: Post posts
+            student-help.rate: Vote on posts
             student-help.thread: Create new threads
           authorizationUrl: 'https://api.ecam.be/oauth2/authorize'
   parameters:
-    messageId:
+    postId:
       schema:
         type: string
         format: uuid
-      name: messageId
+      name: postId
       in: path
       required: true
-      description: Id of an existing message.
+      description: Id of an existing post.
     threadId:
       name: threadId
       in: path
@@ -429,8 +429,8 @@ components:
               message:
                 type: string
           examples:
-            Message:
-              message: Message not found
+            Post:
+              message: Post not found
             Thread:
               message: Thread not found
     Unauthorized:
