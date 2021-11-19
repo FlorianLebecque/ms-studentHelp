@@ -231,7 +231,7 @@ components:
     Thread:
       title: Thread
       type: object
-      description: ''
+      description: The beginning of a serie of messages
       properties:
         id:
           type: string
@@ -239,17 +239,28 @@ components:
           readOnly: true
         title:
           type: string
-        message:
+          description: The thread title
+        first_message:
           $ref: '#/components/schemas/Message'
         tags:
           type: array
           uniqueItems: true
+          minItems: 0
           items:
             type: string
+        category:
+          type: string
+        answered:
+          type: boolean
+          default: false
+          description: If the thread's author has found an answer
       required:
         - id
         - title
-        - message
+        - first_message
+        - tags
+        - category
+        - answered
     Author:
       type: string
       title: Author
