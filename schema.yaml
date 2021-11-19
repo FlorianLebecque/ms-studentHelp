@@ -132,7 +132,7 @@ paths:
         description: Id of an existing message.
   /threads:
     get:
-      summary: Your GET endpoint
+      summary: Threads list
       tags: []
       responses:
         '200':
@@ -148,6 +148,21 @@ paths:
                       $ref: '#/components/schemas/Thread'
       operationId: get-threads
       description: Get a list of published threads
+    post:
+      summary: New thread
+      operationId: post-threads
+      responses:
+        '200':
+          description: OK
+      description: |-
+        Create a new thread in a specific category
+
+        The author is the authenticated user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Thread'
 components:
   schemas:
     Message:
