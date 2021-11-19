@@ -201,10 +201,7 @@ components:
           format: date-time
           readOnly: true
         authorId:
-          type: string
-          minLength: 1
-          format: uuid
-          readOnly: true
+          $ref: '#/components/schemas/Author'
         parent:
           type: string
           format: uuid
@@ -253,6 +250,12 @@ components:
         - id
         - title
         - message
+    Author:
+      type: string
+      title: Author
+      format: uuid
+      description: The author's UUID
+      readOnly: true
   securitySchemes:
     Global JWT:
       type: oauth2
