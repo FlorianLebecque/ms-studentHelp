@@ -261,6 +261,24 @@ components:
         - tags
         - category
         - answered
+      x-examples:
+        Thread with no answers:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          title: Montage amplificateur inverseur
+          first_message:
+            id: 12346eca-6276-4993-bfeb-53cbbbba6f08
+            content: Est-ce que quelqu'un peut me rappeler la formule de calcul pour un montage AOP en amplifiacteur inverseur?
+            upvotes: 2
+            downvotes: 0
+            datePosted: '2019-08-24T14:15:22Z'
+            dateModified: '2019-08-24T14:15:22Z'
+            authorId: ee6f7132-bd0a-4fcd-83b3-a8022377067b
+            children: []
+          tags:
+            - AOP
+            - Amplificateur
+          category: Électronique analogique
+          answered: false
     Author:
       type: string
       title: Author
