@@ -16,6 +16,4 @@ public class HelloController {
 		return "HELLO SPRINGBOOTS!!!";
 	}
 
-
-
 }
