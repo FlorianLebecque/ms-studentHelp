@@ -177,18 +177,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Thread'
-    delete:
-      summary: Delete thread
-      operationId: delete-threads
-      responses:
-        '204':
-          description: Thread was successfully deleted
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-      description: |-
-        Delete an existing thread
-
-        This method is idempotent, it will not return 404 Not Found, as if a thread cannot be fount, it is deleted (or had never been created, which is equivalent)
   '/threads/{threadId}':
     parameters:
       - $ref: '#/components/parameters/threadId'
@@ -226,6 +214,18 @@ paths:
             schema:
               $ref: '#/components/schemas/ThreadPatch'
       description: Allows edition of your own threads
+    delete:
+      summary: Delete thread
+      operationId: delete-threads
+      responses:
+        '204':
+          description: Thread was successfully deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      description: |-
+        Delete an existing thread
+
+        This method is idempotent, it will not return 404 Not Found, as if a thread cannot be fount, it is deleted (or had never been created, which is equivalent)
 components:
   schemas:
     Post:
