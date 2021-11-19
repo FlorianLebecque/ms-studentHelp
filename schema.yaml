@@ -177,6 +177,29 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Thread'
+  '/threads/{threadId}':
+    parameters:
+      - $ref: '#/components/parameters/threadId'
+    patch:
+      summary: Edit thread
+      operationId: patch-threads-threadId
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/Not-Found'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThreadPatch'
+      description: Allows edition of your own threads
 components:
   schemas:
     Message:
@@ -317,6 +340,26 @@ components:
             - Amplificateur
           category: Électronique analogique
           answered: false
+    ThreadPatch:
+      title: ThreadPatch
+      type: object
+      description: Patchable values for a thread
+      properties:
+        title:
+          type: string
+          description: The thread title
+        tags:
+          type: array
+          uniqueItems: true
+          minItems: 0
+          items:
+            type: string
+        category:
+          type: string
+        answered:
+          type: boolean
+          default: false
+          description: If the thread's author has found an answer
     Author:
       type: string
       title: Author
@@ -342,6 +385,13 @@ components:
       in: path
       required: true
       description: Id of an existing message.
+    threadId:
+      name: threadId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
   responses:
     Not-Found:
       description: Requested object was not found in our database
