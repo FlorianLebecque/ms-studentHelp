@@ -147,16 +147,41 @@ components:
       description: A sent message
       type: object
       title: Message
-      x-examples: {}
+      x-examples:
+        An answer to a preexisting question:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          content: 'https://lmgtfy.app/?q=aop+inverseur+formule'
+          upvotes: 0
+          downvotes: 2
+          datePosted: '2019-08-24T14:15:22Z'
+          dateModified: '2019-08-24T14:15:22Z'
+          authorId: ee6f7132-bd0a-4fcd-83b3-a8022377067b
+          parent: 42e2bc1b-6741-4e2e-b138-97b4a342c999
+          children:
+            - 0cb5c5de-ce35-47a4-a1db-3ea542dfb9b8
+            - d2a631d5-dbdc-4aca-9268-1592449de5bf
+        A correction for another answer:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          content: |-
+            Mais non, en python 3 il faut mettre des parenthèses pour les appels à `print`.
+
+            Donc on fait `print("Hello, World!")` et  plus `print "Hello, World!"`
+          upvotes: 3
+          downvotes: 0
+          datePosted: '2019-08-24T14:15:22Z'
+          dateModified: '2019-08-24T14:15:22Z'
+          authorId: ee6f7132-bd0a-4fcd-83b3-a8022377067b
+          parent: 42e2bc1b-6741-4e2e-b138-97b4a342c999
+          children: []
       properties:
         id:
           type: string
-          minLength: 1
           format: uuid
           readOnly: true
         content:
           type: string
           minLength: 1
+          description: 'The message content, in MarkDown'
         upvotes:
           type: number
           minimum: 0
