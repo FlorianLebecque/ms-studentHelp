@@ -27,7 +27,7 @@ paths:
                 $ref: '#/components/schemas/Message'
               examples: {}
         '404':
-          description: Message Not Found
+          $ref: '#/components/responses/Not-Found'
       operationId: get-messages-messageId
       description: Retrieve the information of the message with the matching message ID.
     patch:
@@ -41,7 +41,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Message'
         '404':
-          description: Message Not Found
+          $ref: '#/components/responses/Not-Found'
         '406':
           description: Not Acceptable
           content:
@@ -109,6 +109,8 @@ paths:
                 $ref: '#/components/schemas/Message'
         '400':
           description: Missing Required Information
+        '404':
+          $ref: '#/components/responses/Not-Found'
       requestBody:
         content:
           application/json:
@@ -245,5 +247,20 @@ components:
       in: path
       required: true
       description: Id of an existing message.
+  responses:
+    Not-Found:
+      description: Requested object was not found in our database
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          examples:
+            Message:
+              message: Message not found
+            Thread:
+              message: Thread not found
 security:
   - API Key - 1: []
