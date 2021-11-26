@@ -3,7 +3,8 @@ info:
   title: student help
   version: '1.0'
   license:
-    name: AGPL
+    name: AGPL-3.0-only
+    url: 'https://www.gnu.org/licenses/agpl-3.0.html'
   description: Student to student help providing API
   contact:
     name: Student Help API
