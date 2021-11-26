@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import be.ecam.ms_studenthelp.Object.Post;
 import be.ecam.ms_studenthelp.Object.Greeting;
 
 import java.util.concurrent.atomic.AtomicLong;
