@@ -18,7 +18,7 @@ public class ForumThread {
     private boolean answered;
     private List<Post> children;
     private List<LocalDateTime> modification;
-    
+
     //load
     public ForumThread(String id_,String title_,List<String> tags_,String authorId_,LocalDateTime date_,String category_,boolean answered_,List<Post> children_){
         id       = id_;
@@ -33,7 +33,7 @@ public class ForumThread {
     //create
     public ForumThread(String title_,String authorId_,String category_){
         id       = GuidGenerator.GetNewUUIDString();
-        title    = title_;    
+        title    = title_;
         tags     = new ArrayList<String>();
         authorId = authorId_;
         date     = LocalDateTime.now();
@@ -48,19 +48,62 @@ public class ForumThread {
 
     public void UpdateTitle(String title_){
         title = title_;
-        
+
         if(modification == null){
             modification = new ArrayList<LocalDateTime>();
         }
-
-        //TODO copy dates
-
-        //modification.add(new LocalDateTime(date));
         date = LocalDateTime.now();
+        modification.add(date);
     }
 
     public void Delete(){
         children.clear();
     }
+    @Override
+    public String toString() {
+        return "Thread{" +
+                "id=" + id +
+                ", title=" + title +
+                ", tags=" + tags +
+                ", authorId=" + authorId +
+                ", date=" + date +
+                ", category=" + category +
+                ", answered=" + answered +
+                '}';
+    }
 
+    public String getAuthorId() {
+        return authorId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public List<Post> getChildren() {
+        return children;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public List<LocalDateTime> getModification() {
+        return modification;
+    }
+    public boolean getAnswer(){
+        return answered;
+    }
 }
