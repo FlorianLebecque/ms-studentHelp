@@ -2,6 +2,9 @@ package be.ecam.ms_studenthelp;
 
 import java.util.ArrayList;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,5 +46,11 @@ public class ReactionController {
 		public PutPostsPostIdReactionsResult(Reaction data) {
 			this.data = data;
 		}
+	}
+
+	@DeleteMapping("/posts/{postId}/reactions")
+	public ResponseEntity deletePostsPostIdReactions(@PathVariable("postId") String postId) {
+		// Delete reaction
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }
