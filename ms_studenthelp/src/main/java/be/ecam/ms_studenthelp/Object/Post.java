@@ -26,6 +26,18 @@ public class Post {
         SetDate();
     }
 
+    public String getAuthorId() {
+        return authorId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
     public void SetId(){
         id          =  "null";
     }
