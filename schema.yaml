@@ -469,9 +469,9 @@ components:
       flows:
         implicit:
           scopes:
-            student-help.post: Post posts
-            student-help.rate: Vote on posts
-            student-help.thread: Create new threads
+            student-help.post: Post new posts
+            student-help.react: Vote on posts
+            student-help.thread: 'Create new threads, implies `student-help.post`'
           authorizationUrl: 'https://api.ecam.be/oauth2/authorize'
   parameters:
     postId:
