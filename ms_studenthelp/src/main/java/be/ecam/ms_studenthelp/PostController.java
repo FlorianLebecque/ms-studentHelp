@@ -19,6 +19,9 @@ public class PostController {
 
     @GetMapping("/helloMapping")
 	public Post index_ter() {
+
+        MsStudenthelpApplication.DatabaseManager.CreateForumThread(ft);
+
         Post test = new Post();
         test.setAuthorId("kamoulox");
         test.setContent("C'est la vie de chateau les blEUs?!!");
