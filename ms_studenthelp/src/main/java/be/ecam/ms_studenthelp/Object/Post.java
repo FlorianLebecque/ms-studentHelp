@@ -65,7 +65,41 @@ public class Post {
 
 
     /// ---GETTERS--- ///
-    public String GetId(){
+
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getAuthorId() {
+        return authorId;
+    }
+
+    public LocalDateTime getDatePosted() {
+        return datePosted;
+    }
+
+    public Post getParent() {
+        return parent;
+    }
+
+    public ForumThread getForumThread() {
+        return forumThread;
+    }
+
+    public List<Post> getChildren() {
+        return children;
+    }
+
+    public List<LocalDateTime> getDateModified() {
+        return dateModified;
+    }
+
+    /* public String GetId(){
         return id;
     }
     public String GetContent(){
@@ -95,7 +129,9 @@ public class Post {
     }
     public boolean GetDeleted(){
         return deleted;
-    }
+    } */
+
+
     /// ------------- ///
 
     public void UpdateDate(){
