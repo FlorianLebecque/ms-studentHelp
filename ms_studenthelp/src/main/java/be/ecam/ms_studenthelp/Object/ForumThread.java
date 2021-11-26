@@ -16,18 +16,21 @@ public class ForumThread {
     private LocalDateTime date;
     private String category;
     private boolean answered;
-    private List<Post> replies;
+    private List<Post> children;
+    private List<LocalDateTime> modification;
     
-    public ForumThread(String id_,String title_,List<String> tags_,String authorId_,LocalDateTime date_,String category_,boolean answered_,List<Post> replies_){
+    //load
+    public ForumThread(String id_,String title_,List<String> tags_,String authorId_,LocalDateTime date_,String category_,boolean answered_,List<Post> children_){
         id       = id_;
         title    = title_;
         authorId = authorId_;
         date     = date_;
         category = category_;
         answered = answered_;
-        replies  = replies_;
+        children  = children_;
     }
 
+    //create
     public ForumThread(String title_,String authorId_,String category_){
         id       = GuidGenerator.GetNewUUIDString();
         title    = title_;    
@@ -36,6 +39,28 @@ public class ForumThread {
         date     = LocalDateTime.now();
         category = category_;
         answered = false;
-        replies  = new ArrayList<Post>();
+        children  = new ArrayList<Post>();
     }
+
+    public void Reply(Post reply){
+        children.add(reply);
+    }
+
+    public void UpdateTitle(String title_){
+        title = title_;
+        
+        if(modification == null){
+            modification = new ArrayList<LocalDateTime>();
+        }
+
+        //TODO copy dates
+
+        //modification.add(new LocalDateTime(date));
+        date = LocalDateTime.now();
+    }
+
+    public void Delete(){
+        children.clear();
+    }
+
 }
