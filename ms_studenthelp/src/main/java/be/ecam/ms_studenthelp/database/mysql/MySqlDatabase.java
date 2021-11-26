@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.format.DateTimeFormatter;
 
@@ -108,22 +109,47 @@ public class MySqlDatabase implements IODatabaseObject {
 
     }
 
-
-    /*
-    while (rs.next()) {
-        long id = rs.getLong("ID");
-        String name = rs.getString("FIRST_NAME");
-        String lastName = rs.getString("LAST_NAME");
-
-        // do something with the extracted data...
-    }
-    */
-
     public ForumThread GetForumThread(String uuid){
+
+        String query = "SELECT * FROM `mssh_object` WHERE `type` = 1";
+
         return new ForumThread("tqset", "id1", "test");
     }
 
     public List<ForumThread> GetForumThreads(){
+        String query = "SELECT * FROM `mssh_object` WHERE `type` = 1";
+
+        try {
+            Statement st = con.createStatement();
+      
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+        
+            // iterate through the java resultset
+            while (rs.next()) {
+                String id = rs.getString("id");
+                String datetimestr = rs.getString("datetime");
+                String author = rs.getString("author");
+        
+                //load the meta data
+                String cur_query = String.format(
+                    "SELECT * FROM `mssh_objectmeta` WHERE `id_object` = '%s'",
+                    id
+                );
+
+                Statement metatST = con.createStatement();
+                ResultSet metaRS = metatST.executeQuery(cur_query);
+
+                while(metaRS.next()){
+                    
+                }
+
+
+            }
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
+
         return new ArrayList<ForumThread>();
     }
 
