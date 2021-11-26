@@ -13,8 +13,9 @@ public class PostController {
     @GetMapping("/getPost")
     public Post GetPost(){
         Post post = new Post();
-        post.SetAuthorId("L-A");
-        post.SetContent("Coucou");
+        post.setAuthorId("L-A");
+        post.setContent("Coucou");
         return post;
     }
+    
 }
