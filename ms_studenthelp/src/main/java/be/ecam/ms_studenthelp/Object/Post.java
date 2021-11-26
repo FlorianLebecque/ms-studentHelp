@@ -22,8 +22,6 @@ public class Post {
     
     private List<LocalDateTime> dateModified = new ArrayList<LocalDateTime>();
 
-    
-
     private Post parent;
     private List<Post> children = new ArrayList<Post>();
 
