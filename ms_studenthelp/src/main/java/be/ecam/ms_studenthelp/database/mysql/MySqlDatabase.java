@@ -1,14 +1,18 @@
 package be.ecam.ms_studenthelp.database.mysql;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
-
+import java.util.Locale;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.format.DateTimeFormatter;
 
 import be.ecam.ms_studenthelp.Object.ForumThread;
 import be.ecam.ms_studenthelp.Object.Post;
@@ -29,8 +33,8 @@ public class MySqlDatabase implements IODatabaseObject {
         }
 
         String MySQLURL = "jdbc:mysql://localhost/ms_studenthelp";
-        String databseUserName = "";
-        String databasePassword = "";
+        String databseUserName = "dummy";
+        String databasePassword = "1234";
 
         try{
             con = DriverManager.getConnection(MySQLURL,databseUserName,databasePassword);
@@ -56,32 +60,68 @@ public class MySqlDatabase implements IODatabaseObject {
     public int CreateForumThread(ForumThread ft){
 
         try {
-            //String query = String.format("INSERT INTO `mssh_object`(`id`, `type`, `datetime`, `author`) VALUES ('%s','%d','%s','%s')",);
 
+            
 
-            PreparedStatement ps = con.prepareStatement(""); 
-            ResultSet rs = ps.executeQuery();
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+            String datetime = ft.getDate().format(formatter).replace("T", " ");
+            String query = String.format(
+                "INSERT INTO `mssh_object`(`id`, `type`, `datetime`, `author`) VALUES ('%s',%d,'%s','%s')",
+                ft.getId(),
+                1,
+                datetime,
+                ft.getAuthorId()
+            );
 
+            
 
+            //INSERT INTO `mssh_object`(`id`, `type`, `datetime`, `author`) VALUES ('13a19100-de22-42a9-92ea-7cbb527fc106','1','2021-11-330 13:11:14','0719bd76-427d-4487-a26c-5eab209f9ef9')
+            Statement ps = con.createStatement(); 
+            ps.executeUpdate(query);
 
+            
+            Dictionary<String, String> dic = new Hashtable<String, String>();
+            dic.put("title", ft.getTitle());
+            dic.put("catergory", ft.getCategory());
+            String answered = ft.getAnswer()?"true":"false";
+            dic.put("answered", answered);
+            
+            Enumeration<String> ekey = dic.keys();
+            while(ekey.hasMoreElements()){
+                String key = ekey.nextElement();
+                String cur_query =  String.format(
+                    "INSERT INTO `mssh_objectmeta`(`id_object`, `meta_key`, `type`, `meta_value`) VALUES ('%s','%s','%s','%s')",
+                    ft.getId(),
+                    key,
+                    "string",
+                    dic.get(key)
+                );
 
-            /*
-            while (rs.next()) {
-                long id = rs.getLong("ID");
-                String name = rs.getString("FIRST_NAME");
-                String lastName = rs.getString("LAST_NAME");
+                Statement meta_statement = con.createStatement(); 
+                meta_statement.executeUpdate(cur_query);
 
-                // do something with the extracted data...
             }
-            */
+                    
             return 1;
         } catch (Exception e) {
+            e.printStackTrace();
+
             return -1;
         }
 
 
     }
 
+
+    /*
+    while (rs.next()) {
+        long id = rs.getLong("ID");
+        String name = rs.getString("FIRST_NAME");
+        String lastName = rs.getString("LAST_NAME");
+
+        // do something with the extracted data...
+    }
+    */
 
     public ForumThread GetForumThread(String uuid){
         return new ForumThread("tqset", "id1", "test");

@@ -59,6 +59,7 @@ public class ForumThread {
     public void Delete(){
         children.clear();
     }
+
     @Override
     public String toString() {
         return "Thread{" +
@@ -103,6 +104,7 @@ public class ForumThread {
     public List<LocalDateTime> getModification() {
         return modification;
     }
+    
     public boolean getAnswer(){
         return answered;
     }

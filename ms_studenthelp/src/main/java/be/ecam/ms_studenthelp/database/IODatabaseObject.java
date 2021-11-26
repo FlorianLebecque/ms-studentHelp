@@ -10,8 +10,11 @@ public interface IODatabaseObject{
     public boolean connect();
     public void disconnect();
 
+
     public ForumThread GetForumThread(String uuid);
     public List<ForumThread> GetForumThreads();
+    public int CreateForumThread(ForumThread ft);
+
 
     public Post GetPost(String uuid);
     public List<Post> GetPosts();

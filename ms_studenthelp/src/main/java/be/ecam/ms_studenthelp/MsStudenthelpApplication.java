@@ -9,8 +9,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import be.ecam.ms_studenthelp.Object.ForumThread;
 import be.ecam.ms_studenthelp.database.IODatabaseObject;
 import be.ecam.ms_studenthelp.database.mysql.MySqlDatabase;
+import be.ecam.ms_studenthelp.utils.GuidGenerator;
 
 @SpringBootApplication
 public class MsStudenthelpApplication {
@@ -23,6 +25,12 @@ public class MsStudenthelpApplication {
 
 
 		if(DatabaseManager.connect()){
+
+			ForumThread ft = new ForumThread("First Thread Ever!", GuidGenerator.GetNewUUIDString(),"debug");
+			int a = DatabaseManager.CreateForumThread(ft);
+
+			System.out.println(a);
+
 			SpringApplication.run(MsStudenthelpApplication.class, args);
 		};
 
