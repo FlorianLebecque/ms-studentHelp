@@ -1,0 +1,1110 @@
+<!doctype html>
+<html>
+  <head>
+    <title>student help</title>
+    <style type="text/css">
+      body {
+	font-family: Trebuchet MS, sans-serif;
+	font-size: 15px;
+	color: #444;
+	margin-right: 24px;
+}
+
+h1	{
+	font-size: 25px;
+}
+h2	{
+	font-size: 20px;
+}
+h3	{
+	font-size: 16px;
+	font-weight: bold;
+}
+hr	{
+	height: 1px;
+	border: 0;
+	color: #ddd;
+	background-color: #ddd;
+}
+
+.app-desc {
+  clear: both;
+  margin-left: 20px;
+}
+.param-name {
+  width: 100%;
+}
+.license-info {
+  margin-left: 20px;
+}
+
+.license-url {
+  margin-left: 20px;
+}
+
+.model {
+  margin: 0 0 0px 20px;
+}
+
+.method {
+  margin-left: 20px;
+}
+
+.method-notes	{
+	margin: 10px 0 20px 0;
+	font-size: 90%;
+	color: #555;
+}
+
+pre {
+  padding: 10px;
+  margin-bottom: 2px;
+}
+
+.http-method {
+ text-transform: uppercase;
+}
+
+pre.get {
+  background-color: #0f6ab4;
+}
+
+pre.post {
+  background-color: #10a54a;
+}
+
+pre.put {
+  background-color: #c5862b;
+}
+
+pre.delete {
+  background-color: #a41e22;
+}
+
+.huge	{
+	color: #fff;
+}
+
+pre.example {
+  background-color: #f3f3f3;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+code {
+  white-space: pre;
+}
+
+.nickname {
+  font-weight: bold;
+}
+
+.method-path {
+  font-size: 1.5em;
+  background-color: #0f6ab4;
+}
+
+.up {
+  float:right;
+}
+
+.parameter {
+  width: 500px;
+}
+
+.param {
+  width: 500px;
+  padding: 10px 0 0 20px;
+  font-weight: bold;
+}
+
+.param-desc {
+  width: 700px;
+  padding: 0 0 0 20px;
+  color: #777;
+}
+
+.param-type {
+  font-style: italic;
+}
+
+.param-enum-header {
+width: 700px;
+padding: 0 0 0 60px;
+color: #777;
+font-weight: bold;
+}
+
+.param-enum {
+width: 700px;
+padding: 0 0 0 80px;
+color: #777;
+font-style: italic;
+}
+
+.field-label {
+  padding: 0;
+  margin: 0;
+  clear: both;
+}
+
+.field-items	{
+	padding: 0 0 15px 0;
+	margin-bottom: 15px;
+}
+
+.return-type {
+  clear: both;
+  padding-bottom: 10px;
+}
+
+.param-header {
+  font-weight: bold;
+}
+
+.method-tags {
+  text-align: right;
+}
+
+.method-tag {
+  background: none repeat scroll 0% 0% #24A600;
+  border-radius: 3px;
+  padding: 2px 10px;
+  margin: 2px;
+  color: #FFF;
+  display: inline-block;
+  text-decoration: none;
+}
+
+    </style>
+  </head>
+  <body>
+  <h1>student help</h1>
+    <div class="app-desc">Student to student help providing API</div>
+    <div class="app-desc">More information: <a href="https://openapi-generator.tech">https://openapi-generator.tech</a></div>
+    <div class="app-desc">Contact Info: <a href="contact@ecam.be">contact@ecam.be</a></div>
+    <div class="app-desc">Version: 1.0</div>
+    <div class="app-desc">BasePath:/student-help</div>
+    <div class="license-info">AGPL-3.0-only</div>
+    <div class="license-url">https://www.gnu.org/licenses/agpl-3.0.html</div>
+  <h2>Access</h2>
+    <ol>
+      <li>OAuth AuthorizationUrl:https://api.ecam.be/oauth2/authorizeTokenUrl:</li>
+    </ol>
+
+  <h2><a name="__Methods">Methods</a></h2>
+  [ Jump to <a href="#__Models">Models</a> ]
+
+  <h3>Table of Contents </h3>
+  <div class="method-summary"></div>
+  <h4><a href="#Default">Default</a></h4>
+  <ul>
+  <li><a href="#deletePostsPostId"><code><span class="http-method">delete</span> /posts/{postId}</code></a></li>
+  <li><a href="#deletePostsPostIdReactions"><code><span class="http-method">delete</span> /posts/{postId}/reactions</code></a></li>
+  <li><a href="#deleteThreads"><code><span class="http-method">delete</span> /threads/{threadId}</code></a></li>
+  <li><a href="#getPostsPostId"><code><span class="http-method">get</span> /posts/{postId}</code></a></li>
+  <li><a href="#getPostsPostIdAnswers"><code><span class="http-method">get</span> /posts/{postId}/answers</code></a></li>
+  <li><a href="#getPostsPostIdReactions"><code><span class="http-method">get</span> /posts/{postId}/reactions</code></a></li>
+  <li><a href="#getThreads"><code><span class="http-method">get</span> /threads</code></a></li>
+  <li><a href="#getThreadsThreadId"><code><span class="http-method">get</span> /threads/{threadId}</code></a></li>
+  <li><a href="#patchPostsPostId"><code><span class="http-method">patch</span> /posts/{postId}</code></a></li>
+  <li><a href="#patchThreadsThreadId"><code><span class="http-method">patch</span> /threads/{threadId}</code></a></li>
+  <li><a href="#postPostsPostIdAnswers"><code><span class="http-method">post</span> /posts/{postId}/answers</code></a></li>
+  <li><a href="#postThreads"><code><span class="http-method">post</span> /threads</code></a></li>
+  <li><a href="#putPostsPostIdReactions"><code><span class="http-method">put</span> /posts/{postId}/reactions</code></a></li>
+  </ul>
+
+  <h1><a name="Default">Default</a></h1>
+  <div class="method"><a name="deletePostsPostId"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /posts/{postId}</code></pre></div>
+    <div class="method-summary"> (<span class="nickname">deletePostsPostId</span>)</div>
+    <div class="method-notes"><p>Delete an existing post</p>
+<p>This method is idempotent, it will not return 404 Not Found, as if a post cannot be fount, it is deleted (or had never been created, which is equivalent)</p>
+</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">postId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Id of an existing post. default: null format: uuid</div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    Post was successfully deleted
+        <a href="#"></a>
+    <h4 class="field-label">401</h4>
+    Example response
+        <a href="#inline_response_404">inline_response_404</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="deletePostsPostIdReactions"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /posts/{postId}/reactions</code></pre></div>
+    <div class="method-summary">Remove reaction (<span class="nickname">deletePostsPostIdReactions</span>)</div>
+    <div class="method-notes">Remove your own reaction</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">postId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Id of an existing post. default: null format: uuid</div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    Deleted
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Requested object was not found in our database
+        <a href="#inline_response_404">inline_response_404</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="deleteThreads"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /threads/{threadId}</code></pre></div>
+    <div class="method-summary">Delete thread (<span class="nickname">deleteThreads</span>)</div>
+    <div class="method-notes"><p>Delete an existing thread</p>
+<p>This method is idempotent, it will not return 404 Not Found, as if a thread cannot be fount, it is deleted (or had never been created, which is equivalent)</p>
+</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">threadId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null format: uuid</div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    Thread was successfully deleted
+        <a href="#"></a>
+    <h4 class="field-label">401</h4>
+    Example response
+        <a href="#inline_response_404">inline_response_404</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getPostsPostId"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /posts/{postId}</code></pre></div>
+    <div class="method-summary">Get Post Info by Post ID (<span class="nickname">getPostsPostId</span>)</div>
+    <div class="method-notes">Retrieve the information of the post with the matching post ID.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">postId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Id of an existing post. default: null format: uuid</div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Post">Post</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "parent" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+  "upvotes" : 0.08008281904610115,
+  "children" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+  "dateModified" : "2000-01-23T04:56:07.000+00:00",
+  "id" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+  "downvotes" : 0.6027456183070403,
+  "datePosted" : "2000-01-23T04:56:07.000+00:00",
+  "authorId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+  "content" : "content"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Post Found
+        <a href="#Post">Post</a>
+    <h4 class="field-label">404</h4>
+    Requested object was not found in our database
+        <a href="#inline_response_404">inline_response_404</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getPostsPostIdAnswers"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /posts/{postId}/answers</code></pre></div>
+    <div class="method-summary">Get answers (<span class="nickname">getPostsPostIdAnswers</span>)</div>
+    <div class="method-notes"><p>Get all answers for a post</p>
+<p>Returns a list of all posts in the <code>children</code> array for the specified <code>postId</code>.
+Therefore, all posts returned will have the same <code>parent</code>.</p>
+<p>If there are no answers, returns an empty list.</p>
+</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">postId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Id of an existing post. default: null format: uuid</div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#inline_response_200">inline_response_200</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "answers" : [ {
+    "parent" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "upvotes" : 0.08008281904610115,
+    "children" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+    "dateModified" : "2000-01-23T04:56:07.000+00:00",
+    "id" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "downvotes" : 0.6027456183070403,
+    "datePosted" : "2000-01-23T04:56:07.000+00:00",
+    "authorId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "content" : "content"
+  }, {
+    "parent" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "upvotes" : 0.08008281904610115,
+    "children" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+    "dateModified" : "2000-01-23T04:56:07.000+00:00",
+    "id" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "downvotes" : 0.6027456183070403,
+    "datePosted" : "2000-01-23T04:56:07.000+00:00",
+    "authorId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "content" : "content"
+  } ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#inline_response_200">inline_response_200</a>
+    <h4 class="field-label">404</h4>
+    Requested object was not found in our database
+        <a href="#inline_response_404">inline_response_404</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getPostsPostIdReactions"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /posts/{postId}/reactions</code></pre></div>
+    <div class="method-summary">Get post reactions (<span class="nickname">getPostsPostIdReactions</span>)</div>
+    <div class="method-notes">Get all specific reactions for a post.</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">postId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Id of an existing post. default: null format: uuid</div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#inline_response_200_1">inline_response_200_1</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "data" : [ {
+    "author" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "postId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "value" : 0
+  }, {
+    "author" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "postId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "value" : 0
+  } ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#inline_response_200_1">inline_response_200_1</a>
+    <h4 class="field-label">401</h4>
+    Example response
+        <a href="#inline_response_404">inline_response_404</a>
+    <h4 class="field-label">404</h4>
+    Requested object was not found in our database
+        <a href="#inline_response_404">inline_response_404</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getThreads"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /threads</code></pre></div>
+    <div class="method-summary">Threads list (<span class="nickname">getThreads</span>)</div>
+    <div class="method-notes">Get a list of published threads</div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#inline_response_200_3">inline_response_200_3</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "threads" : [ {
+    "answered" : false,
+    "first_post" : {
+      "parent" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+      "upvotes" : 0.08008281904610115,
+      "children" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+      "dateModified" : "2000-01-23T04:56:07.000+00:00",
+      "id" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+      "downvotes" : 0.6027456183070403,
+      "datePosted" : "2000-01-23T04:56:07.000+00:00",
+      "authorId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+      "content" : "content"
+    },
+    "id" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "title" : "title",
+    "category" : "category",
+    "tags" : [ "tags", "tags" ]
+  }, {
+    "answered" : false,
+    "first_post" : {
+      "parent" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+      "upvotes" : 0.08008281904610115,
+      "children" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+      "dateModified" : "2000-01-23T04:56:07.000+00:00",
+      "id" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+      "downvotes" : 0.6027456183070403,
+      "datePosted" : "2000-01-23T04:56:07.000+00:00",
+      "authorId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+      "content" : "content"
+    },
+    "id" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "title" : "title",
+    "category" : "category",
+    "tags" : [ "tags", "tags" ]
+  } ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Found threads
+        <a href="#inline_response_200_3">inline_response_200_3</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="getThreadsThreadId"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /threads/{threadId}</code></pre></div>
+    <div class="method-summary">Get thread (<span class="nickname">getThreadsThreadId</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">threadId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null format: uuid</div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Thread">Thread</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "answered" : false,
+  "first_post" : {
+    "parent" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "upvotes" : 0.08008281904610115,
+    "children" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+    "dateModified" : "2000-01-23T04:56:07.000+00:00",
+    "id" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "downvotes" : 0.6027456183070403,
+    "datePosted" : "2000-01-23T04:56:07.000+00:00",
+    "authorId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "content" : "content"
+  },
+  "id" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+  "title" : "title",
+  "category" : "category",
+  "tags" : [ "tags", "tags" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Thread">Thread</a>
+    <h4 class="field-label">404</h4>
+    Requested object was not found in our database
+        <a href="#inline_response_404">inline_response_404</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="patchPostsPostId"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="patch"><code class="huge"><span class="http-method">patch</span> /posts/{postId}</code></pre></div>
+    <div class="method-summary">Update Post Information (<span class="nickname">patchPostsPostId</span>)</div>
+    <div class="method-notes"><p>Update the information of an existing post.</p>
+<p>This method is not idempotent, <code>dateModified</code> will be updated to the current time</p>
+</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">postId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Id of an existing post. default: null format: uuid</div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Post <a href="#Post">Post</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Post">Post</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "parent" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+  "upvotes" : 0.08008281904610115,
+  "children" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+  "dateModified" : "2000-01-23T04:56:07.000+00:00",
+  "id" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+  "downvotes" : 0.6027456183070403,
+  "datePosted" : "2000-01-23T04:56:07.000+00:00",
+  "authorId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+  "content" : "content"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    Post Updated
+        <a href="#Post">Post</a>
+    <h4 class="field-label">401</h4>
+    Example response
+        <a href="#inline_response_404">inline_response_404</a>
+    <h4 class="field-label">404</h4>
+    Requested object was not found in our database
+        <a href="#inline_response_404">inline_response_404</a>
+    <h4 class="field-label">406</h4>
+    Not Acceptable
+        <a href="#inline_response_406">inline_response_406</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="patchThreadsThreadId"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="patch"><code class="huge"><span class="http-method">patch</span> /threads/{threadId}</code></pre></div>
+    <div class="method-summary">Edit thread (<span class="nickname">patchThreadsThreadId</span>)</div>
+    <div class="method-notes">Allows edition of your own threads</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">threadId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash;  default: null format: uuid</div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">ThreadPatch <a href="#ThreadPatch">ThreadPatch</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Thread">Thread</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "answered" : false,
+  "first_post" : {
+    "parent" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "upvotes" : 0.08008281904610115,
+    "children" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+    "dateModified" : "2000-01-23T04:56:07.000+00:00",
+    "id" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "downvotes" : 0.6027456183070403,
+    "datePosted" : "2000-01-23T04:56:07.000+00:00",
+    "authorId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "content" : "content"
+  },
+  "id" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+  "title" : "title",
+  "category" : "category",
+  "tags" : [ "tags", "tags" ]
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#Thread">Thread</a>
+    <h4 class="field-label">401</h4>
+    Example response
+        <a href="#inline_response_404">inline_response_404</a>
+    <h4 class="field-label">404</h4>
+    Requested object was not found in our database
+        <a href="#inline_response_404">inline_response_404</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="postPostsPostIdAnswers"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /posts/{postId}/answers</code></pre></div>
+    <div class="method-summary">Create New Answer (<span class="nickname">postPostsPostIdAnswers</span>)</div>
+    <div class="method-notes"><p>Create a new post, as an answer to the specified post</p>
+<p>This method is not idempotent, a new post will be created for each call</p>
+</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">postId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Id of an existing post. default: null format: uuid</div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Post <a href="#Post">Post</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#Post">Post</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "parent" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+  "upvotes" : 0.08008281904610115,
+  "children" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+  "dateModified" : "2000-01-23T04:56:07.000+00:00",
+  "id" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+  "downvotes" : 0.6027456183070403,
+  "datePosted" : "2000-01-23T04:56:07.000+00:00",
+  "authorId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+  "content" : "content"
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    The newly created post
+        <a href="#Post">Post</a>
+    <h4 class="field-label">400</h4>
+    Missing Required Information
+        <a href="#"></a>
+    <h4 class="field-label">404</h4>
+    Requested object was not found in our database
+        <a href="#inline_response_404">inline_response_404</a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="postThreads"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /threads</code></pre></div>
+    <div class="method-summary">New thread (<span class="nickname">postThreads</span>)</div>
+    <div class="method-notes"><p>Create a new thread in a specific category</p>
+<p>The author is the authenticated user</p>
+</div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Thread <a href="#Thread">Thread</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="putPostsPostIdReactions"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /posts/{postId}/reactions</code></pre></div>
+    <div class="method-summary">Set reaction (<span class="nickname">putPostsPostIdReactions</span>)</div>
+    <div class="method-notes">Set your own reaction to a post</div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">postId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Id of an existing post. default: null format: uuid</div>
+    </div>  <!-- field-items -->
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">Reaction <a href="#Reaction">Reaction</a> (optional)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash;  </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      <a href="#inline_response_200_2">inline_response_200_2</a>
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>{
+  "data" : {
+    "author" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "postId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+    "value" : 0
+  }
+}</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    The created or updated reaction
+        <a href="#inline_response_200_2">inline_response_200_2</a>
+  </div> <!-- method -->
+  <hr/>
+
+  <h2><a name="__Models">Models</a></h2>
+  [ Jump to <a href="#__Methods">Methods</a> ]
+
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#Post"><code>Post</code> - Post</a></li>
+    <li><a href="#Reaction"><code>Reaction</code> - Reaction</a></li>
+    <li><a href="#Thread"><code>Thread</code> - Thread</a></li>
+    <li><a href="#ThreadPatch"><code>ThreadPatch</code> - ThreadPatch</a></li>
+    <li><a href="#inline_response_200"><code>inline_response_200</code> - </a></li>
+    <li><a href="#inline_response_200_1"><code>inline_response_200_1</code> - </a></li>
+    <li><a href="#inline_response_200_2"><code>inline_response_200_2</code> - </a></li>
+    <li><a href="#inline_response_200_3"><code>inline_response_200_3</code> - </a></li>
+    <li><a href="#inline_response_404"><code>inline_response_404</code> - </a></li>
+    <li><a href="#inline_response_406"><code>inline_response_406</code> - </a></li>
+  </ol>
+
+  <div class="model">
+    <h3><a name="Post"><code>Post</code> - Post</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>A sent post</div>
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#UUID">UUID</a></span>  format: uuid</div>
+<div class="param">content </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The post content, in MarkDown </div>
+<div class="param">upvotes </div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span>  </div>
+<div class="param">downvotes </div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span>  </div>
+<div class="param">datePosted </div><div class="param-desc"><span class="param-type"><a href="#DateTime">Date</a></span>  format: date-time</div>
+<div class="param">dateModified </div><div class="param-desc"><span class="param-type"><a href="#DateTime">Date</a></span>  format: date-time</div>
+<div class="param">authorId </div><div class="param-desc"><span class="param-type"><a href="#UUID">UUID</a></span> The author's UUID format: uuid</div>
+<div class="param">parent (optional)</div><div class="param-desc"><span class="param-type"><a href="#UUID">UUID</a></span> <p>The parent post id, if it has a parent.</p>
+<p>If not specified, the post can be assumed to be the first post of a thread.</p>
+ format: uuid</div>
+<div class="param">children </div><div class="param-desc"><span class="param-type"><a href="#UUID">set[UUID]</a></span> <p>The responses</p>
+<p>The children will have their <code>parent</code> field set to the <code>id</code> of this post</p>
+ format: uuid</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Reaction"><code>Reaction</code> - Reaction</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">postId </div><div class="param-desc"><span class="param-type"><a href="#UUID">UUID</a></span>  format: uuid</div>
+<div class="param">author </div><div class="param-desc"><span class="param-type"><a href="#UUID">UUID</a></span> The author's UUID format: uuid</div>
+<div class="param">value </div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
+        <div class="param-enum-header">Enum:</div>
+        <div class="param-enum">-1</div><div class="param-enum">1</div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="Thread"><code>Thread</code> - Thread</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>The beginning of a serie of posts</div>
+    <div class="field-items">
+      <div class="param">id </div><div class="param-desc"><span class="param-type"><a href="#UUID">UUID</a></span>  format: uuid</div>
+<div class="param">title </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The thread title </div>
+<div class="param">first_post </div><div class="param-desc"><span class="param-type"><a href="#Post">Post</a></span>  </div>
+<div class="param">tags </div><div class="param-desc"><span class="param-type"><a href="#string">set[String]</a></span>  </div>
+<div class="param">category </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">answered (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> If the thread's author has found an answer </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="ThreadPatch"><code>ThreadPatch</code> - ThreadPatch</a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'>Patchable values for a thread</div>
+    <div class="field-items">
+      <div class="param">title (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span> The thread title </div>
+<div class="param">tags (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">set[String]</a></span>  </div>
+<div class="param">category (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+<div class="param">answered (optional)</div><div class="param-desc"><span class="param-type"><a href="#boolean">Boolean</a></span> If the thread's author has found an answer </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="inline_response_200"><code>inline_response_200</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">answers </div><div class="param-desc"><span class="param-type"><a href="#Post">array[Post]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="inline_response_200_1"><code>inline_response_200_1</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">data (optional)</div><div class="param-desc"><span class="param-type"><a href="#Reaction">array[Reaction]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="inline_response_200_2"><code>inline_response_200_2</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">data (optional)</div><div class="param-desc"><span class="param-type"><a href="#Reaction">Reaction</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="inline_response_200_3"><code>inline_response_200_3</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">threads (optional)</div><div class="param-desc"><span class="param-type"><a href="#Thread">array[Thread]</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="inline_response_404"><code>inline_response_404</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">message (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="inline_response_406"><code>inline_response_406</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">message </div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  </body>
+</html>
