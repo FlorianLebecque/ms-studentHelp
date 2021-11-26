@@ -17,5 +17,14 @@ public class PostController {
         post.setContent("Coucou");
         return post;
     }
-    
+
+    @GetMapping("/helloMapping")
+	public Post index_ter() {
+        Post test = new Post();
+        test.setAuthorId("kamoulox");
+        test.setContent("C'est la vie de chateau les blEUs?!!");
+        //const myJSON = JSON.stringify(obj)
+		return test;//"coucou";
+	}
+
 }
