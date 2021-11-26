@@ -24,15 +24,15 @@ public class MsStudenthelpApplication {
 
 		if(DatabaseManager.connect()){
 
-			ForumThread ft = new ForumThread("First Thread Ever!", GuidGenerator.GetNewUUIDString(),"debug");
-			int a = DatabaseManager.CreateForumThread(ft);
+			//ForumThread ft = new ForumThread("First Thread Ever!", GuidGenerator.GetNewUUIDString(),"debug");
+			//int a = DatabaseManager.CreateForumThread(ft);
 
 			
 
 			SpringApplication.run(MsStudenthelpApplication.class, args);
 		};
 
-		
+		DatabaseManager.disconnect();
 		
 	}
 
