@@ -37,6 +37,10 @@ public class HelloController {
 
 	@GetMapping("/get_Thread")
 	public ForumThread get_Thread(){
+
+        //MsStudenthelpApplication.DatabaseManager.CreateForumThread(new ForumThread( "Cours de geométrie" ,"Monsieur","Math"));
+
+
 		return new ForumThread( "Cours de geométrie" ,"Monsieur","Math");
 	}
 
