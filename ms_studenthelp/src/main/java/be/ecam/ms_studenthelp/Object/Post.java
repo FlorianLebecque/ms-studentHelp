@@ -41,59 +41,59 @@ public class Post {
         id          =  GuidGenerator.GetNewUUIDString();
         datePosted  = LocalDateTime.now();
 
-        SetAuthorId(_authorId);
-        SetContent(_content);
-        SetForumThread(_forumThread);
+        setAuthorId(_authorId);
+        setContent(_content);
+        setForumThread(_forumThread);
 
     }
 
     /// ---SETTERS--- ///
-    public void SetAuthorId(String _authorId){
+    public void setAuthorId(String _authorId){
         authorId    = _authorId;
     }
-    public void SetContent(String _content){
+    public void setContent(String _content){
         content         = _content;
     }
     
-    public void SetParent(Post _parent){
+    public void setParent(Post _parent){
         parent      = _parent;
     }
-    public void SetForumThread(ForumThread _forumThread){
+    public void setForumThread(ForumThread _forumThread){
         forumThread = _forumThread;
     }
     /// ------------- ///
 
 
     /// ---GETTERS--- ///
-    public String GetId(){
+    public String getId(){
         return id;
     }
-    public String GetContent(){
+    public String getContent(){
         return content;
     }
-    public String GetAuthorId(){
+    public String getAuthorId(){
         return authorId;
     }
-    public LocalDateTime GetDatePosted(){
+    public LocalDateTime getDatePosted(){
         return datePosted;
     }
-    public List<LocalDateTime> GetDateModified(){
+    public List<LocalDateTime> getDateModified(){
         return dateModified;
     }
-    public ForumThread GetForumThread(){
+    public ForumThread getForumThread(){
         return forumThread;
     }
-    public Post GetParent(){
+    public Post getParent(){
         assert parent != null : "Parent is null";
         return parent;
     }
-    public List<Post> GetChildren(){
+    public List<Post> getChildren(){
         return children;
     }
-    public boolean GetModified(){
+    public boolean getModified(){
         return modified;
     }
-    public boolean GetDeleted(){
+    public boolean getDeleted(){
         return deleted;
     }
     /// ------------- ///
@@ -119,7 +119,7 @@ public class Post {
 
     public void Reply(String _authorId, String _content){
         Post reply  = new Post(_authorId,_content, this.forumThread);
-        reply.SetParent(this);
+        reply.setParent(this);
         children.add(reply);
     }  
 
