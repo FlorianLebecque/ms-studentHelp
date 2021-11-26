@@ -27,7 +27,7 @@ public class MsStudenthelpApplication {
 			ForumThread ft = new ForumThread("First Thread Ever!", GuidGenerator.GetNewUUIDString(),"debug");
 			int a = DatabaseManager.CreateForumThread(ft);
 
-			System.out.println(a);
+			
 
 			SpringApplication.run(MsStudenthelpApplication.class, args);
 		};
