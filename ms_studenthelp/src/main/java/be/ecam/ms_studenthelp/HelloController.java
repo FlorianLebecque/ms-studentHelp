@@ -21,7 +21,7 @@ public class HelloController {
 	@GetMapping("/get_Thread")
 	public String get_Thread(){
 		ForumThread Thread1 = new ForumThread( "Titre1" ,"String authorId_","String category_");
-		String stringToParse = Thread1.GetJson();
+		String stringToParse = Thread1.GetString();
 		return stringToParse;
 	}
 

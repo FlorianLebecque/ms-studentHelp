@@ -52,7 +52,7 @@ public class ForumThread {
                 '\'' +
                 '}';
     }
-    public String GetJson() {
+    public String GetString() {
         return "Thread{" +
                 "id=" + id +
                 ", title='" + title +
