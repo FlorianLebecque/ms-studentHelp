@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import be.ecam.ms_studenthelp.Object.Post;
@@ -30,4 +31,17 @@ public class ReactionController {
 		}
 	}
 
+	@PutMapping("/posts/{postId}/reactions")
+	public PutPostsPostIdReactionsResult putPostsPostIdReactions(@PathVariable("postId") String postId) {
+		Reaction r = new Reaction(postId, "abcd", 1);
+		return new PutPostsPostIdReactionsResult(r);
+	}
+
+	class PutPostsPostIdReactionsResult {
+		public Reaction data;
+
+		public PutPostsPostIdReactionsResult(Reaction data) {
+			this.data = data;
+		}
+	}
 }
