@@ -38,4 +38,31 @@ public class ForumThread {
         answered = false;
         replies  = new ArrayList<Post>();
     }
+    @Override
+    public String toString() {
+        return "Thread{" +
+                "id=" + id +
+                ", title='" + title +
+                ", tags='" + tags +
+                ", authorId='" + authorId +
+                ", date='" + date +
+                ", category='" + category +
+                ", answered='" + answered +
+                ", replies='" + replies +
+                '\'' +
+                '}';
+    }
+    public String GetJson() {
+        return "Thread{" +
+                "id=" + id +
+                ", title='" + title +
+                ", tags='" + tags +
+                ", authorId='" + authorId +
+                ", date='" + date +
+                ", category='" + category +
+                ", answered='" + answered +
+                ", replies='" + replies +
+                '\'' +
+                '}';
+    }
 }
