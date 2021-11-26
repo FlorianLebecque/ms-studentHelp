@@ -52,11 +52,8 @@ public class ForumThread {
         if(modification == null){
             modification = new ArrayList<LocalDateTime>();
         }
-
-        //TODO copy dates
-
-        //modification.add(new LocalDateTime(date));
         date = LocalDateTime.now();
+        modification.add(date);
     }
 
     public void Delete(){

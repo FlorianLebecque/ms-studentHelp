@@ -20,7 +20,7 @@ public class HelloController {
 
 	@GetMapping("/get_Thread")
 	public ForumThread get_Thread(){
-		return new ForumThread( "Titre1" ,"Monsieur","Math");
+		return new ForumThread( "Cours de geométrie" ,"Monsieur","Math");
 	}
 
 }
