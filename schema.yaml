@@ -144,6 +144,58 @@ paths:
         Therefore, all posts returned will have the same `parent`.
 
         If there are no answers, returns an empty list.
+  '/posts/{postId}/reactions':
+    parameters:
+      - $ref: '#/components/parameters/postId'
+    get:
+      summary: Get post reactions
+      tags: []
+      operationId: get-posts-postId-reactions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Reaction'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/Not-Found'
+      description: Get all specific reactions for a post.
+    put:
+      summary: Set reaction
+      operationId: put-posts-postId-reactions
+      responses:
+        '200':
+          description: The created or updated reaction
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Reaction'
+      description: Set your own reaction to a post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reaction'
+    delete:
+      summary: Remove reaction
+      operationId: delete-posts-postId-reactions
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          $ref: '#/components/responses/Not-Found'
+      description: Remove your own reaction
   /threads:
     get:
       summary: Threads list
@@ -392,6 +444,25 @@ components:
       format: uuid
       description: The author's UUID
       readOnly: true
+    Reaction:
+      title: Reaction
+      type: object
+      properties:
+        postId:
+          type: string
+          format: uuid
+          readOnly: true
+        author:
+          $ref: '#/components/schemas/Author'
+        value:
+          type: integer
+          enum:
+            - -1
+            - 1
+      required:
+        - postId
+        - author
+        - value
   securitySchemes:
     Global JWT:
       type: oauth2
