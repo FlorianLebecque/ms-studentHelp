@@ -38,6 +38,10 @@ public class Post {
         return content;
     }
 
+    public LocalDateTime getDatePosted() {
+        return datePosted;
+    }
+
     public void SetId(){
         id          =  "null";
     }
