@@ -3,6 +3,8 @@ package be.ecam.ms_studenthelp;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import be.ecam.ms_studenthelp.Object.Post;
+
 @RestController
 public class HelloController {
 
@@ -14,6 +16,9 @@ public class HelloController {
 	@GetMapping("/helloworld")
 	public String index_bis() {
 		return "HELLO SPRINGBOOTS!!!";
+
 	}
+
+
 
 }
