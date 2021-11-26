@@ -73,7 +73,7 @@ paths:
               $ref: '#/components/schemas/Post'
         description: Patch post content to update.
       security:
-        - Global JWT:
+        - GlobalJWT:
             - student-help.post
     delete:
       summary: ''
@@ -88,7 +88,7 @@ paths:
 
         This method is idempotent, it will not return 404 Not Found, as if a post cannot be fount, it is deleted (or had never been created, which is equivalent)
       security:
-        - Global JWT:
+        - GlobalJWT:
             - student-help.post
   '/posts/{postId}/answers':
     post:
@@ -116,7 +116,7 @@ paths:
 
         This method is not idempotent, a new post will be created for each call
       security:
-        - Global JWT:
+        - GlobalJWT:
             - student-help.post
     parameters:
       - schema:
@@ -198,7 +198,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Reaction'
       security:
-        - Global JWT:
+        - GlobalJWT:
             - student-help.react
     delete:
       summary: Remove reaction
@@ -210,7 +210,7 @@ paths:
           $ref: '#/components/responses/Not-Found'
       description: Remove your own reaction
       security:
-        - Global JWT:
+        - GlobalJWT:
             - student-help.react
   /threads:
     get:
@@ -246,7 +246,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Thread'
       security:
-        - Global JWT:
+        - GlobalJWT:
             - student-help.thread
   '/threads/{threadId}':
     parameters:
@@ -286,7 +286,7 @@ paths:
               $ref: '#/components/schemas/ThreadPatch'
       description: Allows edition of your own threads
       security:
-        - Global JWT:
+        - GlobalJWT:
             - student-help.thread
     delete:
       summary: Delete thread
@@ -301,7 +301,7 @@ paths:
 
         This method is idempotent, it will not return 404 Not Found, as if a thread cannot be fount, it is deleted (or had never been created, which is equivalent)
       security:
-        - Global JWT:
+        - GlobalJWT:
             - student-help.thread
 components:
   schemas:
@@ -489,7 +489,7 @@ components:
         - author
         - value
   securitySchemes:
-    Global JWT:
+    GlobalJWT:
       type: oauth2
       flows:
         implicit:
@@ -526,9 +526,11 @@ components:
                 type: string
           examples:
             Post:
-              message: Post not found
+              value:
+                message: Post not found
             Thread:
-              message: Thread not found
+              value:
+                message: Thread not found
     Unauthorized:
       description: Example response
       content:
@@ -540,6 +542,7 @@ components:
                 type: string
           examples:
             Unauthorized:
-              message: You are not authorized to do this action
+              value:
+                message: You are not authorized to do this action
 security:
   - API Key - 1: []
