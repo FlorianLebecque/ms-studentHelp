@@ -19,6 +19,16 @@ public class MySqlDatabase implements IODatabaseObject {
 
     public boolean connect(){
         
+        try
+        {
+            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+        }
+        catch (Exception E)
+        {
+            System.err.println("Unable to load driver");
+            E.printStackTrace();
+        }
+
         String MySQLURL = "jdbc:mysql://remotemysql.com";
         String databseUserName = "nJWYJY1ijy";
         String databasePassword = "U7YpjttCs0";
