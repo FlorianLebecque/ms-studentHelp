@@ -14,9 +14,13 @@ public class MsStudenthelpApplication {
 
 		DatabaseManager = new MySqlDatabase();
 
+
+
 		if(DatabaseManager.connect()){
 			SpringApplication.run(MsStudenthelpApplication.class, args);
 		};
+
+		
 		
 	}
 
