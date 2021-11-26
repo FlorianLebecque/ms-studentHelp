@@ -27,10 +27,6 @@ public class HelloController {
 
 	}
 
-	@GetMapping("/get_post")
-	public Post get_post() {
-		return new Post("Bengali");
-	}
 	private static final String template = "Hello, %s!";
 	private final AtomicLong counter = new AtomicLong();
 	@GetMapping("/greeting")
