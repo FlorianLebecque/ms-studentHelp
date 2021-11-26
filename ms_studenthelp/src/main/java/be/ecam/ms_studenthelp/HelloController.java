@@ -22,6 +22,15 @@ public class HelloController {
 
 	}
 
+	@GetMapping("/get_post")
+	public String get_post() {
+
+
+
+		return "post test";
+
+	}
+
 
 
 }
