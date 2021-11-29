@@ -3,11 +3,13 @@ package be.ecam.ms_studenthelp.Object;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.time.LocalDateTime;    
+import java.time.LocalDateTime;
 
+import be.ecam.ms_studenthelp.Interfaces.IForumThread;
+import be.ecam.ms_studenthelp.Interfaces.IPost;
 import be.ecam.ms_studenthelp.utils.GuidGenerator;
 
-public class ForumThread {
+public class ForumThread implements IForumThread {
 
     private final String id;
     private String title;
@@ -16,11 +18,11 @@ public class ForumThread {
     private LocalDateTime date;
     private String category;
     private boolean answered;
-    private List<Post> children;
+    private List<IPost> children;
     private List<LocalDateTime> modification;
 
     //load
-    public ForumThread(String id_,String title_,List<String> tags_,String authorId_,LocalDateTime date_,String category_,boolean answered_,List<Post> children_){
+    public ForumThread(String id_,String title_,List<String> tags_,String authorId_,LocalDateTime date_,String category_,boolean answered_,List<IPost> children_){
         id       = id_;
         title    = title_;
         authorId = authorId_;
@@ -39,10 +41,10 @@ public class ForumThread {
         date     = LocalDateTime.now();
         category = category_;
         answered = false;
-        children  = new ArrayList<Post>();
+        children  = new ArrayList<IPost>();
     }
 
-    public void Reply(Post reply){
+    public void Reply(IPost reply){
         children.add(reply);
     }
 
@@ -93,7 +95,7 @@ public class ForumThread {
         return date;
     }
 
-    public List<Post> getChildren() {
+    public List<IPost> getChildren() {
         return children;
     }
 
@@ -108,4 +110,5 @@ public class ForumThread {
     public boolean getAnswer(){
         return answered;
     }
+
 }
