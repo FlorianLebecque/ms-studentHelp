@@ -31,8 +31,8 @@ public class MsStudenthelpApplication {
 
 			SpringApplication.run(MsStudenthelpApplication.class, args);
 		};
-
-		DatabaseManager.disconnect();
+		//TODO : correct disconnect bugs
+		//DatabaseManager.disconnect();
 		
 	}
 
