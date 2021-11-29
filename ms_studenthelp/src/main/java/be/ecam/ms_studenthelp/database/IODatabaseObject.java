@@ -14,6 +14,7 @@ public interface IODatabaseObject{
     public ForumThread GetForumThread(String uuid);
     public List<ForumThread> GetForumThreads();
     public int CreateForumThread(ForumThread ft);
+    public int UpdateForumThread(ForumThread ft);
 
 
     public Post GetPost(String uuid);

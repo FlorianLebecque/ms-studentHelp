@@ -109,6 +109,11 @@ public class MySqlDatabase implements IODatabaseObject {
 
     }
 
+    public int UpdateForumThread(ForumThread ft) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
     public ForumThread GetForumThread(String uuid){
 
         String query = "SELECT * FROM `mssh_object` WHERE `type` = 1";
@@ -160,6 +165,5 @@ public class MySqlDatabase implements IODatabaseObject {
     public List<Post> GetPosts(){
         return new ArrayList<Post>();
     }
-
 
 }
