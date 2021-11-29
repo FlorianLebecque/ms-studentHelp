@@ -2,7 +2,8 @@ package be.ecam.ms_studenthelp.Object;
 
 import java.util.List;
 
-
+import be.ecam.ms_studenthelp.Interfaces.IForumThread;
+import be.ecam.ms_studenthelp.Interfaces.IPost;
 import be.ecam.ms_studenthelp.utils.*;
 //import jdk.internal.vm.annotation.ForceInline;
 //import jdk.vm.ci.meta.Local;
@@ -10,20 +11,20 @@ import be.ecam.ms_studenthelp.utils.*;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
-public class Post {
+public class Post implements IPost{
 
     private String id;
     private LocalDateTime datePosted;
 
     private String authorId;
     private String content;
-    private ForumThread forumThread;
+    private IForumThread forumThread;
     
     
     private List<LocalDateTime> dateModified = new ArrayList<LocalDateTime>();
 
-    private Post parent;
-    private List<Post> children = new ArrayList<Post>();
+    private IPost parent;
+    private List<IPost> children = new ArrayList<IPost>();
 
     private boolean modified = false;
     private boolean deleted = false;
@@ -33,14 +34,13 @@ public class Post {
         datePosted  = LocalDateTime.now();
     }
 
-    public Post(String _authorId, String _content, ForumThread _forumThread){
+    public Post(String _authorId, String _content, IForumThread _forumThread){
         id          =  GuidGenerator.GetNewUUIDString();
         datePosted  = LocalDateTime.now();
 
         setAuthorId(_authorId);
         setContent(_content);
         setForumThread(_forumThread);
-
     }
 
     /// ---SETTERS--- ///
@@ -51,10 +51,10 @@ public class Post {
         content         = _content;
     }
     
-    public void setParent(Post _parent){
+    public void setParent(IPost _parent){
         parent      = _parent;
     }
-    public void setForumThread(ForumThread _forumThread){
+    public void setForumThread(IForumThread _forumThread){
         forumThread = _forumThread;
     }
     /// ------------- ///
@@ -78,15 +78,15 @@ public class Post {
         return datePosted;
     }
 
-    public Post getParent() {
+    public IPost getParent() {
         return parent;
     }
 
-    public ForumThread getForumThread() {
+    public IForumThread getForumThread() {
         return forumThread;
     }
 
-    public List<Post> getChildren() {
+    public List<IPost> getChildren() {
         return children;
     }
 
@@ -141,7 +141,6 @@ public class Post {
         content     = _content;
         modified = true;
         UpdateDate();
-
     }
 
     public void Delete(){
@@ -150,10 +149,10 @@ public class Post {
     }
 
     public void Reply(String _authorId, String _content){
-        Post reply  = new Post(_authorId,_content, this.forumThread);
+        IPost reply  = new Post(_authorId,_content, this.forumThread);
         reply.setParent(this);
         children.add(reply);
-    }  
+    }
 
     
 }
