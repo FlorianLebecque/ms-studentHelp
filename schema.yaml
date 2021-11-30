@@ -76,7 +76,7 @@ paths:
         - GlobalJWT:
             - student-help.post
     delete:
-      summary: ''
+      summary: Delete post
       operationId: delete-posts-postId
       responses:
         '204':
