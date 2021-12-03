@@ -34,7 +34,7 @@ public interface IForumThread {
 
     public List<String> getTags();
 
-    public List<LocalDateTime> getModification();
+    public LocalDateTime getModification();
     
     public boolean getAnswer();
 }

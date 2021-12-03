@@ -12,14 +12,19 @@ import be.ecam.ms_studenthelp.utils.GuidGenerator;
 public class ForumThread implements IForumThread {
 
     private final String id;
-    private String title;
-    private List<String> tags;
     private final String authorId;
+
     private LocalDateTime date;
+    private LocalDateTime lastModif;
+
+
+    private String title;
     private String category;
+    private List<String> tags;
     private boolean answered;
+
     private List<IPost> children;
-    private List<LocalDateTime> modification;
+
 
     //load
     public ForumThread(String id_,String title_,List<String> tags_,String authorId_,LocalDateTime date_,String category_,boolean answered_,List<IPost> children_){
@@ -51,11 +56,7 @@ public class ForumThread implements IForumThread {
     public void UpdateTitle(String title_){
         title = title_;
 
-        if(modification == null){
-            modification = new ArrayList<LocalDateTime>();
-        }
-        date = LocalDateTime.now();
-        modification.add(date);
+        lastModif = LocalDateTime.now();
     }
 
     public void Delete(){
@@ -103,8 +104,8 @@ public class ForumThread implements IForumThread {
         return tags;
     }
 
-    public List<LocalDateTime> getModification() {
-        return modification;
+    public LocalDateTime getModification() {
+        return lastModif;
     }
     
     public boolean getAnswer(){

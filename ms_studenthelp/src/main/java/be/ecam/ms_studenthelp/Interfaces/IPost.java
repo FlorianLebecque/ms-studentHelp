@@ -11,7 +11,6 @@ public interface IPost {
     //public Post(String _authorId, String _content, ForumThread _forumThread);
 
     /// ---SETTERS--- ///
-    public void setAuthorId(String _authorId);
     public void setContent(String _content);
     
     public void setParent(IPost _parent);
@@ -35,7 +34,7 @@ public interface IPost {
 
     public List<IPost> getChildren();
 
-    public List<LocalDateTime> getDateModified();
+    public LocalDateTime getDateModified();
 
     /* public String GetId(){
 >>>>>>> b7f79efe06cc1b706bcc9a3237b516f05b55a690
