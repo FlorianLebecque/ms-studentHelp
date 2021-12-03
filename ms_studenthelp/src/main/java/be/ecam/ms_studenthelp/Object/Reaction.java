@@ -1,6 +1,8 @@
 package be.ecam.ms_studenthelp.Object;
 
-public class Reaction {
+import be.ecam.ms_studenthelp.Interfaces.IReaction;
+
+public class Reaction implements IReaction {
 
 	private final String postId;
 	private final String authorId;
