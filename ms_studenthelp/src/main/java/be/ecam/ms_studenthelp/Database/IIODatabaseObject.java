@@ -30,5 +30,6 @@ public interface IIODatabaseObject{
     public List<IReaction> GetReactions(IPost pt);
     public IReaction CreateReaction(IReaction reaction);
     public IReaction UpdateReaction(IReaction reaction);
+    public IReaction DeleteReaction(IReaction reaction);
 
 }

@@ -276,4 +276,20 @@ public class MySqlDatabase implements IIODatabaseObject {
         }
     }
 
+    public IReaction DeleteReaction(IReaction reaction){
+        try {
+            String query = String.format(
+                "DELETE FROM `mssh_reaction` WHERE  `post_id` = '%s' AND `author` = '%s'",
+                reaction.getPostId(),
+                reaction.getAuthorId()
+            );
+            Statement ps = con.createStatement();
+            ps.executeUpdate(query);
+
+            return reaction;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }
