@@ -64,7 +64,7 @@ public class PostController {
 
     @PutMapping("/posts/{postId}")
     public IPost ReplyPostByPostId(@PathVariable("postId") String postId) {
-        IPost post = new Post("");
+        IPost post = new Post("test", "post test");
         // Récupérer infos et créer un nouveau post dans la DB
         return post;
     }
