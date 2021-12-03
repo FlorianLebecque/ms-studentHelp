@@ -1,4 +1,4 @@
-package be.ecam.ms_studenthelp.database.mysql;
+package be.ecam.ms_studenthelp.Database.mysql;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -11,11 +11,11 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.format.DateTimeFormatter;
 
+import be.ecam.ms_studenthelp.Database.*;
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
 import be.ecam.ms_studenthelp.Object.ForumThread;
 import be.ecam.ms_studenthelp.Object.Post;
-import be.ecam.ms_studenthelp.database.*;
 
 public class MySqlDatabase implements IIODatabaseObject {
 

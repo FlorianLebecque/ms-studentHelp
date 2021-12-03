@@ -1,4 +1,4 @@
-package be.ecam.ms_studenthelp.database;
+package be.ecam.ms_studenthelp.Database;
 
 import java.util.List;
 
