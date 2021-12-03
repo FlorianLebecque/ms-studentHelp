@@ -303,6 +303,33 @@ paths:
       security:
         - GlobalJWT:
             - student-help.thread
+  /categories:
+    get:
+      summary: Get available categories
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+              examples:
+                example:
+                  value:
+                    data:
+                      - Informatique
+                      - Électronique
+      operationId: get-categories
+      description: |-
+        Get all available categories
+
+        They are not currently editable via this API
 components:
   schemas:
     Post:
@@ -414,7 +441,7 @@ components:
           items:
             type: string
         category:
-          type: string
+          $ref: '#/components/schemas/Category'
         answered:
           type: boolean
           default: false
@@ -488,6 +515,9 @@ components:
         - postId
         - author
         - value
+    Category:
+      type: string
+      title: Category
   securitySchemes:
     GlobalJWT:
       type: oauth2
