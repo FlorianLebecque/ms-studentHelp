@@ -23,18 +23,18 @@ public class ForumThread implements IForumThread {
     private List<String> tags;
     private boolean answered;
 
-    private List<IPost> children;
+    private IPost child;
 
 
     //load
-    public ForumThread(String id_,String title_,List<String> tags_,String authorId_,LocalDateTime date_,String category_,boolean answered_,List<IPost> children_){
+    public ForumThread(String id_,String title_,List<String> tags_,String authorId_,LocalDateTime date_,String category_,boolean answered_,IPost child_){
         id       = id_;
         title    = title_;
         authorId = authorId_;
         date     = date_;
         category = category_;
         answered = answered_;
-        children  = children_;
+        child  = child_;
     }
 
     //create
@@ -46,13 +46,13 @@ public class ForumThread implements IForumThread {
         date     = LocalDateTime.now();
         category = category_;
         answered = false;
-        children  = new ArrayList<IPost>();
     }
 
+    /*
     public void Reply(IPost reply){
         children.add(reply);
     }
-
+    */
     public void UpdateTitle(String title_){
         title = title_;
 
@@ -60,7 +60,7 @@ public class ForumThread implements IForumThread {
     }
 
     public void Delete(){
-        children.clear();
+        child.Delete();
     }
 
     @Override
@@ -96,8 +96,8 @@ public class ForumThread implements IForumThread {
         return date;
     }
 
-    public List<IPost> getChildren() {
-        return children;
+    public IPost getChildren() {
+        return child;
     }
 
     public List<String> getTags() {
