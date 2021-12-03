@@ -58,8 +58,9 @@ public class MySqlDatabase implements IIODatabaseObject {
 
 
 
-    public int CreateForumThread(IForumThread ft){
+    public int CreateForumThread(IForumThread ft_){
 
+        ForumThread ft = (ForumThread)ft_;
         try {
 
             DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
