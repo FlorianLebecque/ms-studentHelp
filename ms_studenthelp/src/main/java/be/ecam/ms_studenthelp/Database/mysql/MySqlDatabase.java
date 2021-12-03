@@ -198,7 +198,7 @@ public class MySqlDatabase implements IIODatabaseObject {
         String postId = post.getId();
         try {
             String cur_query = String.format(
-                "SELECT value FROM `mssh_reaction` WHERE `post_id` = '%s' AND `author` = '%s'",
+                "SELECT value FROM `mssh_reaction` WHERE `postId` = '%s' AND `authorId` = '%s'",
                 postId,
                 authorId
             );
@@ -221,7 +221,7 @@ public class MySqlDatabase implements IIODatabaseObject {
         String postId = post.getId();
         try {
             String cur_query = String.format(
-                "SELECT author, value FROM `mssh_reaction` WHERE `post_id` = '%s'",
+                "SELECT author, value FROM `mssh_reaction` WHERE `postId` = '%s'",
                 postId
             );
 
@@ -230,7 +230,7 @@ public class MySqlDatabase implements IIODatabaseObject {
 
             ArrayList<IReaction> reactions = new ArrayList<IReaction>();
             while(rs.next()) {
-                String authorId = rs.getString("author");
+                String authorId = rs.getString("authorId");
                 int value = rs.getInt("value");
                 Reaction reaction = new Reaction(postId, authorId, value);
                 reactions.add(reaction);
@@ -245,7 +245,7 @@ public class MySqlDatabase implements IIODatabaseObject {
     public IReaction CreateReaction(IReaction reaction){
         try {
             String query = String.format(
-                "INSERT INTO `mssh_reaction`(`post_id`, `author`, `value`) VALUES ('%s','%s',%d)",
+                "INSERT INTO `mssh_reaction`(`postId`, `authorId`, `value`) VALUES ('%s','%s',%d)",
                 reaction.getPostId(),
                 reaction.getAuthorId(),
                 reaction.getValue()
@@ -262,7 +262,7 @@ public class MySqlDatabase implements IIODatabaseObject {
     public IReaction UpdateReaction(IReaction reaction){
         try {
             String query = String.format(
-                "UPDATE `mssh_reaction` SET `value` = %d WHERE `post_id` = '%s' AND `author` = '%s'",
+                "UPDATE `mssh_reaction` SET `value` = %d WHERE `postId` = '%s' AND `authorId` = '%s'",
                 reaction.getPostId(),
                 reaction.getAuthorId(),
                 reaction.getValue()
@@ -279,7 +279,7 @@ public class MySqlDatabase implements IIODatabaseObject {
     public IReaction DeleteReaction(IReaction reaction){
         try {
             String query = String.format(
-                "DELETE FROM `mssh_reaction` WHERE  `post_id` = '%s' AND `author` = '%s'",
+                "DELETE FROM `mssh_reaction` WHERE  `postId` = '%s' AND `authorId` = '%s'",
                 reaction.getPostId(),
                 reaction.getAuthorId()
             );
