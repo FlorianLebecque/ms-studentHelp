@@ -18,9 +18,10 @@ public class HelloController {
 		return "HELLO SPRINGBOOTS!!!";
 	}
 
-	@GetMapping("/get_Thread")
+	@GetMapping("/get_Threadtest")
 	public ForumThread get_Thread(){
 		return new ForumThread( "Cours de geométrie" ,"Monsieur","Math");
+
 	}
 
 }
