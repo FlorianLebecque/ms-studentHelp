@@ -57,3 +57,4 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle
 ms_studenthelp/bin/main/be/ecam/ms_studenthelp/MsStudenthelpApplication.class
+ms_studenthelp/.settings/org.eclipse.buildship.core.prefs
