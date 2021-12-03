@@ -79,9 +79,8 @@ public class MySqlDatabase implements IIODatabaseObject {
         }
     }
 
-    public int CreateForumThread(IForumThread ft_){
+    public int CreateForumThread(IForumThread ft){
 
-        ForumThread ft = (ForumThread)ft_;
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
         String datetime = ft.getDate().format(formatter).replace("T", " ");
@@ -104,7 +103,23 @@ public class MySqlDatabase implements IIODatabaseObject {
         queries.add(query_elem);
         queries.add(query_ft);
 
-        return UpdateQuery(queries);
+        
+        int res = UpdateQuery(queries);
+        if(ft.getChildren()!= null){
+            String query_update = String.format(
+               "UPDATE `mssh_ForumThread` SET `child`='%s' WHERE `id` = '%s'" ,
+               ft.getChildren().getId(),
+               ft.getId()
+            );
+            
+            ArrayList<String> queries_update = new ArrayList<String>();
+            queries_update.add(query_update);
+
+            res += UpdateQuery(queries_update);
+            res += CreatePost(ft.getChildren());
+        }
+
+        return res;
     }
 
     public int UpdateForumThread(IForumThread ft) {
@@ -226,11 +241,61 @@ public class MySqlDatabase implements IIODatabaseObject {
 
 
     public IPost GetPost(String uuid){
+        return GetPost(uuid, 1);
+    }
+
+    private IPost GetPost(String uuid,int recurstion){
+        String query = String.format(
+            "SELECT e.id,e.authorId,e.date,e.lastModif,pt.content,pt.parent FROM `mssh_elem` as e INNER JOIN `mssh_Post` as pt ON pt.id = e.id WHERE e.id = '%s'",
+            uuid
+        );
+
+
+
+
+        
         return new Post("dqd");
     }
 
     public int CreatePost(IPost pt){
-        return 0;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+
+        String datetime = pt.getDatePosted().format(formatter).replace("T", " ");
+
+        String query_elem = String.format(
+            "INSERT INTO `mssh_elem`(`id`, `authorId`, `date`) VALUES ('%s','%s','%s');\n",
+            pt.getId(),
+            pt.getAuthorId(),
+            datetime
+        );
+
+        String query_ft = String.format(
+            "INSERT INTO `mssh_Post`(`id`, `content`) VALUES ('%s','%s');\n",
+            pt.getId(),
+            pt.getContent()
+        );
+
+        String query_setParent = "";
+
+        IPost parent = pt.getParent();
+        if(parent != null){
+            query_setParent = String.format(
+                "UPDATE `mssh_Post` SET `parent`='%s' WHERE `id` = '%s'",
+                parent.getId(),
+                pt.getId()
+            );
+        }
+
+        ArrayList<String> queries = new ArrayList<String>();
+        queries.add(query_elem);
+        queries.add(query_ft);
+
+        if(query_setParent != ""){
+            queries.add(query_setParent);
+        }
+
+        return UpdateQuery(queries);
     }
 
     public int UpdatePost(IPost pt){

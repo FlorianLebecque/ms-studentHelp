@@ -41,5 +41,5 @@ public interface IPost {
 
     public void Delete();
 
-    public void Reply(String _authorId, String _content);
+    public void Reply(IPost reply);
 }
