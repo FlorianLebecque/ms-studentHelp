@@ -120,6 +120,12 @@ public class MySqlDatabase implements IIODatabaseObject {
 
         String query = "SELECT * FROM `mssh_object` WHERE `type` = 1";
 
+        //SELECT * FROM `mssh_object` WHERE `id` = uuid
+
+
+
+        //ForumThread ft = new ForumThread(id_, title_, tags_, authorId_, date_, category_, answered_, children_);
+
         return new ForumThread("tqset", "id1", "test");
     }
 

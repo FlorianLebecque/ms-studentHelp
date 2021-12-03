@@ -24,4 +24,6 @@ public interface IIODatabaseObject{
     public int UpdatePost(IPost pt);
     public List<Post> GetPosts();
 
+    
+
 }
