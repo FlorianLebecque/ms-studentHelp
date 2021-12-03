@@ -17,12 +17,9 @@ public interface IIODatabaseObject{
     public int UpdateForumThread(IForumThread ft);
     public List<IForumThread> GetForumThreads(int nbr_per_page,int page_index);
 
-
     public IPost GetPost(String uuid);
     public int CreatePost(IPost pt);
     public int UpdatePost(IPost pt);
-    public List<IPost> GetPosts(int nbr_per_page,int page_index);
-
 
     public IReaction GetReaction(IPost pt, String authorUuid);
     public List<IReaction> GetReactions(IPost pt);

@@ -26,7 +26,7 @@ public class PostController {
 
     @GetMapping("/getPost")
     public IPost GetPost(){
-        IPost post = new Post("L-A");
+        IPost post = new Post("L-A","qds");
         post.setContent("Coucou");
         return post;
     }

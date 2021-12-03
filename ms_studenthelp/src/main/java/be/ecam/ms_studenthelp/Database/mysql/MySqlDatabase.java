@@ -164,7 +164,7 @@ public class MySqlDatabase implements IIODatabaseObject {
             while (rs.next()) {
 
                 LocalDateTime lastModif = null;
-                java.sql.Timestamp lastModif_ts =  (java.sql.Timestamp)rs.getObject("lastModif");
+                java.sql.Timestamp lastModif_ts = rs.getTimestamp("lastModif");
                 if(lastModif_ts != null){
                     lastModif = lastModif_ts.toLocalDateTime();
                 }
@@ -259,7 +259,7 @@ public class MySqlDatabase implements IIODatabaseObject {
 
 
                 LocalDateTime lastModif = null;
-                java.sql.Timestamp lastModif_ts =  (java.sql.Timestamp)rs.getObject("lastModif");
+                java.sql.Timestamp lastModif_ts = rs.getTimestamp("lastModif");
                 if(lastModif_ts != null){
                     lastModif = lastModif_ts.toLocalDateTime();
                 }
@@ -301,7 +301,8 @@ public class MySqlDatabase implements IIODatabaseObject {
 
 
         } catch (Exception e) {
-            //TODO: handle exception
+            e.printStackTrace();
+
         }
 
         return null;
@@ -349,13 +350,28 @@ public class MySqlDatabase implements IIODatabaseObject {
     }
 
     public int UpdatePost(IPost pt){
-        return 0;
-    }
 
-    public List<IPost> GetPosts(int nbr_per_page,int page_index){
-        return new ArrayList<IPost>();
-    }
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        String datetime = pt.getDateModified().format(formatter).replace("T", " ");
 
+        String query_elem = String.format(
+            "UPDATE `mssh_elem` SET `lastModif`='%s' WHERE `id` = '%s';\n",
+            datetime,
+            pt.getId()
+        );
+
+        String query_ft = String.format(
+            "UPDATE `mssh_Post` SET `content`='%s' WHERE `id` = '%s';\n",
+            pt.getContent(),
+            pt.getId()
+        );
+            
+        ArrayList<String> queries = new ArrayList<String>();
+        queries.add(query_elem);
+        queries.add(query_ft);
+
+        return UpdateQuery(queries);
+    }
 
     public IReaction GetReaction(IPost post, String authorId){
         String postId = post.getId();

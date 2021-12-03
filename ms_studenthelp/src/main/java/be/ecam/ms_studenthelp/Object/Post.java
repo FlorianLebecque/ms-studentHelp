@@ -21,10 +21,13 @@ public class Post implements IPost{
     public IPost parent;
     public List<IPost> children = new ArrayList<IPost>();
 
-    public Post(String _authorId){
+    public Post(String _authorId,String content_){
         id    = GuidGenerator.GetNewUUIDString();
         authorId = _authorId;
         date  = LocalDateTime.now();
+
+        content = content_;
+
     }
 
     public Post(String id_,String authorId_,String content_ ,LocalDateTime date_,LocalDateTime lastModif_ ,IPost parent_){
