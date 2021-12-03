@@ -63,18 +63,16 @@ public class PostController {
     }
 
     @PutMapping("/posts/{postId}")
-    public IPost PutPostByPostId(@PathVariable("postId") String postId) {
+    public IPost ReplyPostByPostId(@PathVariable("postId") String postId) {
         IPost post = new Post("");
         // Récupérer infos et créer un nouveau post dans la DB
         return post;
     }
-
 
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity deletePostByPostId(@PathVariable("postId") String postId) {
         // Delete le post dans la DB
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 
 }
