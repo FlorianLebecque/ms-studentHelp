@@ -23,7 +23,13 @@ public class PostController {
 
         //MsStudenthelpApplication.DatabaseManager.CreateForumThread(ft);
 
-        IPost test = new Post();
+
+
+        IPost test = MsStudenthelpApplication.DatabaseManager.GetPost("uuid");
+
+        MsStudenthelpApplication.DatabaseManager.UpdatePost(test);
+        
+
         test.setAuthorId("kamoulox");
         test.setContent("C'est la vie de chateau les blEUs?!!");
         //const myJSON = JSON.stringify(obj)
