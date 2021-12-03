@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import be.ecam.ms_studenthelp.Interfaces.IPost;
+import be.ecam.ms_studenthelp.Interfaces.IForumThread;
+import be.ecam.ms_studenthelp.utils.*;
 import be.ecam.ms_studenthelp.Object.Post;
 
 import java.util.ArrayList;

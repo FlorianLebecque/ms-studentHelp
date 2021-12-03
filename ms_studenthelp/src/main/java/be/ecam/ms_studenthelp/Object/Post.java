@@ -33,25 +33,27 @@ public class Post implements IPost{
         authorId = _authorId;
 
         date  = LocalDateTime.now();
+        //lastModif = date;
     }
 
     public Post(String _authorId, String _content, IForumThread _forumThread){
         id    = GuidGenerator.GetNewUUIDString();
         authorId = _authorId;
         date  = LocalDateTime.now();
-
+        //lastModif = date;
         setContent(_content);
         setForumThread(_forumThread);
     }
 
     /// ---SETTERS--- ///
     public void setContent(String _content){
-        content         = _content;
+        content = _content;
     }
     
     public void setParent(IPost _parent){
-        parent      = _parent;
+        parent = _parent;
     }
+
     public void setForumThread(IForumThread _forumThread){
         forumThread = _forumThread;
     }
@@ -88,43 +90,9 @@ public class Post implements IPost{
         return children;
     }
 
-    public LocalDateTime getDateModified() {
+    public LocalDateTime getLastModif() {
         return lastModif;
     }
-
-    /* public String GetId(){
->>>>>>> b7f79efe06cc1b706bcc9a3237b516f05b55a690
-        return id;
-    }
-    public String getContent(){
-        return content;
-    }
-    public String getAuthorId(){
-        return authorId;
-    }
-    public LocalDateTime getDatePosted(){
-        return datePosted;
-    }
-    public List<LocalDateTime> getDateModified(){
-        return dateModified;
-    }
-    public ForumThread getForumThread(){
-        return forumThread;
-    }
-    public Post getParent(){
-        assert parent != null : "Parent is null";
-        return parent;
-    }
-    public List<Post> getChildren(){
-        return children;
-    }
-    public boolean getModified(){
-        return modified;
-    }
-    public boolean getDeleted(){
-        return deleted;
-    } */
-
 
     /// ------------- ///
 
@@ -132,7 +100,6 @@ public class Post implements IPost{
 
         lastModif  = LocalDateTime.now();
     }
-
 
     public void UpdateContent(String _content){
         content     = _content;
@@ -150,5 +117,4 @@ public class Post implements IPost{
         children.add(reply);
     }
 
-    
 }

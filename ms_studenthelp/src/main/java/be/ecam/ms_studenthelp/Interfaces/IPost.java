@@ -6,7 +6,7 @@ import java.util.List;
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 
 public interface IPost {
-    //public Post();
+    //public Post(String _authorId);
 
     //public Post(String _authorId, String _content, ForumThread _forumThread);
 
@@ -34,46 +34,11 @@ public interface IPost {
 
     public List<IPost> getChildren();
 
-    public LocalDateTime getDateModified();
-
-    /* public String GetId(){
->>>>>>> b7f79efe06cc1b706bcc9a3237b516f05b55a690
-        return id;
-    }
-    public String getContent(){
-        return content;
-    }
-    public String getAuthorId(){
-        return authorId;
-    }
-    public LocalDateTime getDatePosted(){
-        return datePosted;
-    }
-    public List<LocalDateTime> getDateModified(){
-        return dateModified;
-    }
-    public ForumThread getForumThread(){
-        return forumThread;
-    }
-    public Post getParent(){
-        assert parent != null : "Parent is null";
-        return parent;
-    }
-    public List<Post> getChildren(){
-        return children;
-    }
-    public boolean getModified(){
-        return modified;
-    }
-    public boolean getDeleted(){
-        return deleted;
-    } */
-
+    public LocalDateTime getLastModif();
 
     /// ------------- ///
 
     public void UpdateDate();
-
 
     public void UpdateContent(String _content);
 
