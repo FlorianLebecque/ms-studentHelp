@@ -8,8 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import be.ecam.ms_studenthelp.Object.ForumThread;
-import be.ecam.ms_studenthelp.database.IIODatabaseObject;
-import be.ecam.ms_studenthelp.database.mysql.MySqlDatabase;
+import be.ecam.ms_studenthelp.Database.IIODatabaseObject;
+import be.ecam.ms_studenthelp.Database.mysql.MySqlDatabase;
 import be.ecam.ms_studenthelp.utils.GuidGenerator;
 
 @SpringBootApplication
