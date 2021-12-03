@@ -34,11 +34,11 @@ public class MySqlDatabase implements IIODatabaseObject {
         }
 
         String MySQLURL = "jdbc:mysql://localhost/ms_studenthelp";
-        String databseUserName = "dummy";
+        String databaseUserName = "dummy";
         String databasePassword = "1234";
 
         try{
-            con = DriverManager.getConnection(MySQLURL,databseUserName,databasePassword);
+            con = DriverManager.getConnection(MySQLURL,databaseUserName,databasePassword);
             return con!=null;
 
         }catch(Exception e) {
