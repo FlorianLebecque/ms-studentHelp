@@ -15,34 +15,24 @@ public class Post implements IPost{
 
     private final String id;
     private final String authorId;
-
-
     public LocalDateTime date;
     public LocalDateTime lastModif;
-
-    
     public String content;
-    
-
     public IPost parent;
     public List<IPost> children = new ArrayList<IPost>();
 
     public Post(String _authorId){
         id    = GuidGenerator.GetNewUUIDString();
         authorId = _authorId;
-
         date  = LocalDateTime.now();
     }
 
     public Post(String id_,String authorId_,String content_ ,LocalDateTime date_,LocalDateTime lastModif_ ,IPost parent_){
         id = id_;
         authorId = authorId_;
-
         date = date_;
         lastModif = lastModif_;
-
         content = content_;
-
         parent = parent_;
     }
 
@@ -56,11 +46,9 @@ public class Post implements IPost{
         parent = _parent;
     }
 
-
     public void setChildren(List<IPost> children_){
         children = children_;
     }
-
 
     /// ------------- ///
 
