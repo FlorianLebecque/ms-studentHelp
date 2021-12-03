@@ -2,8 +2,6 @@ package be.ecam.ms_studenthelp.Database.mysql;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -56,76 +54,148 @@ public class MySqlDatabase implements IIODatabaseObject {
         }
     }
 
+    private void LoadMetaDictFromID(Dictionary<String,Object> dic,String id){
 
-
-    public int CreateForumThread(IForumThread ft_){
-
-        ForumThread ft = (ForumThread)ft_;
         try {
-
-            DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-            String datetime = ft.getDate().format(formatter).replace("T", " ");
-            String query = String.format(
-                "INSERT INTO `mssh_object`(`id`, `type`, `datetime`, `author`) VALUES ('%s',%d,'%s','%s')",
-                ft.getId(),
-                1,
-                datetime,
-                ft.getAuthorId()
+             //load the meta data
+             String cur_query = String.format(
+                "SELECT * FROM `mssh_objectmeta` WHERE `id_object` = '%s'",
+                id
             );
 
-            
+            Statement metatST = con.createStatement();
+            ResultSet metaRS = metatST.executeQuery(cur_query);
 
-            //INSERT INTO `mssh_object`(`id`, `type`, `datetime`, `author`) VALUES ('13a19100-de22-42a9-92ea-7cbb527fc106','1','2021-11-330 13:11:14','0719bd76-427d-4487-a26c-5eab209f9ef9')
-            Statement ps = con.createStatement(); 
-            ps.executeUpdate(query);
-
-            
-            Dictionary<String, String> dic = new Hashtable<String, String>();
-            dic.put("title", ft.getTitle());
-            dic.put("catergory", ft.getCategory());
-            String answered = ft.getAnswer()?"true":"false";
-            dic.put("answered", answered);
-            
-            Enumeration<String> ekey = dic.keys();
-            while(ekey.hasMoreElements()){
-                String key = ekey.nextElement();
-                String cur_query =  String.format(
-                    "INSERT INTO `mssh_objectmeta`(`id_object`, `meta_key`, `type`, `meta_value`) VALUES ('%s','%s','%s','%s')",
-                    ft.getId(),
-                    key,
-                    "string",
-                    dic.get(key)
-                );
-
-                Statement meta_statement = con.createStatement(); 
-                meta_statement.executeUpdate(cur_query);
-
+            while(metaRS.next()){
+                dic.put(metaRS.getString("meta_key"), metaRS.getString("meta_value"));
             }
-                    
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
+    }
+
+
+    private int UpdateQuery(List<String> queries){
+        try {
+
+            Statement ps = con.createStatement(); 
+            ps.executeUpdate("START TRANSACTION;");
+
+            for (String query : queries) {
+                ps.executeUpdate(query);
+            }
+
+            ps.executeUpdate("COMMIT;");
+      
             return 1;
         } catch (Exception e) {
+            
             e.printStackTrace();
 
             return -1;
         }
-
-
     }
 
-    public int UpdateForumThread(IForumThread ft) {
-        // TODO Auto-generated method stub
-        return 0;
+    public int CreateForumThread(IForumThread ft_){
+
+        ForumThread ft = (ForumThread)ft_;
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+
+        String datetime = ft.getDate().format(formatter).replace("T", " ");
+
+        String query_elem = String.format(
+            "INSERT INTO `mssh_elem`(`id`, `authorId`, `date`) VALUES ('%s','%s','%s');\n",
+            ft.getId(),
+            ft.getAuthorId(),
+            datetime
+        );
+
+        String query_ft = String.format(
+            "INSERT INTO `mssh_ForumThread`(`id`, `title`, `category`, `answered`) VALUES ('%s','%s',(SELECT `id` FROM `mssh_category` WHERE `title` = '%s'),0);\n",
+            ft.getId(),
+            ft.getTitle(),
+            ft.getCategory()
+        );
+
+        ArrayList<String> queries = new ArrayList<String>();
+        queries.add(query_elem);
+        queries.add(query_ft);
+
+        return UpdateQuery(queries);
+    }
+
+    public int UpdateForumThread(IForumThread ft_) {
+        ForumThread ft = (ForumThread)ft_;
+        
+        int answered = 0;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        String datetime = ft.getModification().format(formatter).replace("T", " ");
+
+        String query_elem = String.format(
+            "UPDATE `mssh_elem` SET `lastModif`='%s' WHERE `id` = '%s';\n",
+            datetime,
+            ft.getId()
+        );
+
+        String query_ft = String.format(
+            "UPDATE `mssh_ForumThread` SET `title`='%s',`category`= (SELECT `id` FROM `mssh_category` WHERE `title` = '%s') ,`answered` = %d WHERE `id` = '%s';\n",
+            ft.getTitle(),
+            ft.getCategory(),
+            answered,
+            ft.getId()
+        );
+            
+        ArrayList<String> queries = new ArrayList<String>();
+        queries.add(query_elem);
+        queries.add(query_ft);
+
+        return UpdateQuery(queries);
     }
 
     public ForumThread GetForumThread(String uuid){
 
-        String query = "SELECT * FROM `mssh_object` WHERE `type` = 1";
+        String query = String.format(
+            "SELECT e.id,e.authorId,e.date,e.lastModif,ft.title as ft_title,ft.answered,ft.child,cat.title as cat_title FROM `mssh_elem` as e INNER JOIN `mssh_ForumThread` as ft ON ft.id = e.id INNER JOIN `mssh_category` as cat ON cat.id = ft.category WHERE e.id = '%s'",
+            uuid
+        );
 
-        //SELECT * FROM `mssh_object` WHERE `id` = uuid
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(query);
+
+            while (rs.next()) {
+
+                ForumThread ft = new ForumThread(
+                    rs.getString("id"),
+                    rs.getString("authorId"),
+                    rs.getString("ft_title"),
+                    rs.getString("cat_title")
+                );
+                
+
+                ft.date = rs.getTimestamp("date").toLocalDateTime();
+
+                java.sql.Timestamp lastModif =  (java.sql.Timestamp)rs.getObject("lastModif");
+                if(lastModif != null){
+                    ft.lastModif = lastModif.toLocalDateTime();
+                }
+
+                int answered = rs.getInt("answered");
+                ft.answered = answered != 0;
+
+                String Child_id = (String)rs.getObject("child");
+                if(Child_id != null){
+                    ft.child = GetPost(Child_id);
+                }
 
 
+                return ft;
+            }
 
-        //ForumThread ft = new ForumThread(id_, title_, tags_, authorId_, date_, category_, answered_, children_);
+        } catch (Exception e) {
+            System.out.println(query);
+        }
 
         return new ForumThread("tqset", "id1", "test");
     }
@@ -145,25 +215,11 @@ public class MySqlDatabase implements IIODatabaseObject {
             // iterate through the java resultset
             while (rs.next()) {
 
-                Dictionary<String, Object> ForumThreadMap = new Hashtable<String, Object>();
+                //Dictionary<String,Object> ForumThreadMap = CreateDicFromRS(rs);
 
-                ForumThreadMap.put("id",rs.getString("id"));
-                ForumThreadMap.put("date",rs.getString("datetime"));
-                ForumThreadMap.put("authorId",rs.getString("author"));
+                //LoadMetaDictFromID(ForumThreadMap,(String)ForumThreadMap.get("id"));
 
-                //load the meta data
-                String cur_query = String.format(
-                    "SELECT * FROM `mssh_objectmeta` WHERE `id_object` = '%s'",
-                    ForumThreadMap.get("id")
-                );
 
-                Statement metatST = con.createStatement();
-                ResultSet metaRS = metatST.executeQuery(cur_query);
-
-                while(metaRS.next()){
-                    ForumThreadMap.put(metaRS.getString("meta_key"), metaRS.getString("meta_value"));
-                }
-                    
 
             }
         } catch (Exception e) {
@@ -176,7 +232,7 @@ public class MySqlDatabase implements IIODatabaseObject {
 
 
     public Post GetPost(String uuid){
-        return new Post();
+        return new Post("dqd");
     }
 
     public int CreatePost(IPost pt){

@@ -14,27 +14,24 @@ public class ForumThread implements IForumThread {
     private final String id;
     private final String authorId;
 
-    private LocalDateTime date;
-    private LocalDateTime lastModif;
+    public LocalDateTime date;
+    public LocalDateTime lastModif;
 
 
-    private String title;
-    private String category;
-    private List<String> tags;
-    private boolean answered;
+    public String title;
+    public String category;
+    public List<String> tags;
+    public boolean answered;
 
-    private IPost child;
+    public IPost child;
 
 
     //load
-    public ForumThread(String id_,String title_,List<String> tags_,String authorId_,LocalDateTime date_,String category_,boolean answered_,IPost child_){
+    public ForumThread(String id_,String authorId_,String title_ ,String category_){
         id       = id_;
-        title    = title_;
         authorId = authorId_;
-        date     = date_;
+        title = title_;
         category = category_;
-        answered = answered_;
-        child  = child_;
     }
 
     //create
