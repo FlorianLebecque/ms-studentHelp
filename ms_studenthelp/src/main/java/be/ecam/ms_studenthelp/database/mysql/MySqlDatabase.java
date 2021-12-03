@@ -11,11 +11,13 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.format.DateTimeFormatter;
 
+import be.ecam.ms_studenthelp.Interfaces.IForumThread;
+import be.ecam.ms_studenthelp.Interfaces.IPost;
 import be.ecam.ms_studenthelp.Object.ForumThread;
 import be.ecam.ms_studenthelp.Object.Post;
 import be.ecam.ms_studenthelp.database.*;
 
-public class MySqlDatabase implements IODatabaseObject {
+public class MySqlDatabase implements IIODatabaseObject {
 
 
     static private Connection con = null;
@@ -54,11 +56,11 @@ public class MySqlDatabase implements IODatabaseObject {
         }
     }
 
-    public int CreateForumThread(ForumThread ft){
+
+
+    public int CreateForumThread(IForumThread ft){
 
         try {
-
-            
 
             DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
             String datetime = ft.getDate().format(formatter).replace("T", " ");
@@ -109,7 +111,7 @@ public class MySqlDatabase implements IODatabaseObject {
 
     }
 
-    public int UpdateForumThread(ForumThread ft) {
+    public int UpdateForumThread(IForumThread ft) {
         // TODO Auto-generated method stub
         return 0;
     }
@@ -158,8 +160,18 @@ public class MySqlDatabase implements IODatabaseObject {
         return new ArrayList<ForumThread>();
     }
 
+
+
     public Post GetPost(String uuid){
         return new Post();
+    }
+
+    public int CreatePost(IPost pt){
+        return 0;
+    }
+
+    public int UpdatePost(IPost pt){
+        return 0;
     }
 
     public List<Post> GetPosts(){
