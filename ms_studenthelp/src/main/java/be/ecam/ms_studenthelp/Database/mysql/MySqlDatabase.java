@@ -254,7 +254,7 @@ public class MySqlDatabase implements IIODatabaseObject {
         String postId = post.getId();
         try {
             String cur_query = String.format(
-                "SELECT value FROM `mssh_reaction` WHERE `postId` = '%s' AND `authorId` = '%s'",
+                "SELECT value FROM `mssh_reactions` WHERE `postId` = '%s' AND `authorId` = '%s'",
                 postId,
                 authorId
             );
@@ -277,7 +277,7 @@ public class MySqlDatabase implements IIODatabaseObject {
         String postId = post.getId();
         try {
             String cur_query = String.format(
-                "SELECT author, value FROM `mssh_reaction` WHERE `postId` = '%s'",
+                "SELECT authorId, value FROM `mssh_reactions` WHERE `postId` = '%s'",
                 postId
             );
 
@@ -301,7 +301,7 @@ public class MySqlDatabase implements IIODatabaseObject {
     public IReaction CreateReaction(IReaction reaction){
         try {
             String query = String.format(
-                "INSERT INTO `mssh_reaction`(`postId`, `authorId`, `value`) VALUES ('%s','%s',%d)",
+                "INSERT INTO `mssh_reactions`(`postId`, `authorId`, `value`) VALUES ('%s','%s',%d)",
                 reaction.getPostId(),
                 reaction.getAuthorId(),
                 reaction.getValue()
@@ -318,7 +318,7 @@ public class MySqlDatabase implements IIODatabaseObject {
     public IReaction UpdateReaction(IReaction reaction){
         try {
             String query = String.format(
-                "UPDATE `mssh_reaction` SET `value` = %d WHERE `postId` = '%s' AND `authorId` = '%s'",
+                "UPDATE `mssh_reactions` SET `value` = %d WHERE `postId` = '%s' AND `authorId` = '%s'",
                 reaction.getPostId(),
                 reaction.getAuthorId(),
                 reaction.getValue()
@@ -335,7 +335,7 @@ public class MySqlDatabase implements IIODatabaseObject {
     public IReaction DeleteReaction(IReaction reaction){
         try {
             String query = String.format(
-                "DELETE FROM `mssh_reaction` WHERE  `postId` = '%s' AND `authorId` = '%s'",
+                "DELETE FROM `mssh_reactions` WHERE  `postId` = '%s' AND `authorId` = '%s'",
                 reaction.getPostId(),
                 reaction.getAuthorId()
             );
