@@ -242,4 +242,21 @@ public class MySqlDatabase implements IIODatabaseObject {
         }
     }
 
+    public IReaction CreateReaction(IReaction reaction){
+        try {
+            String query = String.format(
+                "INSERT INTO `mssh_reaction`(`post_id`, `author`, `value`) VALUES ('%s','%s',%d)",
+                reaction.getPostId(),
+                reaction.getAuthorId(),
+                reaction.getValue()
+            );
+            Statement ps = con.createStatement();
+            ps.executeUpdate(query);
+
+            return reaction;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }
