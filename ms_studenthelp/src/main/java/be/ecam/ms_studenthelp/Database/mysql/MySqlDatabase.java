@@ -225,7 +225,7 @@ public class MySqlDatabase implements IIODatabaseObject {
 
 
 
-    public Post GetPost(String uuid){
+    public IPost GetPost(String uuid){
         return new Post("dqd");
     }
 
@@ -237,8 +237,8 @@ public class MySqlDatabase implements IIODatabaseObject {
         return 0;
     }
 
-    public List<Post> GetPosts(int nbr_per_page,int page_index){
-        return new ArrayList<Post>();
+    public List<IPost> GetPosts(int nbr_per_page,int page_index){
+        return new ArrayList<IPost>();
     }
 
 
