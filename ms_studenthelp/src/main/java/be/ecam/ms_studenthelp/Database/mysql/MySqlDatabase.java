@@ -14,8 +14,10 @@ import java.time.format.DateTimeFormatter;
 import be.ecam.ms_studenthelp.Database.*;
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
+import be.ecam.ms_studenthelp.Interfaces.IReaction;
 import be.ecam.ms_studenthelp.Object.ForumThread;
 import be.ecam.ms_studenthelp.Object.Post;
+import be.ecam.ms_studenthelp.Object.Reaction;
 
 public class MySqlDatabase implements IIODatabaseObject {
 
@@ -189,6 +191,30 @@ public class MySqlDatabase implements IIODatabaseObject {
 
     public List<Post> GetPosts(int nbr_per_page,int page_index){
         return new ArrayList<Post>();
+    }
+
+
+    public IReaction GetReaction(IPost post, String authorId){
+        String postId = post.getId();
+        try {
+            String cur_query = String.format(
+                "SELECT value FROM `mssh_reaction` WHERE `post_id` = '%s' AND `author` = '%s'",
+                postId,
+                authorId
+            );
+
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(cur_query);
+
+            if (rs.next()) {
+                int value = rs.getInt("value");
+                return new Reaction(postId, authorId, value);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

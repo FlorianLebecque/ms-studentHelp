@@ -4,6 +4,7 @@ import java.util.List;
 
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
+import be.ecam.ms_studenthelp.Interfaces.IReaction;
 import be.ecam.ms_studenthelp.Object.ForumThread;
 import be.ecam.ms_studenthelp.Object.Post;
 
@@ -23,4 +24,8 @@ public interface IIODatabaseObject{
     public int CreatePost(IPost pt);
     public int UpdatePost(IPost pt);
     public List<Post> GetPosts(int nbr_per_page,int page_index);
+
+
+    public IReaction GetReaction(IPost pt, String authorUuid);
+
 }
