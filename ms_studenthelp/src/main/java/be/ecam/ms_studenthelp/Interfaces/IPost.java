@@ -3,6 +3,8 @@ package be.ecam.ms_studenthelp.Interfaces;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import be.ecam.ms_studenthelp.Interfaces.IForumThread;
+
 public interface IPost {
     //public Post();
 
