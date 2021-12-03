@@ -24,10 +24,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mssh_catergory`
+-- Table structure for table `mssh_category`
 --
 
-CREATE TABLE `mssh_catergory` (
+CREATE TABLE `mssh_category` (
   `id` int(11) NOT NULL,
   `title` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -88,9 +88,9 @@ CREATE TABLE `mssh_Post` (
 --
 
 --
--- Indexes for table `mssh_catergory`
+-- Indexes for table `mssh_category`
 --
-ALTER TABLE `mssh_catergory`
+ALTER TABLE `mssh_category`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -129,7 +129,7 @@ ALTER TABLE `mssh_Post`
 --
 ALTER TABLE `mssh_ForumThread`
   ADD CONSTRAINT `elem_ft` FOREIGN KEY (`id`) REFERENCES `mssh_elem` (`id`),
-  ADD CONSTRAINT `ft_cat` FOREIGN KEY (`category`) REFERENCES `mssh_catergory` (`id`);
+  ADD CONSTRAINT `ft_cat` FOREIGN KEY (`category`) REFERENCES `mssh_category` (`id`);
 
 --
 -- Constraints for table `mssh_FT_tags`
