@@ -27,7 +27,7 @@ public class PostController {
 
         IPost test = MsStudenthelpApplication.DatabaseManager.GetPost("uuid");
 
-        MsStudenthelpApplication.DatabaseManager.UpdatePost((Post)test);
+        MsStudenthelpApplication.DatabaseManager.UpdatePost(test);
         
 
         test.setAuthorId("kamoulox");
