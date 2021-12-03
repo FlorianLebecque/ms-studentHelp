@@ -1,7 +1,6 @@
 package be.ecam.ms_studenthelp.Object;
 
 import java.util.List;
-import java.util.ArrayList;
 
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
@@ -33,15 +32,18 @@ public class Post implements IPost{
         authorId = _authorId;
 
         date  = LocalDateTime.now();
-        //lastModif = date;
     }
 
-    public Post(String _authorId, String _content){
-        id    = GuidGenerator.GetNewUUIDString();
-        authorId = _authorId;
-        date  = LocalDateTime.now();
-        //lastModif = date;
-        setContent(_content);
+    public Post(String id_,String authorId_,String content_ ,LocalDateTime date_,LocalDateTime lastModif_ ,IPost parent_){
+        id = id_;
+        authorId = authorId_;
+
+        date = date_;
+        lastModif = lastModif_;
+
+        content = content_;
+
+        parent = parent_;
     }
 
     /// ---SETTERS--- ///
@@ -53,6 +55,12 @@ public class Post implements IPost{
     public void setParent(IPost _parent){
         parent = _parent;
     }
+
+
+    public void setChildren(List<IPost> children_){
+        children = children_;
+    }
+
 
     /// ------------- ///
 

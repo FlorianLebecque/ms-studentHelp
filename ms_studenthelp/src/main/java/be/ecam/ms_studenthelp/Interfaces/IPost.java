@@ -14,6 +14,9 @@ public interface IPost {
     public void setContent(String _content);
     
     public void setParent(IPost _parent);
+
+    public void setChildren(List<IPost> children_);
+
     /// ------------- ///
 
 

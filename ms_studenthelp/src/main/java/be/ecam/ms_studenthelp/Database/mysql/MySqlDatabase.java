@@ -241,20 +241,70 @@ public class MySqlDatabase implements IIODatabaseObject {
 
 
     public IPost GetPost(String uuid){
-        return GetPost(uuid, 1);
+        return GetPost(uuid, 1,null);
     }
 
-    private IPost GetPost(String uuid,int recurstion){
+    private IPost GetPost(String uuid,int recurstion,IPost parent){
         String query = String.format(
             "SELECT e.id,e.authorId,e.date,e.lastModif,pt.content,pt.parent FROM `mssh_elem` as e INNER JOIN `mssh_Post` as pt ON pt.id = e.id WHERE e.id = '%s'",
             uuid
         );
 
 
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(query);
+
+            while(rs.next()){
 
 
-        
-        return new Post("dqd");
+                LocalDateTime lastModif = null;
+                java.sql.Timestamp lastModif_ts =  (java.sql.Timestamp)rs.getObject("lastModif");
+                if(lastModif_ts != null){
+                    lastModif = lastModif_ts.toLocalDateTime();
+                }
+
+                Post pt = new Post(
+                    rs.getString("id"),
+                    rs.getString("authorId"),
+                    rs.getString("content"),
+                    rs.getTimestamp("date").toLocalDateTime(),
+                    lastModif,
+                    parent
+                );
+
+                ArrayList<IPost> children = new ArrayList<IPost>();
+
+                if(recurstion > 0){
+                    String query_child = String.format(
+                        "SELECT e.id FROM `mssh_elem` as e INNER JOIN `mssh_Post` as pt ON pt.id = e.id WHERE pt.parent = '%s'",
+                        rs.getString("id")
+                    );
+
+                    Statement st_child = con.createStatement();
+                    ResultSet rs_child = st_child.executeQuery(query_child);
+
+                    while(rs_child.next()){
+                        IPost pt_child = GetPost(rs_child.getString("id"), recurstion-1, pt);
+                        if(pt_child != null){
+                            children.add(pt_child);
+                        }
+                    }
+
+                }
+
+                pt.setChildren(children);
+
+                return pt;
+
+            }
+
+
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
+
+        return null;
     }
 
     public int CreatePost(IPost pt){
