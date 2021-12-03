@@ -21,7 +21,7 @@ public class ThreadController {
     @GetMapping("/thread/{threadId}")
     //test id : 11815501-d8d1-4c05-a0a6-59c699064772
     public IForumThread GetThreadByThreadId(@PathVariable("threadId") String threadId) {
-        IForumThread thread = MsStudenthelpApplication.DatabaseManager.GetForumThread("threadId");
+        IForumThread thread = MsStudenthelpApplication.DatabaseManager.GetForumThread(threadId);
         System.out.println(thread);
         return thread;
     }

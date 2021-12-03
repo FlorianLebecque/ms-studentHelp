@@ -160,14 +160,20 @@ public class MySqlDatabase implements IIODatabaseObject {
         try {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(query);
+            System.out.println(query);
+            System.out.println("RS");
+            System.out.println(rs);
+            System.out.println("RSFin");
+
 
             while (rs.next()) {
 
                 LocalDateTime lastModif = null;
-                java.sql.Timestamp lastModif_ts =  (java.sql.Timestamp)rs.getObject("lastModif");
+                java.sql.Timestamp lastModif_ts =  rs.getTimestamp("lastModif");
                 if(lastModif_ts != null){
                     lastModif = lastModif_ts.toLocalDateTime();
                 }
+
 
                 IPost child = null;
                 String Child_id = (String)rs.getObject("child");
@@ -204,7 +210,7 @@ public class MySqlDatabase implements IIODatabaseObject {
             }
 
         } catch (Exception e) {
-            System.out.println(query);
+            e.printStackTrace();
         }
 
         return null;
