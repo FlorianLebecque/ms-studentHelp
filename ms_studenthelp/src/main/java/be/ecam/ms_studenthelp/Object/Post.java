@@ -1,6 +1,7 @@
 package be.ecam.ms_studenthelp.Object;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
