@@ -148,6 +148,7 @@ public class ForumThreadCRU {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
 
