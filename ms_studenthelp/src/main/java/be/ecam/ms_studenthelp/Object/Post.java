@@ -17,17 +17,16 @@ public class Post implements IPost{
     private final String authorId;
 
 
-    private LocalDateTime date;
-    private LocalDateTime lastModif;
+    public LocalDateTime date;
+    public LocalDateTime lastModif;
 
     
-    private String content;
-    private IForumThread forumThread;
-    
+    public String content;
+    public IForumThread forumThread;
     
 
-    private IPost parent;
-    private List<IPost> children = new ArrayList<IPost>();
+    public IPost parent;
+    public List<IPost> children = new ArrayList<IPost>();
 
     public Post(String _authorId){
         id    = GuidGenerator.GetNewUUIDString();
