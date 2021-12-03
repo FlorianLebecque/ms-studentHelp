@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import be.ecam.ms_studenthelp.Object.Post;
 import be.ecam.ms_studenthelp.Object.Reaction;
+import be.ecam.ms_studenthelp.Interfaces.IPost;
+import be.ecam.ms_studenthelp.Interfaces.IReaction;
 
 @RestController
 public class ReactionController {
@@ -27,9 +28,9 @@ public class ReactionController {
 	}
 
 	class GetPostsPostIdReactionsResult {
-		public ArrayList<Reaction> data;
+		public ArrayList<IReaction> data;
 
-		public GetPostsPostIdReactionsResult(ArrayList<Reaction> data) {
+		public GetPostsPostIdReactionsResult(ArrayList<IReaction> data) {
 			this.data = data;
 		}
 	}
@@ -41,9 +42,9 @@ public class ReactionController {
 	}
 
 	class PutPostsPostIdReactionsResult {
-		public Reaction data;
+		public IReaction data;
 
-		public PutPostsPostIdReactionsResult(Reaction data) {
+		public PutPostsPostIdReactionsResult(IReaction data) {
 			this.data = data;
 		}
 	}
