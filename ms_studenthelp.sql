@@ -42,7 +42,7 @@ CREATE TABLE `mssh_elem` (
   `id` varchar(36) NOT NULL,
   `authorId` varchar(60) NOT NULL,
   `date` datetime NOT NULL,
-  `lastModif` datetime NOT NULL
+  `lastModif` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
