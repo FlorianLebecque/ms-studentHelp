@@ -22,27 +22,33 @@ public class Post implements IPost{
 
     
     public String content;
-    public IForumThread forumThread;
     
 
     public IPost parent;
     public List<IPost> children = new ArrayList<IPost>();
 
-    public Post(String _authorId){
+    public Post(String _authorId,String content_){
         id    = GuidGenerator.GetNewUUIDString();
         authorId = _authorId;
 
         date  = LocalDateTime.now();
+
+        content = content_;
+
     }
 
-    public Post(String _authorId, String _content, IForumThread _forumThread){
-        id    = GuidGenerator.GetNewUUIDString();
-        authorId = _authorId;
-        date  = LocalDateTime.now();
+    public Post(String id_,String authorId_,String content_ ,LocalDateTime date_,LocalDateTime lastModif_ ,IPost parent_){
+        id = id_;
+        authorId = authorId_;
 
-        setContent(_content);
-        setForumThread(_forumThread);
+        date = date_;
+        lastModif = lastModif_;
+
+        content = content_;
+
+        parent = parent_;
     }
+
 
     /// ---SETTERS--- ///
     public void setContent(String _content){
@@ -52,9 +58,12 @@ public class Post implements IPost{
     public void setParent(IPost _parent){
         parent      = _parent;
     }
-    public void setForumThread(IForumThread _forumThread){
-        forumThread = _forumThread;
+
+    public void setChildren(List<IPost> children_){
+        children = children_;
     }
+
+    
     /// ------------- ///
 
 
@@ -78,10 +87,6 @@ public class Post implements IPost{
 
     public IPost getParent() {
         return parent;
-    }
-
-    public IForumThread getForumThread() {
-        return forumThread;
     }
 
     public List<IPost> getChildren() {
@@ -144,8 +149,7 @@ public class Post implements IPost{
         UpdateDate();
     }
 
-    public void Reply(String _authorId, String _content){
-        IPost reply  = new Post(_authorId,_content, this.forumThread);
+    public void Reply(IPost reply){
         reply.setParent(this);
         children.add(reply);
     }

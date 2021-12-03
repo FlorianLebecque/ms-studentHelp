@@ -14,7 +14,9 @@ public interface IPost {
     public void setContent(String _content);
     
     public void setParent(IPost _parent);
-    public void setForumThread(IForumThread _forumThread);
+
+    public void setChildren(List<IPost> children_);
+
     /// ------------- ///
 
 
@@ -29,8 +31,6 @@ public interface IPost {
     public LocalDateTime getDatePosted();
 
     public IPost getParent();
-
-    public IForumThread getForumThread();
 
     public List<IPost> getChildren();
 
@@ -79,5 +79,5 @@ public interface IPost {
 
     public void Delete();
 
-    public void Reply(String _authorId, String _content);
+    public void Reply(IPost reply);
 }
