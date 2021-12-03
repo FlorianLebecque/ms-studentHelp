@@ -131,7 +131,7 @@ public class PostCRU {
     public int UpdatePost(IPost pt){
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-        String datetime = pt.getDateModified().format(formatter).replace("T", " ");
+        String datetime = pt.getLastModif().format(formatter).replace("T", " ");
 
         String query_elem = String.format(
             "UPDATE `mssh_elem` SET `lastModif`='%s' WHERE `id` = '%s';\n",
