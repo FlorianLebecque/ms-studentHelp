@@ -12,8 +12,10 @@ import java.time.format.DateTimeFormatter;
 import be.ecam.ms_studenthelp.Database.*;
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
+import be.ecam.ms_studenthelp.Interfaces.IReaction;
 import be.ecam.ms_studenthelp.Object.ForumThread;
 import be.ecam.ms_studenthelp.Object.Post;
+import be.ecam.ms_studenthelp.Object.Reaction;
 
 public class MySqlDatabase implements IIODatabaseObject {
 
@@ -30,11 +32,11 @@ public class MySqlDatabase implements IIODatabaseObject {
         }
 
         String MySQLURL = "jdbc:mysql://localhost/ms_studenthelp";
-        String databseUserName = "dummy";
+        String databaseUserName = "dummy";
         String databasePassword = "1234";
 
         try{
-            con = DriverManager.getConnection(MySQLURL,databseUserName,databasePassword);
+            con = DriverManager.getConnection(MySQLURL,databaseUserName,databasePassword);
             return con!=null;
 
         }catch(Exception e) {
@@ -245,6 +247,105 @@ public class MySqlDatabase implements IIODatabaseObject {
 
     public List<Post> GetPosts(int nbr_per_page,int page_index){
         return new ArrayList<Post>();
+    }
+
+
+    public IReaction GetReaction(IPost post, String authorId){
+        String postId = post.getId();
+        try {
+            String cur_query = String.format(
+                "SELECT value FROM `mssh_reaction` WHERE `postId` = '%s' AND `authorId` = '%s'",
+                postId,
+                authorId
+            );
+
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(cur_query);
+
+            if (rs.next()) {
+                int value = rs.getInt("value");
+                return new Reaction(postId, authorId, value);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<IReaction> GetReactions(IPost post){
+        String postId = post.getId();
+        try {
+            String cur_query = String.format(
+                "SELECT author, value FROM `mssh_reaction` WHERE `postId` = '%s'",
+                postId
+            );
+
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(cur_query);
+
+            ArrayList<IReaction> reactions = new ArrayList<IReaction>();
+            while(rs.next()) {
+                String authorId = rs.getString("authorId");
+                int value = rs.getInt("value");
+                Reaction reaction = new Reaction(postId, authorId, value);
+                reactions.add(reaction);
+            }
+
+            return reactions;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public IReaction CreateReaction(IReaction reaction){
+        try {
+            String query = String.format(
+                "INSERT INTO `mssh_reaction`(`postId`, `authorId`, `value`) VALUES ('%s','%s',%d)",
+                reaction.getPostId(),
+                reaction.getAuthorId(),
+                reaction.getValue()
+            );
+            Statement ps = con.createStatement();
+            ps.executeUpdate(query);
+
+            return reaction;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public IReaction UpdateReaction(IReaction reaction){
+        try {
+            String query = String.format(
+                "UPDATE `mssh_reaction` SET `value` = %d WHERE `postId` = '%s' AND `authorId` = '%s'",
+                reaction.getPostId(),
+                reaction.getAuthorId(),
+                reaction.getValue()
+            );
+            Statement ps = con.createStatement();
+            ps.executeUpdate(query);
+
+            return reaction;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public IReaction DeleteReaction(IReaction reaction){
+        try {
+            String query = String.format(
+                "DELETE FROM `mssh_reaction` WHERE  `postId` = '%s' AND `authorId` = '%s'",
+                reaction.getPostId(),
+                reaction.getAuthorId()
+            );
+            Statement ps = con.createStatement();
+            ps.executeUpdate(query);
+
+            return reaction;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

@@ -83,6 +83,18 @@ CREATE TABLE `mssh_Post` (
   `content` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mssh_reactions`
+--
+
+CREATE TABLE `mssh_reactions` (
+  `postId` varchar(36) NOT NULL,
+  `authorId` varchar(60) NOT NULL,
+  `value` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Indexes for dumped tables
 --
@@ -144,6 +156,13 @@ ALTER TABLE `mssh_Post`
   ADD CONSTRAINT `elem_pt` FOREIGN KEY (`id`) REFERENCES `mssh_elem` (`id`),
   ADD CONSTRAINT `ft_pt` FOREIGN KEY (`forumThread`) REFERENCES `mssh_ForumThread` (`id`),
   ADD CONSTRAINT `pt_pt` FOREIGN KEY (`parent`) REFERENCES `mssh_Post` (`id`);
+
+--
+-- Constraints for table `mssh_reactions`
+--
+ALTER TABLE `mssh_reactions`
+  ADD CONSTRAINT `pt_re` FOREIGN KEY (`postId`) REFERENCES `mssh_Post` (`id`),
+  ADD CONSTRAINT `pt_at_re` UNIQUE (`postId`, `authorId`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
