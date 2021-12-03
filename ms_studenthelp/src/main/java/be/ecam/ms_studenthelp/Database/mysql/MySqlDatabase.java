@@ -259,4 +259,21 @@ public class MySqlDatabase implements IIODatabaseObject {
         }
     }
 
+    public IReaction UpdateReaction(IReaction reaction){
+        try {
+            String query = String.format(
+                "UPDATE `mssh_reaction` SET `value` = %d WHERE `post_id` = '%s' AND `author` = '%s'",
+                reaction.getPostId(),
+                reaction.getAuthorId(),
+                reaction.getValue()
+            );
+            Statement ps = con.createStatement();
+            ps.executeUpdate(query);
+
+            return reaction;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

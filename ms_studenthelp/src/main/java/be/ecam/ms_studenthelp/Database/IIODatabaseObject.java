@@ -29,5 +29,6 @@ public interface IIODatabaseObject{
     public IReaction GetReaction(IPost pt, String authorUuid);
     public List<IReaction> GetReactions(IPost pt);
     public IReaction CreateReaction(IReaction reaction);
+    public IReaction UpdateReaction(IReaction reaction);
 
 }
