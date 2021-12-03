@@ -107,8 +107,7 @@ public class MySqlDatabase implements IIODatabaseObject {
         return UpdateQuery(queries);
     }
 
-    public int UpdateForumThread(IForumThread ft_) {
-        ForumThread ft = (ForumThread)ft_;
+    public int UpdateForumThread(IForumThread ft) {
         
         int answered = 0;
 
@@ -136,7 +135,7 @@ public class MySqlDatabase implements IIODatabaseObject {
         return UpdateQuery(queries);
     }
 
-    public ForumThread GetForumThread(String uuid){
+    public IForumThread GetForumThread(String uuid){
 
         String query = String.format(
             "SELECT e.id,e.authorId,e.date,e.lastModif,ft.title as ft_title,ft.answered,ft.child,cat.title as cat_title FROM `mssh_elem` as e INNER JOIN `mssh_ForumThread` as ft ON ft.id = e.id INNER JOIN `mssh_category` as cat ON cat.id = ft.category WHERE e.id = '%s'",
@@ -197,10 +196,10 @@ public class MySqlDatabase implements IIODatabaseObject {
     }
 
 
-    public List<ForumThread> GetForumThreads(int nbr_per_page,int page_index){
+    public List<IForumThread> GetForumThreads(int nbr_per_page,int page_index){
         String query = "SELECT e.id FROM `mssh_elem` as e INNER JOIN `mssh_ForumThread` as ft ON ft.id = e.id INNER JOIN `mssh_category` as cat ON cat.id = ft.category";
   
-        ArrayList<ForumThread> ft_list = new ArrayList<>();
+        ArrayList<IForumThread> ft_list = new ArrayList<>();
 
         try {
             Statement st = con.createStatement();
@@ -210,7 +209,7 @@ public class MySqlDatabase implements IIODatabaseObject {
         
             while (rs.next()) {
 
-                ForumThread ft = GetForumThread(rs.getString("id"));
+                IForumThread ft = GetForumThread(rs.getString("id"));
 
                 if(ft != null){
                     ft_list.add(ft);

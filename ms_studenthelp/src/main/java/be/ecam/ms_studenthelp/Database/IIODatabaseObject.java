@@ -14,10 +14,10 @@ public interface IIODatabaseObject{
     public void disconnect();
 
 
-    public ForumThread GetForumThread(String uuid);
+    public IForumThread GetForumThread(String uuid);
     public int CreateForumThread(IForumThread ft);
     public int UpdateForumThread(IForumThread ft);
-    public List<ForumThread> GetForumThreads(int nbr_per_page,int page_index);
+    public List<IForumThread> GetForumThreads(int nbr_per_page,int page_index);
 
 
     public Post GetPost(String uuid);
