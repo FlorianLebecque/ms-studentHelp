@@ -217,4 +217,29 @@ public class MySqlDatabase implements IIODatabaseObject {
         }
     }
 
+    public List<IReaction> GetReactions(IPost post){
+        String postId = post.getId();
+        try {
+            String cur_query = String.format(
+                "SELECT author, value FROM `mssh_reaction` WHERE `post_id` = '%s'",
+                postId
+            );
+
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(cur_query);
+
+            ArrayList<IReaction> reactions = new ArrayList<IReaction>();
+            while(rs.next()) {
+                String authorId = rs.getString("author");
+                int value = rs.getInt("value");
+                Reaction reaction = new Reaction(postId, authorId, value);
+                reactions.add(reaction);
+            }
+
+            return reactions;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }
