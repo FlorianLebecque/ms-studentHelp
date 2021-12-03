@@ -269,6 +269,7 @@ public class MySqlDatabase implements IIODatabaseObject {
                 return null;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -294,6 +295,7 @@ public class MySqlDatabase implements IIODatabaseObject {
 
             return reactions;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -311,6 +313,7 @@ public class MySqlDatabase implements IIODatabaseObject {
 
             return reaction;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -328,6 +331,7 @@ public class MySqlDatabase implements IIODatabaseObject {
 
             return reaction;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -344,6 +348,7 @@ public class MySqlDatabase implements IIODatabaseObject {
 
             return reaction;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
