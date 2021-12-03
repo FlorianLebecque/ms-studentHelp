@@ -1,14 +1,21 @@
 package be.ecam.ms_studenthelp;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import be.ecam.ms_studenthelp.Interfaces.IReaction;
+import be.ecam.ms_studenthelp.Object.Reaction;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import be.ecam.ms_studenthelp.Interfaces.IPost;
 import be.ecam.ms_studenthelp.Object.Post;
 
+import java.util.ArrayList;
+
 
 @RestController
 public class PostController {
+
+    //TEST
 
     @GetMapping("/getPost")
     public IPost GetPost(){
@@ -35,5 +42,36 @@ public class PostController {
         //const myJSON = JSON.stringify(obj)
 		return test;//"coucou";
 	}
+
+    // GOOD
+
+    @GetMapping("/posts/{postId}")
+    public IPost GetPostByPostId(@PathVariable("postId") String postId) {
+        IPost post = MsStudenthelpApplication.DatabaseManager.GetPost("postId");
+        return post;
+    }
+
+    @PatchMapping("/posts/{postId}")
+    public IPost PatchPostByPostId(@PathVariable("postId") String postId) {
+        IPost post = MsStudenthelpApplication.DatabaseManager.GetPost("postId");
+
+        //Récupérer nouvelles infos, les changer dans la DB et renvoyer le nouveau post
+
+        return post;
+    }
+
+    /*@PutMapping("/posts/{postId}")
+    public IPost PutPostByPostId(@PathVariable("postId") String postId) {
+        // Récupérer infos et créer un nouveau post dans la DB
+        return post;
+    }
+
+
+    @DeleteMapping("/posts/{postId}")
+    public IPost deletePostByPostId(@PathVariable("postId") String postId) {
+        // Delete le post dans la DB
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    */
 
 }
