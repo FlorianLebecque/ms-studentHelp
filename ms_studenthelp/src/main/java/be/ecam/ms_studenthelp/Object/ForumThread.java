@@ -30,7 +30,7 @@ public class ForumThread implements IForumThread {
     public ForumThread(String id_,String authorId_,String title_ ,String category_,List<String> tags_,LocalDateTime date_,LocalDateTime lastModif_,Boolean answered_,IPost child_){
         id       = id_;
         authorId = authorId_;
-        
+
         date = date_;
         lastModif = lastModif_;
 
@@ -53,11 +53,11 @@ public class ForumThread implements IForumThread {
         answered = false;
     }
 
-    /*
+
     public void Reply(IPost reply){
-        children.add(reply);
+        child = reply;
     }
-    */
+
     public void UpdateTitle(String title_){
         title = title_;
 
@@ -112,7 +112,7 @@ public class ForumThread implements IForumThread {
     public LocalDateTime getModification() {
         return lastModif;
     }
-    
+
     public boolean getAnswer(){
         return answered;
     }
