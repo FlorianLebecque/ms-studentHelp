@@ -14,32 +14,40 @@ public class ForumThread implements IForumThread {
     private final String id;
     private final String authorId;
 
-    public LocalDateTime date;
-    public LocalDateTime lastModif;
+    private LocalDateTime date;
+    private LocalDateTime lastModif;
 
 
-    public String title;
-    public String category;
-    public List<String> tags;
-    public boolean answered;
+    private String title;
+    private String category;
+    private List<String> tags;
+    private boolean answered;
 
-    public IPost child;
+    private IPost child;
 
 
     //load
-    public ForumThread(String id_,String authorId_,String title_ ,String category_){
+    public ForumThread(String id_,String authorId_,String title_ ,String category_,List<String> tags_,LocalDateTime date_,LocalDateTime lastModif_,Boolean answered_,IPost child_){
         id       = id_;
         authorId = authorId_;
+        
+        date = date_;
+        lastModif = lastModif_;
+
         title = title_;
         category = category_;
+        tags = tags_;
+        answered = answered_;
+
+        child = child_;
     }
 
     //create
     public ForumThread(String title_,String authorId_,String category_){
         id       = GuidGenerator.GetNewUUIDString();
+        authorId = authorId_;
         title    = title_;
         tags     = new ArrayList<String>();
-        authorId = authorId_;
         date     = LocalDateTime.now();
         category = category_;
         answered = false;

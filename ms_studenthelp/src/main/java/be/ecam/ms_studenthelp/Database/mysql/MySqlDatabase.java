@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import be.ecam.ms_studenthelp.Database.*;
@@ -55,27 +57,6 @@ public class MySqlDatabase implements IIODatabaseObject {
             E.printStackTrace();
         }
     }
-
-    private void LoadMetaDictFromID(Dictionary<String,Object> dic,String id){
-
-        try {
-             //load the meta data
-             String cur_query = String.format(
-                "SELECT * FROM `mssh_objectmeta` WHERE `id_object` = '%s'",
-                id
-            );
-
-            Statement metatST = con.createStatement();
-            ResultSet metaRS = metatST.executeQuery(cur_query);
-
-            while(metaRS.next()){
-                dic.put(metaRS.getString("meta_key"), metaRS.getString("meta_value"));
-            }
-        } catch (Exception e) {
-            //TODO: handle exception
-        }
-    }
-
 
     private int UpdateQuery(List<String> queries){
         try {
@@ -168,29 +149,42 @@ public class MySqlDatabase implements IIODatabaseObject {
 
             while (rs.next()) {
 
+                LocalDateTime lastModif = null;
+                java.sql.Timestamp lastModif_ts =  (java.sql.Timestamp)rs.getObject("lastModif");
+                if(lastModif_ts != null){
+                    lastModif = lastModif_ts.toLocalDateTime();
+                }
+
+                IPost child = null;
+                String Child_id = (String)rs.getObject("child");
+                if(Child_id != null){
+                    child = GetPost(Child_id);
+                }
+
+                String query_tag = String.format(
+                    "SELECT `tag` FROM `mssh_FT_tags` WHERE `id` = '%s'",
+                    rs.getString("id")
+                );
+
+                Statement st_tag = con.createStatement();
+                ResultSet rs_tag = st_tag.executeQuery(query_tag);
+                ArrayList<String> tag_list = new ArrayList<String>();
+                while(rs_tag.next()){
+                    tag_list.add(rs_tag.getString("tag"));
+                }
+
+
                 ForumThread ft = new ForumThread(
                     rs.getString("id"),
                     rs.getString("authorId"),
                     rs.getString("ft_title"),
-                    rs.getString("cat_title")
+                    rs.getString("cat_title"),
+                    tag_list,
+                    rs.getTimestamp("date").toLocalDateTime(),
+                    lastModif,
+                    rs.getInt("answered") != 0,
+                    child
                 );
-                
-
-                ft.date = rs.getTimestamp("date").toLocalDateTime();
-
-                java.sql.Timestamp lastModif =  (java.sql.Timestamp)rs.getObject("lastModif");
-                if(lastModif != null){
-                    ft.lastModif = lastModif.toLocalDateTime();
-                }
-
-                int answered = rs.getInt("answered");
-                ft.answered = answered != 0;
-
-                String Child_id = (String)rs.getObject("child");
-                if(Child_id != null){
-                    ft.child = GetPost(Child_id);
-                }
-
 
                 return ft;
             }
@@ -199,14 +193,14 @@ public class MySqlDatabase implements IIODatabaseObject {
             System.out.println(query);
         }
 
-        return new ForumThread("tqset", "id1", "test");
+        return null;
     }
 
 
     public List<ForumThread> GetForumThreads(int nbr_per_page,int page_index){
-        String query = "SELECT * FROM `mssh_object` WHERE `type` = 1";
-
-        //<YOUR CLASS>.getClass().getDeclaredFields()
+        String query = "SELECT e.id FROM `mssh_elem` as e INNER JOIN `mssh_ForumThread` as ft ON ft.id = e.id INNER JOIN `mssh_category` as cat ON cat.id = ft.category";
+  
+        ArrayList<ForumThread> ft_list = new ArrayList<>();
 
         try {
             Statement st = con.createStatement();
@@ -214,21 +208,20 @@ public class MySqlDatabase implements IIODatabaseObject {
             // execute the query, and get a java resultset
             ResultSet rs = st.executeQuery(query);
         
-            // iterate through the java resultset
             while (rs.next()) {
 
-                //Dictionary<String,Object> ForumThreadMap = CreateDicFromRS(rs);
+                ForumThread ft = GetForumThread(rs.getString("id"));
 
-                //LoadMetaDictFromID(ForumThreadMap,(String)ForumThreadMap.get("id"));
-
-
+                if(ft != null){
+                    ft_list.add(ft);
+                }
 
             }
         } catch (Exception e) {
             //TODO: handle exception
         }
 
-        return new ArrayList<ForumThread>();
+        return ft_list;
     }
 
 
