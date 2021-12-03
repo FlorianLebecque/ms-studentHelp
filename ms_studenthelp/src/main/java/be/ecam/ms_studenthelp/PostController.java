@@ -19,8 +19,7 @@ public class PostController {
 
     @GetMapping("/getPost")
     public IPost GetPost(){
-        IPost post = new Post();
-        post.setAuthorId("L-A");
+        IPost post = new Post("L-A");
         post.setContent("Coucou");
         return post;
     }
@@ -37,7 +36,6 @@ public class PostController {
         MsStudenthelpApplication.DatabaseManager.UpdatePost(test);
         
 
-        test.setAuthorId("kamoulox");
         test.setContent("C'est la vie de chateau les blEUs?!!");
         //const myJSON = JSON.stringify(obj)
 		return test;//"coucou";

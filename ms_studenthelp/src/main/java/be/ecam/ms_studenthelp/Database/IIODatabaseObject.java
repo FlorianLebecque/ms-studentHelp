@@ -4,8 +4,7 @@ import java.util.List;
 
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
-import be.ecam.ms_studenthelp.Object.ForumThread;
-import be.ecam.ms_studenthelp.Object.Post;
+import be.ecam.ms_studenthelp.Interfaces.IReaction;
 
 public interface IIODatabaseObject{
 
@@ -13,14 +12,22 @@ public interface IIODatabaseObject{
     public void disconnect();
 
 
-    public ForumThread GetForumThread(String uuid);
+    public IForumThread GetForumThread(String uuid);
     public int CreateForumThread(IForumThread ft);
     public int UpdateForumThread(IForumThread ft);
-    public List<ForumThread> GetForumThreads(int nbr_per_page,int page_index);
+    public List<IForumThread> GetForumThreads(int nbr_per_page,int page_index);
 
 
-    public Post GetPost(String uuid);
+    public IPost GetPost(String uuid);
     public int CreatePost(IPost pt);
     public int UpdatePost(IPost pt);
-    public List<Post> GetPosts(int nbr_per_page,int page_index);
+    public List<IPost> GetPosts(int nbr_per_page,int page_index);
+
+
+    public IReaction GetReaction(IPost pt, String authorUuid);
+    public List<IReaction> GetReactions(IPost pt);
+    public IReaction CreateReaction(IReaction reaction);
+    public IReaction UpdateReaction(IReaction reaction);
+    public IReaction DeleteReaction(IReaction reaction);
+
 }

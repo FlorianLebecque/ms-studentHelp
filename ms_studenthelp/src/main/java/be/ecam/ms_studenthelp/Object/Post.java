@@ -13,40 +13,38 @@ import java.time.LocalDateTime;
 
 public class Post implements IPost{
 
-    private String id;
-    private LocalDateTime datePosted;
+    private final String id;
+    private final String authorId;
 
-    private String authorId;
-    private String content;
-    private IForumThread forumThread;
+
+    public LocalDateTime date;
+    public LocalDateTime lastModif;
+
     
+    public String content;
+    public IForumThread forumThread;
     
-    private List<LocalDateTime> dateModified = new ArrayList<LocalDateTime>();
 
-    private IPost parent;
-    private List<IPost> children = new ArrayList<IPost>();
+    public IPost parent;
+    public List<IPost> children = new ArrayList<IPost>();
 
-    private boolean modified = false;
-    private boolean deleted = false;
+    public Post(String _authorId){
+        id    = GuidGenerator.GetNewUUIDString();
+        authorId = _authorId;
 
-    public Post(){
-        id          =  GuidGenerator.GetNewUUIDString();
-        datePosted  = LocalDateTime.now();
+        date  = LocalDateTime.now();
     }
 
     public Post(String _authorId, String _content, IForumThread _forumThread){
-        id          =  GuidGenerator.GetNewUUIDString();
-        datePosted  = LocalDateTime.now();
+        id    = GuidGenerator.GetNewUUIDString();
+        authorId = _authorId;
+        date  = LocalDateTime.now();
 
-        setAuthorId(_authorId);
         setContent(_content);
         setForumThread(_forumThread);
     }
 
     /// ---SETTERS--- ///
-    public void setAuthorId(String _authorId){
-        authorId    = _authorId;
-    }
     public void setContent(String _content){
         content         = _content;
     }
@@ -75,7 +73,7 @@ public class Post implements IPost{
     }
 
     public LocalDateTime getDatePosted() {
-        return datePosted;
+        return date;
     }
 
     public IPost getParent() {
@@ -90,8 +88,8 @@ public class Post implements IPost{
         return children;
     }
 
-    public List<LocalDateTime> getDateModified() {
-        return dateModified;
+    public LocalDateTime getDateModified() {
+        return lastModif;
     }
 
     /* public String GetId(){
@@ -132,20 +130,18 @@ public class Post implements IPost{
 
     public void UpdateDate(){
 
-        dateModified.add(datePosted);
-        datePosted  = LocalDateTime.now();
+        lastModif  = LocalDateTime.now();
     }
 
 
     public void UpdateContent(String _content){
         content     = _content;
-        modified = true;
         UpdateDate();
     }
 
     public void Delete(){
-        deleted = true;
         UpdateContent("--deleted--");
+        UpdateDate();
     }
 
     public void Reply(String _authorId, String _content){
