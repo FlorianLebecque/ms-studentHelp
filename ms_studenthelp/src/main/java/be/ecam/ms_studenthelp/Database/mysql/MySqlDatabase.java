@@ -160,11 +160,6 @@ public class MySqlDatabase implements IIODatabaseObject {
         try {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(query);
-            System.out.println(query);
-            System.out.println("RS");
-            System.out.println(rs);
-            System.out.println("RSFin");
-
 
             while (rs.next()) {
 

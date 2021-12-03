@@ -12,8 +12,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class ThreadController {
 
     @GetMapping("/CreateThread")
-    public IForumThread CreateThread(){
-        IForumThread thread = new ForumThread("Le meilleur titre du monde","Quelquun","Une catégorie banale");
+    public IForumThread CreateThreadByDefault(){
+        IForumThread thread = new ForumThread("Un tres bon titre","Quelqu1","Une catégorie banale");
+        MsStudenthelpApplication.DatabaseManager.CreateForumThread(thread);
+        return thread;
+    }
+
+    @GetMapping("/createThread/{threadTitre}/{AutheurID}/{catégorie}")
+    public IForumThread CreateThread(@PathVariable("threadTitre") String threadTitre,
+                                            @PathVariable("AutheurID") String AutheurID,
+                                            @PathVariable("catégorie") String catégorie){
+        IForumThread thread = new ForumThread(threadTitre, AutheurID,catégorie);
         MsStudenthelpApplication.DatabaseManager.CreateForumThread(thread);
         return thread;
     }
