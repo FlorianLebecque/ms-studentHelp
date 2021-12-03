@@ -144,8 +144,7 @@ public class Post implements IPost{
         UpdateDate();
     }
 
-    public void Reply(String _authorId, String _content){
-        IPost reply  = new Post(_authorId,_content, this.forumThread);
+    public void Reply(IPost reply){
         reply.setParent(this);
         children.add(reply);
     }

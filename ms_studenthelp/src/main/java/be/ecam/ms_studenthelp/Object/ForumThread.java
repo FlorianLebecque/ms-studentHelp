@@ -53,11 +53,11 @@ public class ForumThread implements IForumThread {
         answered = false;
     }
 
-    /*
+    
     public void Reply(IPost reply){
-        children.add(reply);
+        child = reply;
     }
-    */
+    
     public void UpdateTitle(String title_){
         title = title_;
 
