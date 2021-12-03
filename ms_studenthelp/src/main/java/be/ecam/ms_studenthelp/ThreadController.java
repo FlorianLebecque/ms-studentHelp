@@ -18,11 +18,12 @@ public class ThreadController {
         return thread;
     }
 
-    @GetMapping("/createThread/{threadTitre}/{AutheurID}/{catégorie}")
+    @GetMapping("/createThread/{threadTitre}/{AutheurID}/{NomDeCatégorie}")
+    //createThread/BeauTitre/Sarah/cathegory1
     public IForumThread CreateThread(@PathVariable("threadTitre") String threadTitre,
                                             @PathVariable("AutheurID") String AutheurID,
-                                            @PathVariable("catégorie") String catégorie){
-        IForumThread thread = new ForumThread(threadTitre, AutheurID,catégorie);
+                                            @PathVariable("NomDeCatégorie") String NomDeCatégorie){
+        IForumThread thread = new ForumThread(threadTitre, AutheurID,NomDeCatégorie);
         MsStudenthelpApplication.DatabaseManager.CreateForumThread(thread);
         return thread;
     }
