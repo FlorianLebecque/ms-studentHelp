@@ -3,12 +3,9 @@ package be.ecam.ms_studenthelp.Database.mysql.MySqlSerializer;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.ecam.ms_studenthelp.Database.mysql.MySqlDatabase;
 import be.ecam.ms_studenthelp.Interfaces.*;
 import be.ecam.ms_studenthelp.Object.*;
 

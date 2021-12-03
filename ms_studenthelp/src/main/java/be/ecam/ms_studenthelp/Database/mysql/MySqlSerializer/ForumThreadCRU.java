@@ -17,9 +17,9 @@ public class ForumThreadCRU {
     private Connection con;
     private PostCRU PCRU;
 
-    public ForumThreadCRU(Connection con_){
+    public ForumThreadCRU(Connection con_,PostCRU PCRU_){
         con = con_;
-        PCRU = new PostCRU(con);
+        PCRU = PCRU_;
     }
 
 
