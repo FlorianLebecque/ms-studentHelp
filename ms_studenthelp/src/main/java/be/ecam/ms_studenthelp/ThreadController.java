@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Object.ForumThread;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
@@ -12,14 +13,22 @@ public class ThreadController {
 
     @GetMapping("/CreateThread")
     public IForumThread CreateThread(){
-        IForumThread thread = new ForumThread("Le meilleur titre du monde","Quelqu'un","Une catégorie banale");
+        IForumThread thread = new ForumThread("Le meilleur titre du monde","Quelquun","Une catégorie banale");
         MsStudenthelpApplication.DatabaseManager.CreateForumThread(thread);
+        return thread;
+    }
+
+    @GetMapping("/thread/{threadId}")
+    //test id : 11815501-d8d1-4c05-a0a6-59c699064772
+    public IForumThread GetThreadByThreadId(@PathVariable("threadId") String threadId) {
+        IForumThread thread = MsStudenthelpApplication.DatabaseManager.GetForumThread("threadId");
+        System.out.println(thread);
         return thread;
     }
 
     @GetMapping("/getThread")
     public IForumThread GetEasyThread(){
-        IForumThread thread = new ForumThread("Le meilleur titre du monde","Quelqu'un","Une catégorie banale");
+        IForumThread thread = new ForumThread("Le meilleur titre du monde","Quelquun","Une catégorie banale");
         return thread;
     }
 
