@@ -129,8 +129,11 @@ public class MySqlDatabase implements IIODatabaseObject {
         return new ForumThread("tqset", "id1", "test");
     }
 
-    public List<ForumThread> GetForumThreads(){
+
+    public List<ForumThread> GetForumThreads(int nbr_per_page,int page_index){
         String query = "SELECT * FROM `mssh_object` WHERE `type` = 1";
+
+        //<YOUR CLASS>.getClass().getDeclaredFields()
 
         try {
             Statement st = con.createStatement();
@@ -140,23 +143,26 @@ public class MySqlDatabase implements IIODatabaseObject {
         
             // iterate through the java resultset
             while (rs.next()) {
-                String id = rs.getString("id");
-                String datetimestr = rs.getString("datetime");
-                String author = rs.getString("author");
-        
+
+                Dictionary<String, Object> ForumThreadMap = new Hashtable<String, Object>();
+
+                ForumThreadMap.put("id",rs.getString("id"));
+                ForumThreadMap.put("date",rs.getString("datetime"));
+                ForumThreadMap.put("authorId",rs.getString("author"));
+
                 //load the meta data
                 String cur_query = String.format(
                     "SELECT * FROM `mssh_objectmeta` WHERE `id_object` = '%s'",
-                    id
+                    ForumThreadMap.get("id")
                 );
 
                 Statement metatST = con.createStatement();
                 ResultSet metaRS = metatST.executeQuery(cur_query);
 
                 while(metaRS.next()){
-                    
+                    ForumThreadMap.put(metaRS.getString("meta_key"), metaRS.getString("meta_value"));
                 }
-
+                    
 
             }
         } catch (Exception e) {
@@ -180,7 +186,7 @@ public class MySqlDatabase implements IIODatabaseObject {
         return 0;
     }
 
-    public List<Post> GetPosts(){
+    public List<Post> GetPosts(int nbr_per_page,int page_index){
         return new ArrayList<Post>();
     }
 
