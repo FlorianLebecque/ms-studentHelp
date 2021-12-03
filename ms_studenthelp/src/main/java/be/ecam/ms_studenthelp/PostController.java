@@ -66,6 +66,7 @@ public class PostController {
     public IPost ReplyPostByPostId(@PathVariable("postId") String postId) {
         IPost post = new Post("test", "post test");
         // Récupérer infos et créer un nouveau post dans la DB
+        MsStudenthelpApplication.DatabaseManager.CreatePost(post);
         return post;
     }
 
