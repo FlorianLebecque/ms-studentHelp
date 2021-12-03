@@ -22,7 +22,6 @@ public class Post implements IPost{
 
     
     public String content;
-    public IForumThread forumThread;
     
 
     public IPost parent;
@@ -36,16 +35,16 @@ public class Post implements IPost{
         //lastModif = date;
     }
 
-    public Post(String _authorId, String _content, IForumThread _forumThread){
+    public Post(String _authorId, String _content){
         id    = GuidGenerator.GetNewUUIDString();
         authorId = _authorId;
         date  = LocalDateTime.now();
         //lastModif = date;
         setContent(_content);
-        setForumThread(_forumThread);
     }
 
     /// ---SETTERS--- ///
+
     public void setContent(String _content){
         content = _content;
     }
@@ -54,9 +53,6 @@ public class Post implements IPost{
         parent = _parent;
     }
 
-    public void setForumThread(IForumThread _forumThread){
-        forumThread = _forumThread;
-    }
     /// ------------- ///
 
 
@@ -80,10 +76,6 @@ public class Post implements IPost{
 
     public IPost getParent() {
         return parent;
-    }
-
-    public IForumThread getForumThread() {
-        return forumThread;
     }
 
     public List<IPost> getChildren() {
@@ -112,7 +104,7 @@ public class Post implements IPost{
     }
 
     public void Reply(String _authorId, String _content){
-        IPost reply  = new Post(_authorId,_content, this.forumThread);
+        IPost reply  = new Post(_authorId,_content);
         reply.setParent(this);
         children.add(reply);
     }
