@@ -103,8 +103,7 @@ public class Post implements IPost{
         UpdateDate();
     }
 
-    public void Reply(String _authorId, String _content){
-        IPost reply  = new Post(_authorId,_content);
+    public void Reply(@org.jetbrains.annotations.NotNull IPost reply){
         reply.setParent(this);
         children.add(reply);
     }
