@@ -43,6 +43,14 @@ public class ThreadController {
         return thread;
     }
 
+    @GetMapping("/thread/UpdateCategory/{threadId}/{newCategory}")
+    public IForumThread UpdateForumThreadCategory(@PathVariable("threadId") String threadId, @PathVariable("newCategory") String newCategory) {
+        IForumThread thread = MsStudenthelpApplication.DatabaseManager.GetForumThread(threadId);
+        thread.UpdateCategory(newCategory);
+        MsStudenthelpApplication.DatabaseManager.UpdateForumThread(thread);
+        return thread;
+    }
+
     @GetMapping("/getThread")
     public IForumThread GetEasyThread(){
         IForumThread thread = new ForumThread("Le meilleur titre du monde","Quelquun","Une catégorie banale");

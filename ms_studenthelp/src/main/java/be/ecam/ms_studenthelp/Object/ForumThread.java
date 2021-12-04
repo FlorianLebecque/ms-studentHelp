@@ -64,6 +64,12 @@ public class ForumThread implements IForumThread {
         lastModif = LocalDateTime.now();
     }
 
+    public void UpdateCategory(String category_){
+        category = category_;
+
+        lastModif = LocalDateTime.now();
+    }
+
     public void Delete(){
         child.Delete();
     }

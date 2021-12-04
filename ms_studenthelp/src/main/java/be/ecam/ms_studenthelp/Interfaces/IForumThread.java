@@ -12,6 +12,7 @@ public interface IForumThread {
     //public ForumThread(String title_,String authorId_,String category_);
 
     public void UpdateTitle(String title_);
+    public void UpdateCategory(String category_);
 
     public void Delete();
 
