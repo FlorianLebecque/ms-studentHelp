@@ -2,6 +2,8 @@ package be.ecam.ms_studenthelp;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.ArrayList;
+import java.util.List;
 
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Object.ForumThread;
@@ -51,27 +53,10 @@ public class ThreadController {
         return thread;
     }
 
-    @GetMapping("/getThread")
-    public IForumThread GetEasyThread(){
-        IForumThread thread = new ForumThread("Le meilleur titre du monde","Quelquun","Une catégorie banale");
-        return thread;
+    @GetMapping("/thread/GetForumPages/{nbr_per_page}/{page_index}")
+    public List<IForumThread> GetForumThreadPages(@PathVariable("nbr_per_page") int nbr_per_page, @PathVariable("page_index") int page_index) {
+        List<IForumThread> ft_list = MsStudenthelpApplication.DatabaseManager.GetForumThreads(nbr_per_page,page_index);
+        return ft_list;
     }
-
-    /*@GetMapping("/helloMapping")
-    public IForumThread index_ter() {
-
-        //MsStudenthelpApplication.DatabaseManager.CreateForumThread(ft);
-
-
-
-        IForumThread test = MsStudenthelpApplication.DatabaseManager.GetThread("uuid");
-
-        MsStudenthelpApplication.DatabaseManager.UpdateThread(test);
-
-
-        test.setContent("C'est la vie de chateau les blEUs?!!");
-        //const myJSON = JSON.stringify(obj)
-        return test;//"coucou";
-    }*/
 
 }
