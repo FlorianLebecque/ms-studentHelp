@@ -35,6 +35,13 @@ public class ThreadController {
         System.out.println(thread);
         return thread;
     }
+    @GetMapping("/thread/UpdateTitle/{threadId}/{newTitle}")
+    public IForumThread UpdateForumThreadTitle(@PathVariable("threadId") String threadId, @PathVariable("newTitle") String newTitle) {
+        IForumThread thread = MsStudenthelpApplication.DatabaseManager.GetForumThread(threadId);
+        thread.UpdateTitle(newTitle);
+        MsStudenthelpApplication.DatabaseManager.UpdateForumThread(thread);
+        return thread;
+    }
 
     @GetMapping("/getThread")
     public IForumThread GetEasyThread(){
