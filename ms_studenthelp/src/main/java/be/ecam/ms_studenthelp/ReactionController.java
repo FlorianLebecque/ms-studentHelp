@@ -30,6 +30,7 @@ public class ReactionController {
 
 	@GetMapping("/posts/{postId}/reactions")
 	public GetPostsPostIdReactionsResult getPostsPostIdReactions(@PathVariable("postId") String postId, HttpServletResponse resp) {
+        // postId format verification
         try {
             UUID.fromString(postId);
         } catch (IllegalArgumentException e) {
@@ -71,8 +72,11 @@ public class ReactionController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "postId should be an UUID");
         }
 
+        // Parsing the JSON body
         JsonParser springParser = JsonParserFactory.getJsonParser();
         Map<String,Object> body_data = springParser.parseMap(body);
+
+        // Getting `value` from the parsed body, and validating it
         Integer value = (Integer) body_data.get("value");
         if (value == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "value should be in the body");
@@ -89,8 +93,10 @@ public class ReactionController {
             return new PutPostsPostIdReactionsResult("Post not found");
         }
 
+        // TODO: Fetch the author from the OAuth token
         String authorId = "author";
 
+        // Creating or updating the reaction depending on its existence
         IReaction reaction = db.GetReaction(post, authorId);
         if (reaction == null) {
             reaction = new Reaction(postId, authorId, value);
