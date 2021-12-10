@@ -149,4 +149,11 @@ public class MySqlDatabase implements IIODatabaseObject {
         return RCRUD.DeleteReaction(reaction);
     }
 
+
+
+
+    public List<String> GetCategories() {
+        return categoryManager.GetCategories();
+    }
+
 }
