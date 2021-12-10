@@ -73,6 +73,13 @@ public class ForumThread implements IForumThread {
     public void Delete(){
         child.Delete();
     }
+    public void AddTags(String tag){
+        tags.add(tag);
+    }
+    public void AddTags(ArrayList<String> tag){
+        for(String n : tag)
+            tags.add(n);
+    }
 
     @Override
     public String toString() {

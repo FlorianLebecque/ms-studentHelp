@@ -2,6 +2,7 @@ package be.ecam.ms_studenthelp.Interfaces;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.ArrayList;
 
 public interface IForumThread {
 
@@ -15,6 +16,8 @@ public interface IForumThread {
     public void UpdateCategory(String category_);
 
     public void Delete();
+    public void AddTags(ArrayList<String> tag);
+    public void AddTags(String tag);
 
     @Override
     public String toString();

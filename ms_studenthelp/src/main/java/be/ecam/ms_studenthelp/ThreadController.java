@@ -48,10 +48,11 @@ public class ThreadController {
         JsonParser springParser = JsonParserFactory.getJsonParser();
         Map<String,Object> body_data = springParser.parseMap(body);
         String threadTitre = (String) body_data.get("title");
-        //List<String> tags = (List<String>) body_data.get("tags");
+        ArrayList<String> tags = (ArrayList<String>) body_data.get("tags");
         String NomDeCatégorie = (String) body_data.get("category");
         String AutheurID = "Someone"; //To be set : the author is the authenticated user
         IForumThread thread = new ForumThread(threadTitre, AutheurID,NomDeCatégorie);
+        thread.AddTags(tags);
         MsStudenthelpApplication.DatabaseManager.CreateForumThread(thread);
         return thread;
     }
