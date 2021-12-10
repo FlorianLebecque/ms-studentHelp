@@ -24,7 +24,7 @@ public class Post implements IPost{
         id    = GuidGenerator.GetNewUUIDString();
         authorId = _authorId;
         date  = LocalDateTime.now();
-
+        lastModif = date;
         content = content_;
 
     }
@@ -33,7 +33,7 @@ public class Post implements IPost{
         id = id_;
         authorId = authorId_;
         date = date_;
-        lastModif = lastModif_;
+        lastModif = date_;
         content = content_;
         parent = parent_;
     }

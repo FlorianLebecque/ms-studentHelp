@@ -1,51 +1,19 @@
 package be.ecam.ms_studenthelp;
 
+import org.springframework.boot.json.JsonParser;
+import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 import be.ecam.ms_studenthelp.Interfaces.IPost;
 import be.ecam.ms_studenthelp.Object.Post;
-import be.ecam.ms_studenthelp.Interfaces.IForumThread;
-import be.ecam.ms_studenthelp.utils.*;
-import be.ecam.ms_studenthelp.Database.IIODatabaseObject;
-import be.ecam.ms_studenthelp.Object.Reaction;
-import be.ecam.ms_studenthelp.Interfaces.IReaction;
 
 
 @RestController
 public class PostController {
-
-    //TEST
-
-    @GetMapping("/getPost")
-    public IPost GetPost(){
-        IPost post = new Post("L-A","qds");
-        post.setContent("Coucou");
-        return post;
-    }
-
-    @GetMapping("/helloMapping")
-	public IPost index_ter() {
-
-        //MsStudenthelpApplication.DatabaseManager.CreateForumThread(ft);
-
-        IPost test = MsStudenthelpApplication.DatabaseManager.GetPost("uuid");
-
-        MsStudenthelpApplication.DatabaseManager.UpdatePost(test);
-
-        test.setContent("C'est la vie de chateau les blEUs?!!");
-        //const myJSON = JSON.stringify(obj)
-		return test;//"coucou";
-	}
-
-    // GOOD
 
     @GetMapping("/posts/{postId}")
     public IPost GetPostByPostId(@PathVariable("postId") String postId) {
@@ -54,26 +22,33 @@ public class PostController {
     }
 
     @PatchMapping("/posts/{postId}")
-    public IPost PatchPostByPostId(@PathVariable("postId") String postId) {
+    public IPost PatchPostByPostId(@PathVariable("postId") String postId, @RequestBody String body) {
+        JsonParser springParser = JsonParserFactory.getJsonParser();
+        Map<String,Object> body_data = springParser.parseMap(body);
+        String content = body_data.get("content").toString();
         IPost post = MsStudenthelpApplication.DatabaseManager.GetPost(postId);
-
-        //Récupérer nouvelles infos, les changer dans la DB et renvoyer le nouveau post
-
+        post.setContent(content);
+        MsStudenthelpApplication.DatabaseManager.UpdatePost(post);
         return post;
     }
 
-    @PutMapping("/posts/{postId}")
-    public IPost ReplyPostByPostId(@PathVariable("postId") String postId) {
-        IPost post = new Post("test", "post test");
-        // Récupérer infos et créer un nouveau post dans la DB
+    @PutMapping("/posts/")
+    public IPost ReplyPostByPostId(@RequestBody String body) {
+        JsonParser springParser = JsonParserFactory.getJsonParser();
+        Map<String,Object> body_data = springParser.parseMap(body);
+        String authorId = body_data.get("authorId").toString();
+        String content = body_data.get("content").toString();
+        IPost post = new Post(authorId, content);
         MsStudenthelpApplication.DatabaseManager.CreatePost(post);
         return post;
     }
 
     @DeleteMapping("/posts/{postId}")
-    public ResponseEntity deletePostByPostId(@PathVariable("postId") String postId) {
-        // Delete le post dans la DB
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public IPost deletePostByPostId(@PathVariable("postId") String postId) {
+        IPost post = MsStudenthelpApplication.DatabaseManager.GetPost(postId);
+        post.setContent("Deleted post");
+        MsStudenthelpApplication.DatabaseManager.UpdatePost(post);
+        return post;
     }
 
 }
