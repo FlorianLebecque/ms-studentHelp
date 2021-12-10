@@ -53,6 +53,14 @@ public class ThreadController {
         return thread;
     }
 
+    @GetMapping("/thread/Delete/{threadId}")
+    public IForumThread DeleteForumThreadTitle(@PathVariable("threadId") String threadId) {
+        IForumThread thread = MsStudenthelpApplication.DatabaseManager.GetForumThread(threadId);
+        thread.UpdateTitle("Deleted");
+        MsStudenthelpApplication.DatabaseManager.UpdateForumThread(thread);
+        return thread;
+    }
+
     @GetMapping("/thread/GetForumPages/{nbr_per_page}/{page_index}")
     public List<IForumThread> GetForumThreadPages(@PathVariable("nbr_per_page") int nbr_per_page, @PathVariable("page_index") int page_index) {
         List<IForumThread> ft_list = MsStudenthelpApplication.DatabaseManager.GetForumThreads(nbr_per_page,page_index);
