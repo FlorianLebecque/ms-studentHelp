@@ -43,14 +43,15 @@ public class ForumThread implements IForumThread {
     }
 
     //create
-    public ForumThread(String title_,String authorId_,String category_){
+    public ForumThread(String title_,String authorId_,String category_,IPost child_,boolean answered_){
         id       = GuidGenerator.GetNewUUIDString();
         authorId = authorId_;
         title    = title_;
         tags     = new ArrayList<String>();
         date     = LocalDateTime.now();
         category = category_;
-        answered = false;
+        answered = answered;
+        child    = child_;
     }
 
 
