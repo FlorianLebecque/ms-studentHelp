@@ -114,7 +114,7 @@ public class ForumThread implements IForumThread {
         return date;
     }
 
-    public IPost getChildren() {
+    public IPost getChild() {
         return child;
     }
 

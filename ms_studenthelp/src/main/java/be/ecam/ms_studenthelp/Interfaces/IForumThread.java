@@ -32,7 +32,7 @@ public interface IForumThread {
 
     public LocalDateTime getDate();
 
-    public IPost getChildren();
+    public IPost getChild();
 
     public List<String> getTags();
 
