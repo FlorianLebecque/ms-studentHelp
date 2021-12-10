@@ -24,6 +24,9 @@ public class MySqlDatabase implements IIODatabaseObject {
     private ReactionCRUD RCRUD;
 
     public MySqlDatabase(){
+
+        this.connect();
+
         PCRU  = new PostCRU(con);
         FTCRU = new ForumThreadCRU(con,PCRU);
         RCRUD = new ReactionCRUD(con);
