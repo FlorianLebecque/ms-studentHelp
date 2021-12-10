@@ -134,8 +134,7 @@ public class ReactionController {
         IIODatabaseObject db = MsStudenthelpApplication.DatabaseManager;
         IPost post = db.GetPost(postId);
         if (post == null) {
-            resp.setStatus(404);
-            return new PutPostsPostIdReactionsResult("Post not found");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
         // TODO: Fetch the author from the OAuth token
