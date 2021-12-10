@@ -28,4 +28,6 @@ public interface IIODatabaseObject{
     public IReaction UpdateReaction(IReaction reaction);
     public IReaction DeleteReaction(IReaction reaction);
 
+    public List<String> GetCategories();
+
 }
