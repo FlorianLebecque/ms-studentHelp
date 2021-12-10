@@ -14,6 +14,7 @@ public interface IForumThread {
 
     public void UpdateTitle(String title_);
     public void UpdateCategory(String category_);
+    public void UpdateAnswered(boolean answered_);
 
     public void Delete();
     public void AddTags(List<String> tag);

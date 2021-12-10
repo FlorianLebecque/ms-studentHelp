@@ -70,6 +70,10 @@ public class ForumThread implements IForumThread {
         lastModif = LocalDateTime.now();
     }
 
+    public void UpdateAnswered(boolean answered_) {
+        answered = answered_;
+    }
+
     public void Delete(){
         child.Delete();
     }
