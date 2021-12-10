@@ -123,8 +123,24 @@ public class ReactionController {
 	}
 
 	@DeleteMapping("/posts/{postId}/reactions")
-	public ResponseEntity deletePostsPostIdReactions(@PathVariable("postId") String postId) {
-		// Delete reaction
+	public ResponseEntity deletePostsPostIdReactions(@PathVariable("postId") String postId, HttpServletResponse resp) {
+
+        IIODatabaseObject db = MsStudenthelpApplication.DatabaseManager;
+        IPost post = db.GetPost(postId);
+        if (post == null) {
+            resp.setStatus(404);
+            return new PutPostsPostIdReactionsResult("Post not found");
+        }
+
+        // TODO: Fetch the author from the OAuth token
+        String authorId = "author";
+
+        // Creating or updating the reaction depending on its existence
+        IReaction reaction = db.GetReaction(post, authorId);
+        if (reaction != null) {
+            db.DeleteReaction(reaction);
+        }
+
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }
