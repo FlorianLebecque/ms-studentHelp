@@ -22,6 +22,7 @@ public class MySqlDatabase implements IIODatabaseObject {
     private ForumThreadCRU FTCRU;
     private PostCRU PCRU;
     private ReactionCRUD RCRUD;
+    private CategoryManager categoryManager;
 
     public MySqlDatabase(){
 
@@ -30,6 +31,7 @@ public class MySqlDatabase implements IIODatabaseObject {
         PCRU  = new PostCRU(con);
         FTCRU = new ForumThreadCRU(con,PCRU);
         RCRUD = new ReactionCRUD(con);
+        categoryManager = new CategoryManager(con);
     }
 
 
@@ -145,6 +147,13 @@ public class MySqlDatabase implements IIODatabaseObject {
     public IReaction DeleteReaction(IReaction reaction){
         
         return RCRUD.DeleteReaction(reaction);
+    }
+
+
+
+
+    public List<String> GetCategories() {
+        return categoryManager.GetCategories();
     }
 
 }
