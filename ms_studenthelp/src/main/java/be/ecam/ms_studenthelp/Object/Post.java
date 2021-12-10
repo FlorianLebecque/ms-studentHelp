@@ -2,7 +2,6 @@ package be.ecam.ms_studenthelp.Object;
 
 import java.util.List;
 
-import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
 import be.ecam.ms_studenthelp.utils.*;
 //import jdk.internal.vm.annotation.ForceInline;

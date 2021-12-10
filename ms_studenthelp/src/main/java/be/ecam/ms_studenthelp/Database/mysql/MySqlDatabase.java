@@ -1,22 +1,18 @@
 package be.ecam.ms_studenthelp.Database.mysql;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.Statement;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 
 import be.ecam.ms_studenthelp.Database.*;
 import be.ecam.ms_studenthelp.Database.mysql.MySqlSerializer.*;
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
 import be.ecam.ms_studenthelp.Interfaces.IReaction;
-import be.ecam.ms_studenthelp.Object.ForumThread;
-import be.ecam.ms_studenthelp.Object.Post;
-import be.ecam.ms_studenthelp.Object.Reaction;
+
+
 
 public class MySqlDatabase implements IIODatabaseObject {
 
@@ -26,12 +22,15 @@ public class MySqlDatabase implements IIODatabaseObject {
     private ForumThreadCRU FTCRU;
     private PostCRU PCRU;
     private ReactionCRUD RCRUD;
+    private CategoryManager categoryManager;
 
     public MySqlDatabase(){
-        connect();
-        FTCRU = new ForumThreadCRU(con);
+        this.connect();
+
         PCRU  = new PostCRU(con);
+        FTCRU = new ForumThreadCRU(con,PCRU);
         RCRUD = new ReactionCRUD(con);
+        categoryManager = new CategoryManager(con);
     }
 
 
@@ -57,6 +56,10 @@ public class MySqlDatabase implements IIODatabaseObject {
         }
         
         return false;
+    }
+
+    public boolean isConnected(){
+        return con != null;
     }
 
     public void disconnect(){
@@ -147,6 +150,13 @@ public class MySqlDatabase implements IIODatabaseObject {
     public IReaction DeleteReaction(IReaction reaction){
         
         return RCRUD.DeleteReaction(reaction);
+    }
+
+
+
+
+    public List<String> GetCategories() {
+        return categoryManager.GetCategories();
     }
 
 }

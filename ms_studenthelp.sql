@@ -78,8 +78,7 @@ CREATE TABLE `mssh_FT_tags` (
 
 CREATE TABLE `mssh_Post` (
   `id` varchar(36) NOT NULL,
-  `forumThread` varchar(36) NOT NULL,
-  `parent` varchar(36) NOT NULL,
+  `parent` varchar(36) DEFAULT NULL,
   `content` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -129,7 +128,6 @@ ALTER TABLE `mssh_FT_tags`
 --
 ALTER TABLE `mssh_Post`
   ADD KEY `elem_pt` (`id`),
-  ADD KEY `ft_pt` (`forumThread`),
   ADD KEY `pt_pt` (`parent`);
 
 --
@@ -154,7 +152,6 @@ ALTER TABLE `mssh_FT_tags`
 --
 ALTER TABLE `mssh_Post`
   ADD CONSTRAINT `elem_pt` FOREIGN KEY (`id`) REFERENCES `mssh_elem` (`id`),
-  ADD CONSTRAINT `ft_pt` FOREIGN KEY (`forumThread`) REFERENCES `mssh_ForumThread` (`id`),
   ADD CONSTRAINT `pt_pt` FOREIGN KEY (`parent`) REFERENCES `mssh_Post` (`id`);
 
 --

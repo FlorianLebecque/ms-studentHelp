@@ -11,6 +11,7 @@ public interface IIODatabaseObject{
     public boolean connect();
     public void disconnect();
 
+    public boolean isConnected();
 
     public IForumThread GetForumThread(String uuid);
     public int CreateForumThread(IForumThread ft);
@@ -26,5 +27,7 @@ public interface IIODatabaseObject{
     public IReaction CreateReaction(IReaction reaction);
     public IReaction UpdateReaction(IReaction reaction);
     public IReaction DeleteReaction(IReaction reaction);
+
+    public List<String> GetCategories();
 
 }
