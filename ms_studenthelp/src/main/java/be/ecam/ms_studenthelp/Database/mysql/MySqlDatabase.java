@@ -57,6 +57,10 @@ public class MySqlDatabase implements IIODatabaseObject {
         return false;
     }
 
+    public boolean isConnected(){
+        return con != null;
+    }
+
     public void disconnect(){
         try{
             con.commit();

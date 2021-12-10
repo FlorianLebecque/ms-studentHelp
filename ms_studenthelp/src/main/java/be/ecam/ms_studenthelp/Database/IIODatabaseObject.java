@@ -11,6 +11,7 @@ public interface IIODatabaseObject{
     public boolean connect();
     public void disconnect();
 
+    public boolean isConnected();
 
     public IForumThread GetForumThread(String uuid);
     public int CreateForumThread(IForumThread ft);
