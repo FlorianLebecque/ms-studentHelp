@@ -233,9 +233,6 @@ paths:
     post:
       summary: New thread
       operationId: post-threads
-      responses:
-        '200':
-          description: OK
       description: |-
         Create a new thread in a specific category
 
@@ -248,6 +245,13 @@ paths:
       security:
         - GlobalJWT:
             - student-help.thread
+      responses:
+        '200':
+          description: Newly created thread
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
   '/threads/{threadId}':
     parameters:
       - $ref: '#/components/parameters/threadId'
