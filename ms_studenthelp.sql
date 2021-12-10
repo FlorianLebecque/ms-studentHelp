@@ -128,7 +128,6 @@ ALTER TABLE `mssh_FT_tags`
 --
 ALTER TABLE `mssh_Post`
   ADD KEY `elem_pt` (`id`),
-  ADD KEY `ft_pt` (`forumThread`),
   ADD KEY `pt_pt` (`parent`);
 
 --
