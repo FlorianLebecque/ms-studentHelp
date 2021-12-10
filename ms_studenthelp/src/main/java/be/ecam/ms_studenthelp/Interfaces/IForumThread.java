@@ -16,7 +16,7 @@ public interface IForumThread {
     public void UpdateCategory(String category_);
 
     public void Delete();
-    public void AddTags(ArrayList<String> tag);
+    public void AddTags(List<String> tag);
     public void AddTags(String tag);
 
     @Override

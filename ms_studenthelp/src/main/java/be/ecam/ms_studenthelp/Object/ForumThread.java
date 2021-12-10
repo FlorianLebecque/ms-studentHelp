@@ -76,7 +76,7 @@ public class ForumThread implements IForumThread {
     public void AddTags(String tag){
         tags.add(tag);
     }
-    public void AddTags(ArrayList<String> tag){
+    public void AddTags(List<String> tag){
         for(String n : tag)
             tags.add(n);
     }
