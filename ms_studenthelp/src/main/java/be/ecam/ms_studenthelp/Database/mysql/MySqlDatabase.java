@@ -1,7 +1,8 @@
 package be.ecam.ms_studenthelp.Database.mysql;
 
 import java.util.List;
-import java.sql.Connection;
+
+import java.sql.Connection; 
 import java.sql.DriverManager;
 import java.sql.Statement;
 
@@ -12,8 +13,6 @@ import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
 import be.ecam.ms_studenthelp.Interfaces.IReaction;
 
-
-
 public class MySqlDatabase implements IIODatabaseObject {
 
 
@@ -23,6 +22,7 @@ public class MySqlDatabase implements IIODatabaseObject {
     private PostCRU PCRU;
     private ReactionCRUD RCRUD;
     private CategoryManager categoryManager;
+
 
     public MySqlDatabase(){
 
@@ -37,6 +37,8 @@ public class MySqlDatabase implements IIODatabaseObject {
 
     public boolean connect(){
         
+        
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (Exception E) {

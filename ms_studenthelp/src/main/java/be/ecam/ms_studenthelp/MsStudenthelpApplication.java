@@ -4,6 +4,7 @@ package be.ecam.ms_studenthelp;
 
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -22,20 +23,10 @@ public class MsStudenthelpApplication {
 
 		DatabaseManager = new MySqlDatabase();
 
-
-
 		if(DatabaseManager.isConnected()){
-
-			//ForumThread ft = new ForumThread("First Thread Ever!", GuidGenerator.GetNewUUIDString(),"debug");
-			//int a = DatabaseManager.CreateForumThread(ft);
-
 			SpringApplication.run(MsStudenthelpApplication.class, args);
-		};
-		//TODO : correct disconnect bugs
-		//DatabaseManager.disconnect();
-		
-	}
 
-	
+		}
+	}
 
 }
