@@ -32,6 +32,13 @@ public class ThreadController {
     /**
      * POST /threads
      * https://beta.bachelay.eu/ms-studentHelp/#/operations/post-threads
+     * Create a new thread in a specific category and the post it contain. Return a IForumThread
+     * Parameters of the body :
+     * String title
+     * List<String> tags
+     * String category
+     * Boolean answered
+     * Map<String,String> first_post : to create the content of the Thread
      */
     @PostMapping("/threads")
     public IForumThread PostThreads(@RequestBody String body){
@@ -78,6 +85,7 @@ public class ThreadController {
     /**
      * GET /threads/{threadId}
      * https://beta.bachelay.eu/ms-studentHelp/#/operations/get-threads-threadId
+     * Return an existing Thread from is threadID (String)
      */
     @GetMapping("/threads/{threadId}")
     public IForumThread getThreadsThreadId(@PathVariable("threadId") String threadId) {
@@ -88,6 +96,8 @@ public class ThreadController {
     /**
      * PATCH /threads/{threadId}
      * https://beta.bachelay.eu/ms-studentHelp/#/operations/patch-threads-threadId
+     * Modify an existing Thread from its threadId and a body (where the modification are) and return it.
+     * It allows to modify the title, tags, category and/or answered of an existing thread.
      */
     @PatchMapping("/threads/{threadId}")
     public IForumThread patchThreadsThreadId(@PathVariable("threadId") String threadId, @RequestBody String body) {
@@ -126,6 +136,7 @@ public class ThreadController {
     /**
      * DELETE /threads/{threadId}
      * https://beta.bachelay.eu/ms-studentHelp/#/operations/delete-threads
+     * Delete a Thread from is Id.
      */
     @DeleteMapping("/threads/{threadId}")
     public IForumThread DeleteForumThreadTitle(@PathVariable("threadId") String threadId) {
@@ -145,8 +156,13 @@ public class ThreadController {
         return null;
     }
 
+    /**
+     * GET /threads
+     * https://beta.bachelay.eu/ms-studentHelp/#/operations/get-threads
+     * Get a list of published threads
+     */
     /*
-    @GetMapping("/thread/GetForumPages/{nbr_per_page}/{page_index}")
+    @GetMapping("/threads")
     public List<IForumThread> GetForumThreadPages(@PathVariable("nbr_per_page") int nbr_per_page, @PathVariable("page_index") int page_index) {
         List<IForumThread> ft_list = MsStudenthelpApplication.DatabaseManager.GetForumThreads(nbr_per_page,page_index);
         return ft_list;

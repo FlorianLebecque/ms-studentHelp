@@ -26,7 +26,7 @@ public class ForumThread implements IForumThread {
     private IPost child;
 
 
-    //load
+    //load a Thread
     public ForumThread(String id_,String authorId_,String title_ ,String category_,List<String> tags_,LocalDateTime date_,LocalDateTime lastModif_,Boolean answered_,IPost child_){
         id       = id_;
         authorId = authorId_;
@@ -42,7 +42,7 @@ public class ForumThread implements IForumThread {
         child = child_;
     }
 
-    //create
+    //create a Thread
     public ForumThread(String title_,String authorId_,String category_,IPost child_,boolean answered_){
         id       = GuidGenerator.GetNewUUIDString();
         authorId = authorId_;
