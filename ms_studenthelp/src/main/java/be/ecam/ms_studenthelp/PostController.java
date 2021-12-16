@@ -19,19 +19,12 @@ public class PostController {
 
     @GetMapping("/helloMapping")
 	public IPost index_ter() {
-
         //MsStudenthelpApplication.DatabaseManager.CreateForumThread(ft);
-
-
-
         IPost test = MsStudenthelpApplication.DatabaseManager.GetPost("uuid");
-
         MsStudenthelpApplication.DatabaseManager.UpdatePost(test);
-        
-
-        test.setContent("C'est la vie de chateau les blEUs?!!");
+        test.setContent("Hello Mapping!");
         //const myJSON = JSON.stringify(obj)
-		return test;//"coucou";
+		return test;
 	}
 
 }
