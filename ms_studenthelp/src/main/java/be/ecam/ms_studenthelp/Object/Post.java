@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 
 public class Post implements IPost{
+    //A Post is created by defining authorId and content before defining the rest via the setters
+    //To create a reply: create a new Post before using function Reply(IPost reply) which defines the new Post as beeing the reply
 
     private final String id;
     private final String authorId;
@@ -26,6 +28,7 @@ public class Post implements IPost{
     public IPost parent;
     public List<IPost> children = new ArrayList<IPost>();
 
+    //create
     public Post(String _authorId,String content_){
         id    = GuidGenerator.GetNewUUIDString();
         authorId = _authorId;
@@ -36,6 +39,7 @@ public class Post implements IPost{
 
     }
 
+    //load
     public Post(String id_,String authorId_,String content_ ,LocalDateTime date_,LocalDateTime lastModif_ ,IPost parent_){
         id = id_;
         authorId = authorId_;
@@ -60,14 +64,11 @@ public class Post implements IPost{
 
     public void setChildren(List<IPost> children_){
         children = children_;
-    }
-
-    
+    }    
     /// ------------- ///
 
 
     /// ---GETTERS--- ///
-
     public String getContent() {
         return content;
     }
@@ -95,52 +96,16 @@ public class Post implements IPost{
     public LocalDateTime getDateModified() {
         return lastModif;
     }
-
-    /* public String GetId(){
->>>>>>> b7f79efe06cc1b706bcc9a3237b516f05b55a690
-        return id;
-    }
-    public String getContent(){
-        return content;
-    }
-    public String getAuthorId(){
-        return authorId;
-    }
-    public LocalDateTime getDatePosted(){
-        return datePosted;
-    }
-    public List<LocalDateTime> getDateModified(){
-        return dateModified;
-    }
-    public ForumThread getForumThread(){
-        return forumThread;
-    }
-    public Post getParent(){
-        assert parent != null : "Parent is null";
-        return parent;
-    }
-    public List<Post> getChildren(){
-        return children;
-    }
-    public boolean getModified(){
-        return modified;
-    }
-    public boolean getDeleted(){
-        return deleted;
-    } */
-
-
     /// ------------- ///
-
-    public void UpdateDate(){
-
-        lastModif  = LocalDateTime.now();
-    }
-
 
     public void UpdateContent(String _content){
         content     = _content;
         UpdateDate();
+    }
+
+    public void UpdateDate(){
+
+        lastModif  = LocalDateTime.now();
     }
 
     public void Delete(){
