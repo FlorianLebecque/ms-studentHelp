@@ -17,16 +17,5 @@ public class PostController {
         return post;
     }
 
-    @GetMapping("/helloMapping")
-	public IPost index_ter() {
-        //MsStudenthelpApplication.DatabaseManager.CreateForumThread(ft);
-        IPost test = MsStudenthelpApplication.DatabaseManager.GetPost("5b470671-34c2-4d2c-8146-e7df83b56773");
-        //IPost test = new Post("Rob", "test");
-        //int alo = MsStudenthelpApplication.DatabaseManager.CreatePost(test);
-        MsStudenthelpApplication.DatabaseManager.UpdatePost(test);
-        test.setContent("Hello Mapping!");
-        //const myJSON = JSON.stringify(obj)
-		return test;
-	}
 
 }
