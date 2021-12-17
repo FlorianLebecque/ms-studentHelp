@@ -22,7 +22,7 @@ public class ForumThreadCRU {
         PCRU = PCRU_;
     }
 
-
+    //TODO : ADD tag managment
     public int CreateForumThread(IForumThread ft){
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
