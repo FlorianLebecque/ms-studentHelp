@@ -30,15 +30,9 @@ public class Post implements IPost{
 
     private final String id;
     private final String authorId;
-
-
     public LocalDateTime date;
     public LocalDateTime lastModif;
-
-    
     public String content;
-    
-
     public IPost parent;
     public List<IPost> children = new ArrayList<IPost>();
 
@@ -46,39 +40,35 @@ public class Post implements IPost{
     public Post(String _authorId,String _content){
         id    = GuidGenerator.GetNewUUIDString();
         authorId = _authorId;
-
         date  = LocalDateTime.now();
-
+        lastModif = date;
         content = _content;
-
     }
 
     //load
     public Post(String id_,String authorId_,String content_ ,LocalDateTime date_,LocalDateTime lastModif_ ,IPost parent_){
         id = id_;
         authorId = authorId_;
-
         date = date_;
-        lastModif = lastModif_;
-
+        lastModif = date_;
         content = content_;
-
         parent = parent_;
     }
 
-
     /// ---SETTERS--- ///
+
     public void setContent(String _content){
-        content         = _content;
+        content = _content;
     }
     
     public void setParent(IPost _parent){
-        parent      = _parent;
+        parent = _parent;
     }
 
     public void setChildren(List<IPost> children_){
         children = children_;
-    }    
+    }
+
     /// ------------- ///
 
 
@@ -107,7 +97,7 @@ public class Post implements IPost{
         return children;
     }
 
-    public LocalDateTime getDateModified() {
+    public LocalDateTime getLastModif() {
         return lastModif;
     }
     /// ------------- ///
@@ -117,21 +107,22 @@ public class Post implements IPost{
         UpdateDate();
     }
 
+
     public void UpdateDate(){
 
         lastModif  = LocalDateTime.now();
     }
 
+
     public void Delete(){
         UpdateContent("--deleted--");
         UpdateDate();
     }
-
+    
     //To create a reply: create a new Post before using function Reply(IPost reply) which defines the new Post as beeing the reply
     public void Reply(IPost reply){
         reply.setParent(this);
         children.add(reply);
     }
 
-    
 }
