@@ -60,7 +60,6 @@ public class ForumThreadCRU {
             queries_update.add(query_update);
 
             res += MySqlDatabase.UpdateQuery(queries_update);
-            res += PCRU.CreatePost(ft.getChild());
         }
 
         return res;
