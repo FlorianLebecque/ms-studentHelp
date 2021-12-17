@@ -2,7 +2,6 @@ package be.ecam.ms_studenthelp.Object;
 
 import java.util.List;
 
-import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
 import be.ecam.ms_studenthelp.utils.*;
 //import jdk.internal.vm.annotation.ForceInline;
@@ -12,41 +11,63 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 
 public class Post implements IPost{
+    /**
+     * The Post object represents a post inside a parent thread. 
+     * He can have answers that will be referenced in his 'children' list.
+     * 2 ways to create a Post object:
+     *  CREATE: when you create a new Post
+     *      @param {String} _authorId
+     *      @param {String} _content
+     *      Other @parameters are defined by setters
+     *  LOAD: when you load an existing Post from the database
+     *      @param {String} id_
+     *      @param {String} authorId_
+     *      @param {Stirg} content_
+     *      @param {LocalDateTime} date_
+     *      @param {LocalDateTime} LastModif_
+     *      @param {IPost} parent_
+     */
 
-    private String id;
-    private LocalDateTime datePosted;
+    private final String id;
+    private final String authorId;
 
-    private String authorId;
-    private String content;
-    private IForumThread forumThread;
+
+    public LocalDateTime date;
+    public LocalDateTime lastModif;
+
     
+    public String content;
     
-    private List<LocalDateTime> dateModified = new ArrayList<LocalDateTime>();
 
-    private IPost parent;
-    private List<IPost> children = new ArrayList<IPost>();
+    public IPost parent;
+    public List<IPost> children = new ArrayList<IPost>();
 
-    private boolean modified = false;
-    private boolean deleted = false;
+    //create
+    public Post(String _authorId,String _content){
+        id    = GuidGenerator.GetNewUUIDString();
+        authorId = _authorId;
 
-    public Post(){
-        id          =  GuidGenerator.GetNewUUIDString();
-        datePosted  = LocalDateTime.now();
+        date  = LocalDateTime.now();
+
+        content = _content;
+
     }
 
-    public Post(String _authorId, String _content, IForumThread _forumThread){
-        id          =  GuidGenerator.GetNewUUIDString();
-        datePosted  = LocalDateTime.now();
+    //load
+    public Post(String id_,String authorId_,String content_ ,LocalDateTime date_,LocalDateTime lastModif_ ,IPost parent_){
+        id = id_;
+        authorId = authorId_;
 
-        setAuthorId(_authorId);
-        setContent(_content);
-        setForumThread(_forumThread);
+        date = date_;
+        lastModif = lastModif_;
+
+        content = content_;
+
+        parent = parent_;
     }
+
 
     /// ---SETTERS--- ///
-    public void setAuthorId(String _authorId){
-        authorId    = _authorId;
-    }
     public void setContent(String _content){
         content         = _content;
     }
@@ -54,14 +75,14 @@ public class Post implements IPost{
     public void setParent(IPost _parent){
         parent      = _parent;
     }
-    public void setForumThread(IForumThread _forumThread){
-        forumThread = _forumThread;
-    }
+
+    public void setChildren(List<IPost> children_){
+        children = children_;
+    }    
     /// ------------- ///
 
 
     /// ---GETTERS--- ///
-
     public String getContent() {
         return content;
     }
@@ -75,81 +96,39 @@ public class Post implements IPost{
     }
 
     public LocalDateTime getDatePosted() {
-        return datePosted;
+        return date;
     }
 
     public IPost getParent() {
         return parent;
     }
 
-    public IForumThread getForumThread() {
-        return forumThread;
-    }
-
     public List<IPost> getChildren() {
         return children;
     }
 
-    public List<LocalDateTime> getDateModified() {
-        return dateModified;
+    public LocalDateTime getDateModified() {
+        return lastModif;
     }
-
-    /* public String GetId(){
->>>>>>> b7f79efe06cc1b706bcc9a3237b516f05b55a690
-        return id;
-    }
-    public String getContent(){
-        return content;
-    }
-    public String getAuthorId(){
-        return authorId;
-    }
-    public LocalDateTime getDatePosted(){
-        return datePosted;
-    }
-    public List<LocalDateTime> getDateModified(){
-        return dateModified;
-    }
-    public ForumThread getForumThread(){
-        return forumThread;
-    }
-    public Post getParent(){
-        assert parent != null : "Parent is null";
-        return parent;
-    }
-    public List<Post> getChildren(){
-        return children;
-    }
-    public boolean getModified(){
-        return modified;
-    }
-    public boolean getDeleted(){
-        return deleted;
-    } */
-
-
     /// ------------- ///
-
-    public void UpdateDate(){
-
-        dateModified.add(datePosted);
-        datePosted  = LocalDateTime.now();
-    }
-
 
     public void UpdateContent(String _content){
         content     = _content;
-        modified = true;
         UpdateDate();
     }
 
-    public void Delete(){
-        deleted = true;
-        UpdateContent("--deleted--");
+    public void UpdateDate(){
+
+        lastModif  = LocalDateTime.now();
     }
 
-    public void Reply(String _authorId, String _content){
-        IPost reply  = new Post(_authorId,_content, this.forumThread);
+    public void Delete(){
+        UpdateContent("--deleted--");
+        UpdateDate();
+    }
+
+    //To create a reply: create a new Post before using function Reply(IPost reply) which defines the new Post as beeing the reply
+    public void Reply(IPost reply){
         reply.setParent(this);
         children.add(reply);
     }

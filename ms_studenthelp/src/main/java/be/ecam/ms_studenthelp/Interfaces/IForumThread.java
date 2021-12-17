@@ -11,8 +11,6 @@ public interface IForumThread {
     //create
     //public ForumThread(String title_,String authorId_,String category_);
 
-    public void Reply(IPost reply);
-
     public void UpdateTitle(String title_);
 
     public void Delete();
@@ -30,11 +28,11 @@ public interface IForumThread {
 
     public LocalDateTime getDate();
 
-    public List<IPost> getChildren();
+    public IPost getChildren();
 
     public List<String> getTags();
 
-    public List<LocalDateTime> getModification();
+    public LocalDateTime getModification();
     
     public boolean getAnswer();
 }

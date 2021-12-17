@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Nov 26, 2021 at 02:24 PM
--- Server version: 10.3.31-MariaDB-0ubuntu0.20.04.1
--- PHP Version: 7.4.3
+-- Host: 127.0.0.1:3306
+-- Generation Time: Dec 17, 2021 at 08:49 AM
+-- Server version: 8.0.21
+-- PHP Version: 7.3.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,89 +18,125 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ms_studenthelp`
+-- Database: `ms_`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mssh_object`
+-- Table structure for table `mssh_category`
 --
 
-CREATE TABLE `mssh_object` (
+DROP TABLE IF EXISTS `mssh_category`;
+CREATE TABLE IF NOT EXISTS `mssh_category` (
+  `id` int NOT NULL,
+  `title` varchar(60) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mssh_elem`
+--
+
+DROP TABLE IF EXISTS `mssh_elem`;
+CREATE TABLE IF NOT EXISTS `mssh_elem` (
   `id` varchar(36) NOT NULL,
-  `type` int(11) NOT NULL,
-  `datetime` datetime NOT NULL,
-  `author` varchar(36) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `mssh_object`
---
-
-INSERT INTO `mssh_object` (`id`, `type`, `datetime`, `author`) VALUES
-('e085fb86-649c-4e5d-b37a-91bd6b871396', 1, '2021-11-26 14:17:12', '8e649c81-d9aa-4b76-b62a-425280531a40');
+  `authorId` varchar(60) NOT NULL,
+  `date` datetime NOT NULL,
+  `lastModif` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mssh_objectmeta`
+-- Table structure for table `mssh_forumthread`
 --
 
-CREATE TABLE `mssh_objectmeta` (
-  `id` int(11) NOT NULL,
-  `id_object` varchar(36) NOT NULL,
-  `meta_key` varchar(30) NOT NULL,
-  `type` varchar(30) NOT NULL,
-  `meta_value` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `mssh_forumthread`;
+CREATE TABLE IF NOT EXISTS `mssh_forumthread` (
+  `id` varchar(36) NOT NULL,
+  `title` varchar(120) NOT NULL,
+  `category` int NOT NULL,
+  `answered` int NOT NULL DEFAULT '0',
+  `child` varchar(36) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ft_cat` (`category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `mssh_objectmeta`
+-- Table structure for table `mssh_ft_tags`
 --
 
-INSERT INTO `mssh_objectmeta` (`id`, `id_object`, `meta_key`, `type`, `meta_value`) VALUES
-(1, 'e085fb86-649c-4e5d-b37a-91bd6b871396', 'catergory', 'string', 'debug'),
-(2, 'e085fb86-649c-4e5d-b37a-91bd6b871396', 'answered', 'string', 'false'),
-(3, 'e085fb86-649c-4e5d-b37a-91bd6b871396', 'title', 'string', 'First Thread Ever!');
+DROP TABLE IF EXISTS `mssh_ft_tags`;
+CREATE TABLE IF NOT EXISTS `mssh_ft_tags` (
+  `id` varchar(36) NOT NULL,
+  `tag` varchar(60) NOT NULL,
+  PRIMARY KEY (`id`,`tag`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
 
 --
--- Indexes for dumped tables
+-- Table structure for table `mssh_post`
 --
 
---
--- Indexes for table `mssh_object`
---
-ALTER TABLE `mssh_object`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `author_index` (`author`);
+DROP TABLE IF EXISTS `mssh_post`;
+CREATE TABLE IF NOT EXISTS `mssh_post` (
+  `id` varchar(36) NOT NULL,
+  `parent` varchar(36) DEFAULT NULL,
+  `content` varchar(500) NOT NULL,
+  KEY `elem_pt` (`id`),
+  KEY `pt_pt` (`parent`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
 
 --
--- Indexes for table `mssh_objectmeta`
---
-ALTER TABLE `mssh_objectmeta`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `object_meta` (`id_object`);
-
---
--- AUTO_INCREMENT for dumped tables
+-- Table structure for table `mssh_reactions`
 --
 
---
--- AUTO_INCREMENT for table `mssh_objectmeta`
---
-ALTER TABLE `mssh_objectmeta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+DROP TABLE IF EXISTS `mssh_reactions`;
+CREATE TABLE IF NOT EXISTS `mssh_reactions` (
+  `postId` varchar(36) NOT NULL,
+  `authorId` varchar(60) NOT NULL,
+  `value` int NOT NULL,
+  UNIQUE KEY `pt_at_re` (`postId`,`authorId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `mssh_objectmeta`
+-- Constraints for table `mssh_forumthread`
 --
-ALTER TABLE `mssh_objectmeta`
-  ADD CONSTRAINT `object_meta` FOREIGN KEY (`id_object`) REFERENCES `mssh_object` (`id`);
+ALTER TABLE `mssh_forumthread`
+  ADD CONSTRAINT `elem_ft` FOREIGN KEY (`id`) REFERENCES `mssh_elem` (`id`),
+  ADD CONSTRAINT `ft_cat` FOREIGN KEY (`category`) REFERENCES `mssh_category` (`id`);
+
+--
+-- Constraints for table `mssh_ft_tags`
+--
+ALTER TABLE `mssh_ft_tags`
+  ADD CONSTRAINT `ft_tag` FOREIGN KEY (`id`) REFERENCES `mssh_forumthread` (`id`);
+
+--
+-- Constraints for table `mssh_post`
+--
+ALTER TABLE `mssh_post`
+  ADD CONSTRAINT `elem_pt` FOREIGN KEY (`id`) REFERENCES `mssh_elem` (`id`),
+  ADD CONSTRAINT `pt_pt` FOREIGN KEY (`parent`) REFERENCES `mssh_post` (`id`);
+
+--
+-- Constraints for table `mssh_reactions`
+--
+ALTER TABLE `mssh_reactions`
+  ADD CONSTRAINT `pt_re` FOREIGN KEY (`postId`) REFERENCES `mssh_post` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

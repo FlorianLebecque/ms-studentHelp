@@ -12,54 +12,60 @@ import be.ecam.ms_studenthelp.utils.GuidGenerator;
 public class ForumThread implements IForumThread {
 
     private final String id;
-    private String title;
-    private List<String> tags;
     private final String authorId;
+
     private LocalDateTime date;
+    private LocalDateTime lastModif;
+
+
+    private String title;
     private String category;
+    private List<String> tags;
     private boolean answered;
-    private List<IPost> children;
-    private List<LocalDateTime> modification;
+
+    private IPost child;
+
 
     //load
-    public ForumThread(String id_,String title_,List<String> tags_,String authorId_,LocalDateTime date_,String category_,boolean answered_,List<IPost> children_){
+    public ForumThread(String id_,String authorId_,String title_ ,String category_,List<String> tags_,LocalDateTime date_,LocalDateTime lastModif_,Boolean answered_,IPost child_){
         id       = id_;
-        title    = title_;
         authorId = authorId_;
-        date     = date_;
+        
+        date = date_;
+        lastModif = lastModif_;
+
+        title = title_;
         category = category_;
+        tags = tags_;
         answered = answered_;
-        children  = children_;
+
+        child = child_;
     }
 
     //create
     public ForumThread(String title_,String authorId_,String category_){
         id       = GuidGenerator.GetNewUUIDString();
+        authorId = authorId_;
         title    = title_;
         tags     = new ArrayList<String>();
-        authorId = authorId_;
         date     = LocalDateTime.now();
         category = category_;
         answered = false;
-        children  = new ArrayList<IPost>();
     }
 
+    
     public void Reply(IPost reply){
-        children.add(reply);
+        child = reply;
     }
-
+    
     public void UpdateTitle(String title_){
         title = title_;
 
-        if(modification == null){
-            modification = new ArrayList<LocalDateTime>();
-        }
-        date = LocalDateTime.now();
-        modification.add(date);
+        lastModif = LocalDateTime.now();
     }
 
     public void Delete(){
-        children.clear();
+        child.Delete();
     }
 
     @Override
@@ -95,16 +101,16 @@ public class ForumThread implements IForumThread {
         return date;
     }
 
-    public List<IPost> getChildren() {
-        return children;
+    public IPost getChildren() {
+        return child;
     }
 
     public List<String> getTags() {
         return tags;
     }
 
-    public List<LocalDateTime> getModification() {
-        return modification;
+    public LocalDateTime getModification() {
+        return lastModif;
     }
     
     public boolean getAnswer(){

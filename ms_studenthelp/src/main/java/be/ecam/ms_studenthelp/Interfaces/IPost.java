@@ -3,19 +3,18 @@ package be.ecam.ms_studenthelp.Interfaces;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import be.ecam.ms_studenthelp.Interfaces.IForumThread;
-
 public interface IPost {
     //public Post();
 
     //public Post(String _authorId, String _content, ForumThread _forumThread);
 
     /// ---SETTERS--- ///
-    public void setAuthorId(String _authorId);
     public void setContent(String _content);
     
     public void setParent(IPost _parent);
-    public void setForumThread(IForumThread _forumThread);
+
+    public void setChildren(List<IPost> children_);
+
     /// ------------- ///
 
 
@@ -31,11 +30,9 @@ public interface IPost {
 
     public IPost getParent();
 
-    public IForumThread getForumThread();
-
     public List<IPost> getChildren();
 
-    public List<LocalDateTime> getDateModified();
+    public LocalDateTime getDateModified();
 
     /* public String GetId(){
 >>>>>>> b7f79efe06cc1b706bcc9a3237b516f05b55a690
@@ -80,5 +77,5 @@ public interface IPost {
 
     public void Delete();
 
-    public void Reply(String _authorId, String _content);
+    public void Reply(IPost reply);
 }
