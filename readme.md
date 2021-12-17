@@ -5,16 +5,18 @@ Student support platform <br />
 
 ### Windows
 - make sur to have wamp installed (or a mysql server)
-- you may need to install mysql connectorJ
 - install the java jdk
+- you may need to install mysql connectorJ
 
 ### Linux
 - install mysql
 - - you may want to install phpmyadmin
 - install java jdk
+- install mysql java connector
 
 
 ### common
+- Copy the repo
 - Create a database:
 - - Name : `ms_studenthelp`
 - - Import : `ms_studenthelp.sql`
@@ -37,8 +39,6 @@ The database credentials are curently hardcoded in [`ms_studenthelp/src/main/jav
 - server on `localhost`
 - database named `ms_studenthelp`
 - username `dummy` with password `1234`
-
-
 
 ## Diagram
 ### Database
