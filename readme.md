@@ -1,6 +1,11 @@
 # ms-studentHelp
 Student support platform <br />
 
+## API
+
+Our OpenAPI schema is in [`schema.yaml`](schema.yaml).
+It also has a generated doc available at https://beta.bachelay.eu/ms-studentHelp
+
 ## Database
 
 Uses a MySQL/MariaDB database.
@@ -13,15 +18,12 @@ The database credentials are curently hardcoded in ms_studenthelp/src/main/java/
 - database named `ms_studenthelp`
 - username `dummy` with password `1234`
 
-## API
 
-Our OpenAPI schema is in [`schema.yaml`](schema.yaml).
-It also has a generated doc available at https://beta.bachelay.eu/ms-studentHelp
 
 ## Diagram
 ### Database
-Database Diagram : ![](ms_studenthelp.png)
+![](ms_studenthelp.png)
 
 
 ### class
-Class Diagram : ![](https://lucid.app/publicSegments/view/9de2afd8-5cb7-414e-8c9d-8eb506c31ad0/image.png)
+![](https://lucid.app/publicSegments/view/9de2afd8-5cb7-414e-8c9d-8eb506c31ad0/image.png)
