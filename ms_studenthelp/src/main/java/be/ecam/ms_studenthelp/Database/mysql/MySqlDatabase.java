@@ -33,9 +33,9 @@ public class MySqlDatabase implements IIODatabaseObject {
      * 
      *          - the paginatation is not implemented
      *          
-
-            DATABASE
-
+     *       
+     *      DATABASE
+     *
      *          All the object are stored in the mysql table (see ms_studenthelp.png)
      *            [mssh_elem] -> store data from Post AND Thread
      *                - Id        :  the post or thread id
