@@ -3,6 +3,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,gradle
 
 .vscode
+.vs
 .idea
 ms_stutendhelp/.settings/org.eclipse.buildship.core.prefs
 
