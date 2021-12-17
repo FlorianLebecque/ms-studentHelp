@@ -2,6 +2,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/java,gradle
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,gradle
 
+.vscode
+.idea
+ms_stutendhelp/.settings/org.eclipse.buildship.core.prefs
+
 ### Java ###
 # Compiled class file
 *.class
@@ -53,3 +57,5 @@ gradle-app.setting
 .classpath
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle
+ms_studenthelp/bin/main/be/ecam/ms_studenthelp/MsStudenthelpApplication.class
+ms_studenthelp/.settings/org.eclipse.buildship.core.prefs

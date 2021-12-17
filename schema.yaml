@@ -1,0 +1,582 @@
+openapi: 3.0.0
+info:
+  title: student help
+  version: '1.0'
+  license:
+    name: AGPL-3.0-only
+    url: 'https://www.gnu.org/licenses/agpl-3.0.html'
+  description: Student to student help providing API
+  contact:
+    name: Student Help API
+    email: contact@ecam.be
+servers:
+  - url: 'https://api.ecam.be/student-help'
+    description: Production
+paths:
+  '/posts/{postId}':
+    parameters:
+      - $ref: '#/components/parameters/postId'
+    get:
+      summary: Get specific Post
+      tags: []
+      responses:
+        '200':
+          description: Post Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+              examples: {}
+        '404':
+          $ref: '#/components/responses/Not-Found'
+      operationId: get-posts-postId
+      description: Retrieve the information of the post with the matching post ID.
+    patch:
+      summary: Update specific Post
+      operationId: patch-posts-postId
+      responses:
+        '200':
+          description: Post Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/Not-Found'
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                required:
+                  - message
+              examples:
+                Content was empty:
+                  value:
+                    message: Content may not be empty
+      description: |-
+        Update the information of an existing post.
+
+        This method is not idempotent, `dateModified` will be updated to the current time
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+        description: Patch post content to update.
+      security:
+        - GlobalJWT:
+            - student-help.post
+    delete:
+      summary: Delete specific Post
+      operationId: delete-posts-postId
+      responses:
+        '204':
+          description: Post was successfully deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      description: |-
+        Delete an existing post
+
+        This method is idempotent, it will not return 404 Not Found, as if a post cannot be fount, it is deleted (or had never been created, which is equivalent)
+      security:
+        - GlobalJWT:
+            - student-help.post
+  '/posts/{postId}/answers':
+    post:
+      summary: Answer a Post
+      operationId: post-posts-postId-answers
+      responses:
+        '200':
+          description: The newly created post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: Missing Required Information
+        '404':
+          $ref: '#/components/responses/Not-Found'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+        description: Post the necessary fields for the API to create a new post.
+      description: |-
+        Create a new post, as an answer to the specified post
+
+        This method is not idempotent, a new post will be created for each call
+      security:
+        - GlobalJWT:
+            - student-help.post
+    parameters:
+      - schema:
+          type: string
+          format: uuid
+        name: postId
+        in: path
+        required: true
+        description: Id of an existing post.
+    get:
+      summary: Get answers to Post
+      operationId: get-posts-postId-answers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  answers:
+                    type: array
+                    minItems: 0
+                    items:
+                      $ref: '#/components/schemas/Post'
+                    readOnly: true
+                required:
+                  - answers
+        '404':
+          $ref: '#/components/responses/Not-Found'
+      description: |-
+        Get all answers for a post
+
+        Returns a list of all posts in the `children` array for the specified `postId`.
+        Therefore, all posts returned will have the same `parent`.
+
+        If there are no answers, returns an empty list.
+  '/posts/{postId}/reactions':
+    parameters:
+      - $ref: '#/components/parameters/postId'
+    get:
+      summary: Get post Reactions
+      tags: []
+      operationId: get-posts-postId-reactions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Reaction'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/Not-Found'
+      description: Get all specific reactions for a post.
+    put:
+      summary: Set own Reaction to post
+      operationId: put-posts-postId-reactions
+      responses:
+        '200':
+          description: The created or updated reaction
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Reaction'
+      description: Set your own reaction to a post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reaction'
+      security:
+        - GlobalJWT:
+            - student-help.react
+    delete:
+      summary: Remove own Reaction to Post
+      operationId: delete-posts-postId-reactions
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          $ref: '#/components/responses/Not-Found'
+      description: Remove your own reaction
+      security:
+        - GlobalJWT:
+            - student-help.react
+  /threads:
+    get:
+      summary: Get Thread list
+      tags: []
+      responses:
+        '200':
+          description: Found threads
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  threads:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Thread'
+      operationId: get-threads
+      description: Get a list of published threads
+    post:
+      summary: Create new Thread
+      operationId: post-threads
+      description: |-
+        Create a new thread in a specific category
+
+        The author is the authenticated user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Thread'
+      security:
+        - GlobalJWT:
+            - student-help.thread
+      responses:
+        '200':
+          description: Newly created thread
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+  '/threads/{threadId}':
+    parameters:
+      - $ref: '#/components/parameters/threadId'
+    get:
+      summary: Get specific Thread
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+        '404':
+          $ref: '#/components/responses/Not-Found'
+      operationId: get-threads-threadId
+      description: ''
+    patch:
+      summary: Update specific Thread
+      operationId: patch-threads-threadId
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Thread'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/Not-Found'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThreadPatch'
+      description: Allows edition of your own threads
+      security:
+        - GlobalJWT:
+            - student-help.thread
+    delete:
+      summary: Delete specific Thread
+      operationId: delete-threads
+      responses:
+        '204':
+          description: Thread was successfully deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      description: |-
+        Delete an existing thread
+
+        This method is idempotent, it will not return 404 Not Found, as if a thread cannot be fount, it is deleted (or had never been created, which is equivalent)
+      security:
+        - GlobalJWT:
+            - student-help.thread
+  /categories:
+    get:
+      summary: Get Categories list
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+              examples:
+                example:
+                  value:
+                    data:
+                      - Informatique
+                      - Électronique
+      operationId: get-categories
+      description: |-
+        Get all available categories
+
+        They are not currently editable via this API
+components:
+  schemas:
+    Post:
+      description: A sent post
+      type: object
+      title: Post
+      x-examples:
+        An answer to a preexisting question:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          content: 'https://lmgtfy.app/?q=aop+inverseur+formule'
+          upvotes: 0
+          downvotes: 2
+          datePosted: '2019-08-24T14:15:22Z'
+          dateModified: '2019-08-24T14:15:22Z'
+          authorId: ee6f7132-bd0a-4fcd-83b3-a8022377067b
+          parent: 42e2bc1b-6741-4e2e-b138-97b4a342c999
+          children:
+            - 0cb5c5de-ce35-47a4-a1db-3ea542dfb9b8
+            - d2a631d5-dbdc-4aca-9268-1592449de5bf
+        A correction for another answer:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          content: |-
+            Mais non, en python 3 il faut mettre des parenthèses pour les appels à `print`.
+
+            Donc on fait `print("Hello, World!")` et  plus `print "Hello, World!"`
+          upvotes: 3
+          downvotes: 0
+          datePosted: '2019-08-24T14:15:22Z'
+          dateModified: '2019-08-24T14:15:22Z'
+          authorId: ee6f7132-bd0a-4fcd-83b3-a8022377067b
+          parent: 42e2bc1b-6741-4e2e-b138-97b4a342c999
+          children: []
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        content:
+          type: string
+          minLength: 1
+          description: 'The post content, in MarkDown'
+        upvotes:
+          type: number
+          minimum: 0
+          readOnly: true
+        downvotes:
+          type: number
+          minimum: 0
+          readOnly: true
+        datePosted:
+          type: string
+          minLength: 1
+          format: date-time
+          readOnly: true
+        dateModified:
+          type: string
+          minLength: 1
+          format: date-time
+          readOnly: true
+        authorId:
+          $ref: '#/components/schemas/Author'
+        parent:
+          type: string
+          format: uuid
+          description: |-
+            The parent post id, if it has a parent.
+
+            If not specified, the post can be assumed to be the first post of a thread.
+          readOnly: true
+        children:
+          type: array
+          uniqueItems: true
+          description: |-
+            The responses
+
+            The children will have their `parent` field set to the `id` of this post
+          items:
+            type: string
+            format: uuid
+            readOnly: true
+          readOnly: true
+      required:
+        - id
+        - content
+        - upvotes
+        - downvotes
+        - datePosted
+        - dateModified
+        - authorId
+        - children
+    Thread:
+      title: Thread
+      type: object
+      description: The beginning of a serie of posts
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          description: The thread title
+        first_post:
+          $ref: '#/components/schemas/Post'
+        tags:
+          type: array
+          uniqueItems: true
+          minItems: 0
+          items:
+            type: string
+        category:
+          $ref: '#/components/schemas/Category'
+        answered:
+          type: boolean
+          default: false
+          description: If the thread's author has found an answer
+      required:
+        - id
+        - title
+        - first_post
+        - tags
+        - category
+      x-examples:
+        Thread with no answers:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          title: Montage amplificateur inverseur
+          first_post:
+            id: 12346eca-6276-4993-bfeb-53cbbbba6f08
+            content: Est-ce que quelqu'un peut me rappeler la formule de calcul pour un montage AOP en amplifiacteur inverseur?
+            upvotes: 2
+            downvotes: 0
+            datePosted: '2019-08-24T14:15:22Z'
+            dateModified: '2019-08-24T14:15:22Z'
+            authorId: ee6f7132-bd0a-4fcd-83b3-a8022377067b
+            children: []
+          tags:
+            - AOP
+            - Amplificateur
+          category: Électronique analogique
+          answered: false
+    ThreadPatch:
+      title: ThreadPatch
+      type: object
+      description: Patchable values for a thread
+      properties:
+        title:
+          type: string
+          description: The thread title
+        tags:
+          type: array
+          uniqueItems: true
+          minItems: 0
+          items:
+            type: string
+        category:
+          type: string
+        answered:
+          type: boolean
+          default: false
+          description: If the thread's author has found an answer
+    Author:
+      type: string
+      title: Author
+      format: uuid
+      description: The author's UUID
+      readOnly: true
+    Reaction:
+      title: Reaction
+      type: object
+      properties:
+        postId:
+          type: string
+          format: uuid
+          readOnly: true
+        author:
+          $ref: '#/components/schemas/Author'
+        value:
+          type: integer
+          enum:
+            - -1
+            - 1
+      required:
+        - postId
+        - author
+        - value
+    Category:
+      type: string
+      title: Category
+  securitySchemes:
+    GlobalJWT:
+      type: oauth2
+      flows:
+        implicit:
+          scopes:
+            student-help.post: Post new posts
+            student-help.react: Vote on posts
+            student-help.thread: 'Create new threads, implies `student-help.post`'
+          authorizationUrl: 'https://api.ecam.be/oauth2/authorize'
+  parameters:
+    postId:
+      schema:
+        type: string
+        format: uuid
+      name: postId
+      in: path
+      required: true
+      description: Id of an existing post.
+    threadId:
+      name: threadId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    Not-Found:
+      description: Requested object was not found in our database
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          examples:
+            Post:
+              value:
+                message: Post not found
+            Thread:
+              value:
+                message: Thread not found
+    Unauthorized:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          examples:
+            Unauthorized:
+              value:
+                message: You are not authorized to do this action
+security:
+  - API Key - 1: []
