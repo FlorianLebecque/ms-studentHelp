@@ -1,6 +1,26 @@
 # ms-studentHelp
 Student support platform <br />
 
+## Installation
+
+### Windows
+- make sur to have wamp installed (or a mysql server)
+- you may need to install mysql connectorJ
+- install the java jdk
+
+### Linux
+- install mysql
+- - you may want to install phpmyadmin
+- install java jdk
+
+
+### common
+- Create a database:
+- - Name : `ms_studenthelp`
+- - Import : `ms_studenthelp.sql`
+
+- Create a mysql user named `dummy` with password `1234` , grant him data acces on `ms_studenthelp`
+
 ## API
 
 Our OpenAPI schema is in [`schema.yaml`](schema.yaml).
