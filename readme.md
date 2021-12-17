@@ -6,7 +6,7 @@ Student support platform <br />
 ### Windows
 - make sur to have wamp installed (or a mysql server)
 - install the java jdk
-- you may need to install mysql connectorJ
+- you may need to install mysql connectorJ and add it to your PATH ( System(Control Panel) => Advanced system settings => Environment Variables => New System Variable => [value of the PATH])
 
 ### Linux
 - install mysql
