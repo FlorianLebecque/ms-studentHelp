@@ -17,21 +17,5 @@ public class PostController {
         return post;
     }
 
-    @GetMapping("/helloMapping")
-	public IPost index_ter() {
-
-        //MsStudenthelpApplication.DatabaseManager.CreateForumThread(ft);
-
-
-
-        IPost test = MsStudenthelpApplication.DatabaseManager.GetPost("uuid");
-
-        MsStudenthelpApplication.DatabaseManager.UpdatePost(test);
-        
-
-        test.setContent("C'est la vie de chateau les blEUs?!!");
-        //const myJSON = JSON.stringify(obj)
-		return test;//"coucou";
-	}
 
 }
