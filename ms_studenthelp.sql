@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Dec 03, 2021 at 10:57 AM
--- Server version: 10.3.31-MariaDB-0ubuntu0.20.04.1
--- PHP Version: 7.4.3
+-- Host: 127.0.0.1:3306
+-- Generation Time: Dec 17, 2021 at 08:49 AM
+-- Server version: 8.0.21
+-- PHP Version: 7.3.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ms_studenthelp`
+-- Database: `ms_`
 --
 
 -- --------------------------------------------------------
@@ -27,10 +27,12 @@ SET time_zone = "+00:00";
 -- Table structure for table `mssh_category`
 --
 
-CREATE TABLE `mssh_category` (
-  `id` int(11) NOT NULL,
-  `title` varchar(60) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `mssh_category`;
+CREATE TABLE IF NOT EXISTS `mssh_category` (
+  `id` int NOT NULL,
+  `title` varchar(60) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -38,49 +40,59 @@ CREATE TABLE `mssh_category` (
 -- Table structure for table `mssh_elem`
 --
 
-CREATE TABLE `mssh_elem` (
+DROP TABLE IF EXISTS `mssh_elem`;
+CREATE TABLE IF NOT EXISTS `mssh_elem` (
   `id` varchar(36) NOT NULL,
   `authorId` varchar(60) NOT NULL,
   `date` datetime NOT NULL,
-  `lastModif` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `lastModif` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mssh_ForumThread`
+-- Table structure for table `mssh_forumthread`
 --
 
-CREATE TABLE `mssh_ForumThread` (
+DROP TABLE IF EXISTS `mssh_forumthread`;
+CREATE TABLE IF NOT EXISTS `mssh_forumthread` (
   `id` varchar(36) NOT NULL,
   `title` varchar(120) NOT NULL,
-  `category` int(11) NOT NULL,
-  `answered` int(11) NOT NULL DEFAULT 0,
-  `child` varchar(36) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `category` int NOT NULL,
+  `answered` int NOT NULL DEFAULT '0',
+  `child` varchar(36) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ft_cat` (`category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mssh_FT_tags`
+-- Table structure for table `mssh_ft_tags`
 --
 
-CREATE TABLE `mssh_FT_tags` (
+DROP TABLE IF EXISTS `mssh_ft_tags`;
+CREATE TABLE IF NOT EXISTS `mssh_ft_tags` (
   `id` varchar(36) NOT NULL,
-  `tag` varchar(60) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `tag` varchar(60) NOT NULL,
+  PRIMARY KEY (`id`,`tag`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mssh_Post`
+-- Table structure for table `mssh_post`
 --
 
-CREATE TABLE `mssh_Post` (
+DROP TABLE IF EXISTS `mssh_post`;
+CREATE TABLE IF NOT EXISTS `mssh_post` (
   `id` varchar(36) NOT NULL,
   `parent` varchar(36) DEFAULT NULL,
-  `content` varchar(500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `content` varchar(500) NOT NULL,
+  KEY `elem_pt` (`id`),
+  KEY `pt_pt` (`parent`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -88,79 +100,43 @@ CREATE TABLE `mssh_Post` (
 -- Table structure for table `mssh_reactions`
 --
 
-CREATE TABLE `mssh_reactions` (
+DROP TABLE IF EXISTS `mssh_reactions`;
+CREATE TABLE IF NOT EXISTS `mssh_reactions` (
   `postId` varchar(36) NOT NULL,
   `authorId` varchar(60) NOT NULL,
-  `value` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `mssh_category`
---
-ALTER TABLE `mssh_category`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `mssh_elem`
---
-ALTER TABLE `mssh_elem`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `mssh_ForumThread`
---
-ALTER TABLE `mssh_ForumThread`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `ft_cat` (`category`);
-
---
--- Indexes for table `mssh_FT_tags`
---
-ALTER TABLE `mssh_FT_tags`
-  ADD PRIMARY KEY (`id`,`tag`);
-
---
--- Indexes for table `mssh_Post`
---
-ALTER TABLE `mssh_Post`
-  ADD KEY `elem_pt` (`id`),
-  ADD KEY `ft_pt` (`forumThread`),
-  ADD KEY `pt_pt` (`parent`);
+  `value` int NOT NULL,
+  UNIQUE KEY `pt_at_re` (`postId`,`authorId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `mssh_ForumThread`
+-- Constraints for table `mssh_forumthread`
 --
-ALTER TABLE `mssh_ForumThread`
+ALTER TABLE `mssh_forumthread`
   ADD CONSTRAINT `elem_ft` FOREIGN KEY (`id`) REFERENCES `mssh_elem` (`id`),
   ADD CONSTRAINT `ft_cat` FOREIGN KEY (`category`) REFERENCES `mssh_category` (`id`);
 
 --
--- Constraints for table `mssh_FT_tags`
+-- Constraints for table `mssh_ft_tags`
 --
-ALTER TABLE `mssh_FT_tags`
-  ADD CONSTRAINT `ft_tag` FOREIGN KEY (`id`) REFERENCES `mssh_ForumThread` (`id`);
+ALTER TABLE `mssh_ft_tags`
+  ADD CONSTRAINT `ft_tag` FOREIGN KEY (`id`) REFERENCES `mssh_forumthread` (`id`);
 
 --
--- Constraints for table `mssh_Post`
+-- Constraints for table `mssh_post`
 --
-ALTER TABLE `mssh_Post`
+ALTER TABLE `mssh_post`
   ADD CONSTRAINT `elem_pt` FOREIGN KEY (`id`) REFERENCES `mssh_elem` (`id`),
-  ADD CONSTRAINT `pt_pt` FOREIGN KEY (`parent`) REFERENCES `mssh_Post` (`id`);
+  ADD CONSTRAINT `pt_pt` FOREIGN KEY (`parent`) REFERENCES `mssh_post` (`id`);
 
 --
 -- Constraints for table `mssh_reactions`
 --
 ALTER TABLE `mssh_reactions`
-  ADD CONSTRAINT `pt_re` FOREIGN KEY (`postId`) REFERENCES `mssh_Post` (`id`),
-  ADD CONSTRAINT `pt_at_re` UNIQUE (`postId`, `authorId`);
+  ADD CONSTRAINT `pt_re` FOREIGN KEY (`postId`) REFERENCES `mssh_post` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

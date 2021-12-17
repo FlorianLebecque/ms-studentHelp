@@ -29,6 +29,7 @@ public class PostController {
         return post;
     }
 
+
     /**
      * ENDPOINT PATCH to modify content of a post
      *
@@ -86,9 +87,11 @@ public class PostController {
         return post;
     }
 
+
     /**
      * Methode to post with a thread
      *
      * To code
      */
+
 }
