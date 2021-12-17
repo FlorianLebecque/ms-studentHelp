@@ -67,7 +67,6 @@ public class MySqlDatabase implements IIODatabaseObject {
 
 
     public MySqlDatabase(){
-
         this.connect();
 
         PCRU  = new PostCRU(con);

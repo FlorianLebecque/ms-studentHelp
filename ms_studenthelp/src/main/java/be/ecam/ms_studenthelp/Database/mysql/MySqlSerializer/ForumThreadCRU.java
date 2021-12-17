@@ -49,10 +49,10 @@ public class ForumThreadCRU {
 
         
         int res = MySqlDatabase.UpdateQuery(queries);
-        if(ft.getChildren()!= null){
+        if(ft.getChild()!= null){
             String query_update = String.format(
                "UPDATE `mssh_ForumThread` SET `child`='%s' WHERE `id` = '%s'" ,
-               ft.getChildren().getId(),
+               ft.getChild().getId(),
                ft.getId()
             );
             
@@ -60,7 +60,7 @@ public class ForumThreadCRU {
             queries_update.add(query_update);
 
             res += MySqlDatabase.UpdateQuery(queries_update);
-            res += PCRU.CreatePost(ft.getChildren());
+            res += PCRU.CreatePost(ft.getChild());
         }
 
         return res;
@@ -148,6 +148,7 @@ public class ForumThreadCRU {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
 

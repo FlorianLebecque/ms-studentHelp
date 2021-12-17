@@ -26,11 +26,11 @@ public class ForumThread implements IForumThread {
     private IPost child;
 
 
-    //load
+    //load a Thread
     public ForumThread(String id_,String authorId_,String title_ ,String category_,List<String> tags_,LocalDateTime date_,LocalDateTime lastModif_,Boolean answered_,IPost child_){
         id       = id_;
         authorId = authorId_;
-        
+
         date = date_;
         lastModif = lastModif_;
 
@@ -42,30 +42,48 @@ public class ForumThread implements IForumThread {
         child = child_;
     }
 
-    //create
-    public ForumThread(String title_,String authorId_,String category_){
+    //create a Thread
+    public ForumThread(String title_,String authorId_,String category_,IPost child_,boolean answered_){
         id       = GuidGenerator.GetNewUUIDString();
         authorId = authorId_;
         title    = title_;
         tags     = new ArrayList<String>();
         date     = LocalDateTime.now();
         category = category_;
-        answered = false;
+        answered = answered;
+        child    = child_;
     }
 
-    
+
     public void Reply(IPost reply){
         child = reply;
     }
-    
+
     public void UpdateTitle(String title_){
         title = title_;
 
         lastModif = LocalDateTime.now();
     }
 
+    public void UpdateCategory(String category_){
+        category = category_;
+
+        lastModif = LocalDateTime.now();
+    }
+
+    public void UpdateAnswered(boolean answered_) {
+        answered = answered_;
+    }
+
     public void Delete(){
         child.Delete();
+    }
+    public void AddTags(String tag){
+        tags.add(tag);
+    }
+    public void AddTags(List<String> tag){
+        for(String n : tag)
+            tags.add(n);
     }
 
     @Override
@@ -101,7 +119,7 @@ public class ForumThread implements IForumThread {
         return date;
     }
 
-    public IPost getChildren() {
+    public IPost getChild() {
         return child;
     }
 
@@ -112,7 +130,7 @@ public class ForumThread implements IForumThread {
     public LocalDateTime getModification() {
         return lastModif;
     }
-    
+
     public boolean getAnswer(){
         return answered;
     }
