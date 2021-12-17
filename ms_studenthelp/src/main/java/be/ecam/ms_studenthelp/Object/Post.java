@@ -102,9 +102,9 @@ public class Post implements IPost{
         UpdateDate();
     }
 
-    public void Reply(@org.jetbrains.annotations.NotNull IPost reply){
+    public void Reply(IPost reply){
         reply.setParent(this);
-        children.add(reply);
+        //children.add(reply);
     }
 
 }
