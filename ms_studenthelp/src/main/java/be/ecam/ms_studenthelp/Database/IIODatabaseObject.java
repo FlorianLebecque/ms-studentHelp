@@ -13,6 +13,22 @@ public interface IIODatabaseObject{
 
     public boolean isConnected();
 
+    /*
+     *  I IO Database Object
+     * 
+     *  Create, read, update, delete for all Object (interface) 
+     *      Naming convention:
+     * 
+     *          read   : Get+ObjectName+(String uuid);
+     *                      +ObjectName+s(int max_per_page,int page_index)  -> should return a list
+     *          Create : Create+ObjectName+(InterfaceName obj);
+     *          Update : Update+ObjectName+(InterfaceName obj);
+     *          Delete : Delete+ObjectName+(InterfaceName obj);
+     * 
+     *      There is no delete for most of the interface -> We need to keep the database integrity
+     *      When we want to delete anything, the content is simply set to "[Deleted]"
+     * 
+     */
     public IForumThread GetForumThread(String uuid);
     public int CreateForumThread(IForumThread ft);
     public int UpdateForumThread(IForumThread ft);
