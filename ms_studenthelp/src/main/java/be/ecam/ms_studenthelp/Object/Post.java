@@ -118,11 +118,10 @@ public class Post implements IPost{
         UpdateContent("--deleted--");
         UpdateDate();
     }
-    
+  
     //To create a reply: create a new Post before using function Reply(IPost reply) which defines the new Post as beeing the reply
     public void Reply(IPost reply){
         reply.setParent(this);
-        children.add(reply);
     }
 
 }

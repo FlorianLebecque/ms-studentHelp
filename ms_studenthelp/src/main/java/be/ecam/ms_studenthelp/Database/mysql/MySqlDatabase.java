@@ -33,29 +33,29 @@ public class MySqlDatabase implements IIODatabaseObject {
      * 
      *          - the paginatation is not implemented
      *          
-     */
 
-    /**
-     *      All the object are stored in the mysql table (see ms_studenthelp.png)
-     *          [mssh_elem] -> store data from Post AND Thread
-     *              - Id        :  the post or thread id
-     *              - authorId  : the id of the creator
-     *              - date      : date of creation
-     *              - lastModif : date of the last modification
-     * 
-     *          [mssh_forumthread] -> store the data of a thread
-     *              - Id        : link to [mssh_elem]
-     *              - category  : link to the category table
-     *              - Child     : link to the first post of the thread
-     *          
-     *          [mssh_post] -> store the data of a post
-     *              - Id        : ...
-     *              - Parent    : if null -> the post is the first post of a thread
-     *                            if not null -> link to the id of the parent post  (tree like structure)
-     * 
-     *          [mssh_reactions] -> list of all the reaction on the posts
-     *          [mssh_ft_tags]   -> list of all the tags on the threads
-     *          [mssh_category]  -> list of all the category
+            DATABASE
+
+     *          All the object are stored in the mysql table (see ms_studenthelp.png)
+     *            [mssh_elem] -> store data from Post AND Thread
+     *                - Id        :  the post or thread id
+     *                - authorId  : the id of the creator
+     *                - date      : date of creation
+     *                - lastModif : date of the last modification
+     *   
+     *            [mssh_forumthread] -> store the data of a thread
+     *                - Id        : link to [mssh_elem]
+     *                - category  : link to the category table
+     *                - Child     : link to the first post of the thread
+     *            
+     *            [mssh_post] -> store the data of a post
+     *                - Id        : ...
+     *                - Parent    : if null -> the post is the first post of a thread
+     *                              if not null -> link to the id of the parent post  (tree like structure)
+     *   
+     *            [mssh_reactions] -> list of all the reaction on the posts
+     *            [mssh_ft_tags]   -> list of all the tags on the threads
+     *            [mssh_category]  -> list of all the category
      */
 
     static private Connection con = null;
