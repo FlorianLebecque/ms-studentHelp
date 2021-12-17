@@ -10,7 +10,7 @@ It also has a generated doc available at https://beta.bachelay.eu/ms-studentHelp
 
 Uses a MySQL/MariaDB database.
 
-The schema is available in [`ms_studenthelp/ms_studenthelp.sql`](ms_studenthelp/ms_studenthelp.sql)
+The schema is available in [`ms_studenthelp/ms_studenthelp.sql`](ms_studenthelp.sql)
 
 The database credentials are curently hardcoded in ms_studenthelp/src/main/java/be/ecam/ms_studenthelp/Database/mysql/MySqlDatabase.java
 
