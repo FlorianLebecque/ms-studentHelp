@@ -15,6 +15,24 @@ import be.ecam.ms_studenthelp.Interfaces.IReaction;
 
 public class MySqlDatabase implements IIODatabaseObject {
 
+    /*
+     *  Implementation of IIODatabaseObject 
+     * 
+     *      CRU  -> Create, Read, Update
+     *      CRUD -> Create, Read, Update, Delete
+     * 
+     *      Made of a few serialyzer
+     *          -> FTCRU -> ForumThread CRU
+     *          -> PCRU  -> Post CRU
+     *          -> RCRUD -> Reaction CRUD
+     *          -> ...
+     * 
+     *      TODO
+     *          - Use Application.properties to get db credentials
+     *              or use the intergrated ORM of springboot 
+     *          
+     */
+
 
     static private Connection con = null;
 
@@ -34,10 +52,11 @@ public class MySqlDatabase implements IIODatabaseObject {
         categoryManager = new CategoryManager(con);
     }
 
+    protected void finalize(){  
+        disconnect();
+    }            
 
     public boolean connect(){
-        
-        
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -154,9 +173,6 @@ public class MySqlDatabase implements IIODatabaseObject {
         
         return RCRUD.DeleteReaction(reaction);
     }
-
-
-
 
     public List<String> GetCategories() {
         return categoryManager.GetCategories();
