@@ -86,12 +86,4 @@ public class PostController {
         MsStudenthelpApplication.DatabaseManager.UpdatePost(post);
         return post;
     }
-
-
-    /**
-     * Methode to post with a thread
-     *
-     * To code
-     */
-
 }
