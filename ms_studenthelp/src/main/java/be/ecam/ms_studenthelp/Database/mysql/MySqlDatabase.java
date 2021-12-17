@@ -1,7 +1,8 @@
 package be.ecam.ms_studenthelp.Database.mysql;
 
 import java.util.List;
-import java.sql.Connection;
+
+import java.sql.Connection; 
 import java.sql.DriverManager;
 import java.sql.Statement;
 
@@ -12,10 +13,50 @@ import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
 import be.ecam.ms_studenthelp.Interfaces.IReaction;
 
-
-
 public class MySqlDatabase implements IIODatabaseObject {
 
+    /*
+     *  Implementation of IIODatabaseObject 
+     * 
+     *      CRU  -> Create, Read, Update
+     *      CRUD -> Create, Read, Update, Delete
+     * 
+     *      Made of a few serialyzer
+     *          -> FTCRU -> ForumThread CRU
+     *          -> PCRU  -> Post CRU
+     *          -> RCRUD -> Reaction CRUD
+     *          -> ...
+     * 
+     *      TODO
+     *          - Use Application.properties to get db credentials
+     *              or use the intergrated ORM of springboot 
+     * 
+     *          - the paginatation is not implemented
+     *          
+     */
+
+    /**
+     *      All the object are stored in the mysql table (see ms_studenthelp.png)
+     *          [mssh_elem] -> store data from Post AND Thread
+     *              - Id        :  the post or thread id
+     *              - authorId  : the id of the creator
+     *              - date      : date of creation
+     *              - lastModif : date of the last modification
+     * 
+     *          [mssh_forumthread] -> store the data of a thread
+     *              - Id        : link to [mssh_elem]
+     *              - category  : link to the category table
+     *              - Child     : link to the first post of the thread
+     *          
+     *          [mssh_post] -> store the data of a post
+     *              - Id        : ...
+     *              - Parent    : if null -> the post is the first post of a thread
+     *                            if not null -> link to the id of the parent post  (tree like structure)
+     * 
+     *          [mssh_reactions] -> list of all the reaction on the posts
+     *          [mssh_ft_tags]   -> list of all the tags on the threads
+     *          [mssh_category]  -> list of all the category
+     */
 
     static private Connection con = null;
 
@@ -23,6 +64,7 @@ public class MySqlDatabase implements IIODatabaseObject {
     private PostCRU PCRU;
     private ReactionCRUD RCRUD;
     private CategoryManager categoryManager;
+
 
     public MySqlDatabase(){
 
@@ -34,9 +76,12 @@ public class MySqlDatabase implements IIODatabaseObject {
         categoryManager = new CategoryManager(con);
     }
 
+    protected void finalize(){  
+        disconnect();
+    }            
 
     public boolean connect(){
-        
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (Exception E) {
@@ -73,6 +118,10 @@ public class MySqlDatabase implements IIODatabaseObject {
         }
     }
 
+    /*
+     *  Take a list of mysql queries, encapsulate them in a commit 
+     *  and execute them in a sequence
+     */
     public static int UpdateQuery(List<String> queries){
         try {
 
@@ -152,9 +201,6 @@ public class MySqlDatabase implements IIODatabaseObject {
         
         return RCRUD.DeleteReaction(reaction);
     }
-
-
-
 
     public List<String> GetCategories() {
         return categoryManager.GetCategories();

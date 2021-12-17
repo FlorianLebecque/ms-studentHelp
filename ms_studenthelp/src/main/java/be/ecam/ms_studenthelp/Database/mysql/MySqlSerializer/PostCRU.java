@@ -23,12 +23,14 @@ public class PostCRU {
         return GetPost(uuid, 1,null);
     }
 
+    //recursive function the create a post and get a list of its children
     private IPost GetPost(String uuid,int recurstion,IPost parent){
+
+        // select the data to create based on it's uuid
         String query = String.format(
             "SELECT e.id,e.authorId,e.date,e.lastModif,pt.content,pt.parent FROM `mssh_elem` as e INNER JOIN `mssh_Post` as pt ON pt.id = e.id WHERE e.id = '%s'",
             uuid
         );
-
 
         try {
             Statement st = con.createStatement();
@@ -54,7 +56,9 @@ public class PostCRU {
 
                 ArrayList<IPost> children = new ArrayList<IPost>();
 
+                //get it's children
                 if(recurstion > 0){
+                    //select the data to create a post base on it's parent id
                     String query_child = String.format(
                         "SELECT e.id FROM `mssh_elem` as e INNER JOIN `mssh_Post` as pt ON pt.id = e.id WHERE pt.parent = '%s'",
                         rs.getString("id")

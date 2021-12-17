@@ -21,6 +21,7 @@ public class PostController {
         return post;
     }
 
+
     @PatchMapping("/posts/{postId}")
     public IPost PatchPostByPostId(@PathVariable("postId") String postId, @RequestBody String body) {
         JsonParser springParser = JsonParserFactory.getJsonParser();
@@ -50,5 +51,6 @@ public class PostController {
         MsStudenthelpApplication.DatabaseManager.UpdatePost(post);
         return post;
     }
+
 
 }
