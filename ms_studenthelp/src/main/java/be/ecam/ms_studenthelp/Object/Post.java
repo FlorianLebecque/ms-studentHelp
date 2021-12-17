@@ -14,11 +14,11 @@ public class Post implements IPost{
     /**
      * The Post object represents a post inside a parent thread. 
      * He can have answers that will be referenced in his 'children' list.
-     * 2 ways to create a Post object:
+     * 2 ways to construct a Post object:
      *  CREATE: when you create a new Post
      *      @param {String} _authorId
      *      @param {String} _content
-     *      Other @parameters are defined by setters
+     *      Other @parameters must be defined by the setters
      *  LOAD: when you load an existing Post from the database
      *      @param {String} id_
      *      @param {String} authorId_
