@@ -8,6 +8,7 @@ import java.sql.Statement;
 
 
 import be.ecam.ms_studenthelp.Database.*;
+import be.ecam.ms_studenthelp.Database.entities.Category;
 import be.ecam.ms_studenthelp.Database.mysql.MySqlSerializer.*;
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
@@ -63,7 +64,6 @@ public class MySqlDatabase implements IIODatabaseObject {
     private ForumThreadCRU FTCRU;
     private PostCRU PCRU;
     private ReactionCRUD RCRUD;
-    private CategoryManager categoryManager;
 
 
     public MySqlDatabase(){
@@ -72,9 +72,9 @@ public class MySqlDatabase implements IIODatabaseObject {
         PCRU  = new PostCRU(con);
         FTCRU = new ForumThreadCRU(con,PCRU);
         RCRUD = new ReactionCRUD(con);
-        categoryManager = new CategoryManager(con);
     }
 
+    @Override
     protected void finalize(){  
         disconnect();
     }            
@@ -200,9 +200,4 @@ public class MySqlDatabase implements IIODatabaseObject {
         
         return RCRUD.DeleteReaction(reaction);
     }
-
-    public List<String> GetCategories() {
-        return categoryManager.GetCategories();
-    }
-
 }
