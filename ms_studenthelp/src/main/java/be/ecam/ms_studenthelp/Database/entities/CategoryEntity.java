@@ -1,18 +1,27 @@
 package be.ecam.ms_studenthelp.Database.entities;
 
+import org.springframework.lang.NonNull;
+
 import javax.persistence.*;
 
 @Entity
-@Table(name="mssh_category")
-public class Category {
+@Table(name = "categories")
+public class CategoryEntity {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name = "id", unique = true)
     private Long id;
+
+    @NonNull
+    @Column(name = "title")
     private String title;
 
-    protected Category() {}
+    @OneToOne(mappedBy = "category")
+    private ThreadEntity thread;
 
-    public Category(String title) {
+    protected CategoryEntity() {}
+
+    public CategoryEntity(@NonNull String title) {
         this.title = title;
     }
 
@@ -20,11 +29,12 @@ public class Category {
         return id;
     }
 
+    @NonNull
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(@NonNull String title) {
         this.title = title;
     }
 

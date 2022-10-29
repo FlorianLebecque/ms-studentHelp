@@ -4,15 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import be.ecam.ms_studenthelp.Database.entities.Category;
+import be.ecam.ms_studenthelp.Database.entities.CategoryEntity;
 import be.ecam.ms_studenthelp.Database.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-
-import be.ecam.ms_studenthelp.Database.IIODatabaseObject;
-import be.ecam.ms_studenthelp.Interfaces.IReaction;
 
 @RestController
 public class CategoryController {
@@ -30,9 +26,9 @@ public class CategoryController {
 	@GetMapping("/categories")
 	public GetCategoriesResult getCategories() {
 		List<String> categoryTitles = new ArrayList<String>();
-		List<Category> categories = categoryRepository.findAll();
+		List<CategoryEntity> categories = categoryRepository.findAll();
 
-		categories.forEach((Category category) -> { categoryTitles.add(category.getTitle()); });
+		categories.forEach((CategoryEntity categoryEntity) -> { categoryTitles.add(categoryEntity.getTitle()); });
 
 		System.out.println(categoryTitles);
 		return new GetCategoriesResult(categoryTitles);
