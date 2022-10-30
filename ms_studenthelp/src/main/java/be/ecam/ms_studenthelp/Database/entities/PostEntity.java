@@ -1,11 +1,16 @@
 package be.ecam.ms_studenthelp.Database.entities;
 
+import be.ecam.ms_studenthelp.Interfaces.IPost;
+import be.ecam.ms_studenthelp.Object.Post;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "posts")
@@ -30,24 +35,30 @@ public class PostEntity {
 
     @NonNull
     @Column(name = "date_posted")
-    private Date datePosted;
+    private LocalDateTime datePosted;
 
     @NonNull
     @Column(name = "date_modified")
-    private Date dateModified;
+    private LocalDateTime dateModified;
 
     @Nullable
     @ManyToOne
     @JoinColumn(name = "parent", referencedColumnName = "id")  // Foreign key
     private PostEntity parent;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "author_id", referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "author_id")
     private AuthorEntity author;
 
     protected PostEntity() {}
 
-    public PostEntity(@NonNull String content, @NonNull int upVotes, @NonNull int downVotes, @NonNull Date datePosted, @NonNull Date dateModified, @NonNull AuthorEntity author) {
+    public PostEntity(@NonNull String content,
+                      @NonNull int upVotes,
+                      @NonNull int downVotes,
+                      @NonNull LocalDateTime datePosted,
+                      @NonNull LocalDateTime dateModified,
+                      @NonNull AuthorEntity author) {
+        id = UUID.randomUUID().toString();
         this.content = content;
         this.upVotes = upVotes;
         this.downVotes = downVotes;
@@ -74,12 +85,12 @@ public class PostEntity {
     }
 
     @NonNull
-    public Date getDatePosted() {
+    public LocalDateTime getDatePosted() {
         return datePosted;
     }
 
     @NonNull
-    public Date getDateModified() {
+    public LocalDateTime getDateModified() {
         return dateModified;
     }
 
@@ -108,11 +119,11 @@ public class PostEntity {
         this.downVotes = downVotes;
     }
 
-    public void setDatePosted(@NonNull Date datePosted) {
+    public void setDatePosted(@NonNull LocalDateTime datePosted) {
         this.datePosted = datePosted;
     }
 
-    public void setDateModified(@NonNull Date dateModified) {
+    public void setDateModified(@NonNull LocalDateTime dateModified) {
         this.dateModified = dateModified;
     }
 
@@ -122,5 +133,21 @@ public class PostEntity {
 
     public void setParent(@Nullable PostEntity parent) {
         this.parent = parent;
+    }
+
+    public IPost toPost() {
+        IPost parent = this.parent != null ? this.parent.toPost() : null;
+
+        return new Post(
+                id,
+                content,
+                upVotes,
+                downVotes,
+                datePosted,
+                dateModified,
+                author.toAuthor(),
+                parent,
+                new ArrayList<>()
+                );
     }
 }

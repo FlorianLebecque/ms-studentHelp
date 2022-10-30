@@ -66,9 +66,9 @@ public class PostController {
         Map<String,Object> body_data = springParser.parseMap(body);
         String authorId = body_data.get("authorId").toString();
         String content = body_data.get("content").toString();
-        IPost post = new Post(authorId, content);
+        IPost post = null; //new Post(authorId, content);
         IPost postToReply = MsStudenthelpApplication.DatabaseManager.GetPost(postId);
-        postToReply.Reply(post);
+        //postToReply.Reply(post);
         MsStudenthelpApplication.DatabaseManager.CreatePost(post);
         return post;
     }

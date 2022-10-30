@@ -17,4 +17,7 @@ public interface ThreadRepository extends CrudRepository<ThreadEntity, String> {
     @NotNull
     Optional<ThreadEntity> findById(@NotNull String id);
     ThreadEntity findByTitle(@NonNull String title);
+
+    @Override
+    void deleteById(String id);
 }

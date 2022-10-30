@@ -1,43 +1,44 @@
 package be.ecam.ms_studenthelp.Interfaces;
 
+import be.ecam.ms_studenthelp.Object.Category;
+import be.ecam.ms_studenthelp.Object.Tag;
+import org.springframework.lang.NonNull;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 
 public interface IForumThread {
+    @NonNull
+    String getId();
 
+    @NonNull
+    String getTitle();
 
-    //public ForumThread(String id_,String title_,List<String> tags_,String authorId_,LocalDateTime date_,String category_,boolean answered_,List<Post> children_);
+    boolean isAnswered();
 
-    //create
-    //public ForumThread(String title_,String authorId_,String category_);
+    @NonNull
+    Category getCategory();
 
-    public void UpdateTitle(String title_);
-    public void UpdateCategory(String category_);
-    public void UpdateAnswered(boolean answered_);
+    @NonNull
+    LocalDateTime getDatePosted();
 
-    public void Delete();
-    public void AddTags(List<String> tag);
-    public void AddTags(String tag);
+    @NonNull
+    LocalDateTime getDateModified();
+
+    IPost getFirstPost();
+
+    @NonNull
+    Set<Tag> getTags();
+
+    void setTitle(@NonNull String title);
+    void setAnswered(boolean answered);
+    void setCategory(@NonNull Category category);
+    void setDateModified(@NonNull LocalDateTime dateModified);
+    void setFirstPost(IPost firstPost);
+    void setTags(@NonNull Set<Tag> tags);
 
     @Override
-    public String toString();
-
-    public String getAuthorId();
-
-    public String getId();
-
-    public String getCategory();
-
-    public String getTitle();
-
-    public LocalDateTime getDate();
-
-    public IPost getChild();
-
-    public List<String> getTags();
-
-    public LocalDateTime getModification();
-    
-    public boolean getAnswer();
+    String toString();
 }

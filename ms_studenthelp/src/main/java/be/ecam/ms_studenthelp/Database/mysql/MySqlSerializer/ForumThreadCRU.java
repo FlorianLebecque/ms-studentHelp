@@ -27,12 +27,12 @@ public class ForumThreadCRU {
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
-        String datetime = ft.getDate().format(formatter).replace("T", " ");
+        String datetime = ft.getDateModified().format(formatter).replace("T", " ");
 
         String query_elem = String.format(
             "INSERT INTO `mssh_elem`(`id`, `authorId`, `date`) VALUES ('%s','%s','%s');\n",
             ft.getId(),
-            ft.getAuthorId(),
+            "yop",
             datetime
         );
 
@@ -49,10 +49,10 @@ public class ForumThreadCRU {
 
         
         int res = MySqlDatabase.UpdateQuery(queries);
-        if(ft.getChild()!= null){
+        if(ft.getFirstPost()!= null){
             String query_update = String.format(
                "UPDATE `mssh_ForumThread` SET `child`='%s' WHERE `id` = '%s'" ,
-               ft.getChild().getId(),
+               ft.getFirstPost().getId(),
                ft.getId()
             );
             
@@ -70,7 +70,7 @@ public class ForumThreadCRU {
         int answered = 0;
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-        String datetime = ft.getModification().format(formatter).replace("T", " ");
+        String datetime = ft.getDateModified().format(formatter).replace("T", " ");
 
         String query_elem = String.format(
             "UPDATE `mssh_elem` SET `lastModif`='%s' WHERE `id` = '%s';\n",
@@ -131,7 +131,7 @@ public class ForumThreadCRU {
                 }
 
 
-                ForumThread ft = new ForumThread(
+                /*ForumThread ft = new ForumThread(
                     rs.getString("id"),
                     rs.getString("authorId"),
                     rs.getString("ft_title"),
@@ -141,9 +141,9 @@ public class ForumThreadCRU {
                     lastModif,
                     rs.getInt("answered") != 0,
                     child
-                );
+                );*/
 
-                return ft;
+                return null;
             }
 
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package be.ecam.ms_studenthelp.Database.entities;
 
+import be.ecam.ms_studenthelp.Object.Tag;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
@@ -8,16 +9,16 @@ import javax.persistence.*;
 @Table(name = "tags")
 public class TagEntity {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
-    private String id;
+    private long id;
 
     @NonNull
     @Column(name = "title")
     private String title;
 
     @NonNull
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "thread_id", referencedColumnName = "id")
     private ThreadEntity thread;
 
@@ -29,7 +30,7 @@ public class TagEntity {
     }
 
     @NonNull
-    public String getId() {
+    public long getId() {
         return id;
     }
 
@@ -43,7 +44,7 @@ public class TagEntity {
         return thread;
     }
 
-    public void setId(@NonNull String id) {
+    public void setId(@NonNull long id) {
         this.id = id;
     }
 
@@ -53,5 +54,9 @@ public class TagEntity {
 
     public void setThread(@NonNull ThreadEntity thread) {
         this.thread = thread;
+    }
+
+    public Tag toTag() {
+        return new Tag(id, title);
     }
 }

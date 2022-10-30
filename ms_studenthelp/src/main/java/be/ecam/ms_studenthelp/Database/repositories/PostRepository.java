@@ -16,4 +16,7 @@ public interface PostRepository extends CrudRepository<PostEntity, String> {
     Optional<PostEntity> findById(@NotNull String id);
     PostEntity findByParent(@Nullable PostEntity parent);
     PostEntity findAllByParent(@Nullable PostEntity parent);
+
+    @Override
+    void deleteAll(@NotNull Iterable<? extends PostEntity> entities);
 }

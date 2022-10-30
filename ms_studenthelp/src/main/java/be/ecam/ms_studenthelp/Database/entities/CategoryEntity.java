@@ -1,5 +1,6 @@
 package be.ecam.ms_studenthelp.Database.entities;
 
+import be.ecam.ms_studenthelp.Object.Category;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
@@ -10,14 +11,11 @@ public class CategoryEntity {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id", unique = true)
-    private Long id;
+    private long id;
 
     @NonNull
     @Column(name = "title")
     private String title;
-
-    @OneToOne(mappedBy = "category")
-    private ThreadEntity thread;
 
     protected CategoryEntity() {}
 
@@ -41,5 +39,9 @@ public class CategoryEntity {
     @Override
     public String toString() {
         return String.format("Categories[id=%d, title='%s']", id, title);
+    }
+
+    public Category toCategory() {
+        return new Category(id, title);
     }
 }
