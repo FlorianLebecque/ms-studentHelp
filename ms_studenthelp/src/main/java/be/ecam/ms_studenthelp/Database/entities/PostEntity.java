@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -50,6 +51,10 @@ public class PostEntity {
     @JoinColumn(name = "author_id")
     private AuthorEntity author;
 
+    @NonNull
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private Set<ReactionEntity> reactions;
+
     protected PostEntity() {}
 
     public PostEntity(@NonNull String content,
@@ -57,7 +62,8 @@ public class PostEntity {
                       @NonNull int downVotes,
                       @NonNull LocalDateTime datePosted,
                       @NonNull LocalDateTime dateModified,
-                      @NonNull AuthorEntity author) {
+                      @NonNull AuthorEntity author,
+                      @NonNull Set<ReactionEntity> reactions) {
         id = UUID.randomUUID().toString();
         this.content = content;
         this.upVotes = upVotes;
@@ -65,6 +71,7 @@ public class PostEntity {
         this.datePosted = datePosted;
         this.dateModified = dateModified;
         this.author = author;
+        this.reactions = reactions;
     }
 
     public String getId() {
@@ -103,6 +110,11 @@ public class PostEntity {
         return parent;
     }
 
+    @NonNull
+    public Set<ReactionEntity> getReactions() {
+        return reactions;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -133,6 +145,10 @@ public class PostEntity {
 
     public void setParent(@Nullable PostEntity parent) {
         this.parent = parent;
+    }
+
+    public void setReactions(@NonNull Set<ReactionEntity> reactions) {
+        this.reactions = reactions;
     }
 
     public IPost toPost() {

@@ -32,7 +32,7 @@ public class ReactionCRUD {
 
             if (rs.next()) {
                 int value = rs.getInt("value");
-                return new Reaction(postId, authorId, value);
+                return null; //new Reaction(postId, authorId, value);
             } else {
                 return null;
             }
@@ -56,7 +56,7 @@ public class ReactionCRUD {
             while(rs.next()) {
                 String authorId = rs.getString("authorId");
                 int value = rs.getInt("value");
-                Reaction reaction = new Reaction(postId, authorId, value);
+                Reaction reaction = null; //new Reaction(postId, authorId, value);
                 reactions.add(reaction);
             }
 
@@ -70,8 +70,8 @@ public class ReactionCRUD {
         try {
             String query = String.format(
                 "INSERT INTO `mssh_reaction`(`postId`, `authorId`, `value`) VALUES ('%s','%s',%d)",
-                reaction.getPostId(),
-                reaction.getAuthorId(),
+                "", //reaction.getPostId(),
+                "", //reaction.getAuthorId(),
                 reaction.getValue()
             );
             Statement ps = con.createStatement();
@@ -87,8 +87,8 @@ public class ReactionCRUD {
         try {
             String query = String.format(
                 "UPDATE `mssh_reaction` SET `value` = %d WHERE `postId` = '%s' AND `authorId` = '%s'",
-                reaction.getPostId(),
-                reaction.getAuthorId(),
+                "", // reaction.getPostId(),
+                "", // reaction.getAuthorId(),
                 reaction.getValue()
             );
             Statement ps = con.createStatement();
@@ -104,8 +104,8 @@ public class ReactionCRUD {
         try {
             String query = String.format(
                 "DELETE FROM `mssh_reaction` WHERE  `postId` = '%s' AND `authorId` = '%s'",
-                reaction.getPostId(),
-                reaction.getAuthorId()
+                "", //reaction.getPostId(),
+                "" //reaction.getAuthorId()
             );
             Statement ps = con.createStatement();
             ps.executeUpdate(query);

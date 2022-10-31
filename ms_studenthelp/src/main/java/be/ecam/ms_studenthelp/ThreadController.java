@@ -91,7 +91,8 @@ public class ThreadController {
                 firstPost.getDownvotes(),
                 firstPost.getDatePosted(),
                 firstPost.getDateModified(),
-                authorEntity
+                authorEntity,
+                new HashSet<>()
         );
 
         ThreadEntity threadEntity = new ThreadEntity(title, categoryEntity, postEntity);

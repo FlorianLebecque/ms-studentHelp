@@ -1,11 +1,19 @@
 package be.ecam.ms_studenthelp;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.html.Option;
 
+import be.ecam.ms_studenthelp.Database.entities.AuthorEntity;
+import be.ecam.ms_studenthelp.Database.entities.PostEntity;
+import be.ecam.ms_studenthelp.Database.entities.ReactionEntity;
+import be.ecam.ms_studenthelp.Database.repositories.AuthorRepository;
+import be.ecam.ms_studenthelp.Database.repositories.PostRepository;
+import be.ecam.ms_studenthelp.Database.repositories.ReactionRepository;
+import be.ecam.ms_studenthelp.Object.Author;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.http.HttpStatus;
@@ -25,51 +33,36 @@ import be.ecam.ms_studenthelp.Interfaces.IReaction;
 
 @RestController
 public class ReactionController {
-
-
+    @Autowired private ReactionRepository reactionRepository;
+    @Autowired private PostRepository postRepository;
+    @Autowired private AuthorRepository authorRepository;
 
 	@GetMapping("/posts/{postId}/reactions")
-	public GetPostsPostIdReactionsResult getPostsPostIdReactions(@PathVariable("postId") String postId, HttpServletResponse resp) {
-        // postId format verification
-        try {
-            UUID.fromString(postId);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "postId should be an UUID");
+	public Set<Reaction> getPostsPostIdReactions(@PathVariable("postId") String postId, HttpServletResponse resp) {
+        Optional<PostEntity> optionalPostEntity = postRepository.findById(postId);
+
+        // If the post is not found, return a 404 error
+        if (optionalPostEntity.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found !");
         }
 
-        IIODatabaseObject db = MsStudenthelpApplication.DatabaseManager;
-        IPost post = db.GetPost(postId);
-        if (post == null) {
-            resp.setStatus(404);
-            return new GetPostsPostIdReactionsResult("Post not found");
-        }
-        List<IReaction> reactions = db.GetReactions(post);
-        if (reactions == null) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Database error");
-        }
+        PostEntity postEntity = optionalPostEntity.get();
+        Set<ReactionEntity> reactionEntities = postEntity.getReactions();
 
-		return new GetPostsPostIdReactionsResult(reactions);
-	}
-
-	class GetPostsPostIdReactionsResult {
-		public List<IReaction> data = null;
-		public String message = null;
-
-		public GetPostsPostIdReactionsResult(List<IReaction> data) {
-			this.data = data;
-		}
-
-		public GetPostsPostIdReactionsResult(String message) {
-			this.message = message;
-		}
+        // Convert ReactionEntity to Reaction
+        return reactionEntities
+                .stream()
+                .map(ReactionEntity::toReaction)
+                .collect(Collectors.toSet());
 	}
 
 	@PutMapping("/posts/{postId}/reactions")
-	public PutPostsPostIdReactionsResult putPostsPostIdReactions(@PathVariable("postId") String postId, @RequestBody String body, HttpServletResponse resp) {
-        try {
-            UUID.fromString(postId);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "postId should be an UUID");
+	public Reaction putPostsPostIdReactions(@PathVariable("postId") String postId, @RequestBody String body, HttpServletResponse resp) {
+        Optional<PostEntity> optionalPostEntity = postRepository.findById(postId);
+
+        // If the post is not found, return a 404 error
+        if (optionalPostEntity.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found !");
         }
 
         // Parsing the JSON body
@@ -78,74 +71,48 @@ public class ReactionController {
 
         // Getting `value` from the parsed body, and validating it
         Integer value = (Integer) body_data.get("value");
-        if (value == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "value should be in the body");
-        }
-        if (value != 1 && value != -1) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "value should be either 1 or -1");
-        }
+        String authorId = (String) body_data.get("authorId");
 
-
-        IIODatabaseObject db = MsStudenthelpApplication.DatabaseManager;
-        IPost post = db.GetPost(postId);
-        if (post == null) {
-            resp.setStatus(404);
-            return new PutPostsPostIdReactionsResult("Post not found");
+        if ((value == null) || (authorId == null)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Value and authorId should be presents in the body !");
+        }
+        if ((value != 1) && (value != -1)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Value should be 1 or -1 !");
         }
 
-        // TODO: Fetch the author from the OAuth token
-        String authorId = "author";
+        PostEntity postEntity = optionalPostEntity.get();
+        Optional<AuthorEntity> optionalAuthorEntity = authorRepository.findById(authorId);
+        AuthorEntity authorEntity = optionalAuthorEntity.isEmpty() ? new AuthorEntity(authorId) :
+                optionalAuthorEntity.get();
+        ReactionEntity reactionEntity = reactionRepository.findByPostAndAuthor(postEntity,
+                authorEntity);
 
-        // Creating or updating the reaction depending on its existence
-        IReaction reaction = db.GetReaction(post, authorId);
-        if (reaction == null) {
-            reaction = new Reaction(postId, authorId, value);
-            reaction = db.CreateReaction(reaction);
-            if (reaction == null) {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Database error");
-            }
+        // If the author has already reacted to this post, update his reaction
+        if (reactionEntity == null) {
+            reactionEntity = new ReactionEntity(value, authorEntity, postEntity);
         } else {
-            reaction.setValue(value);
-            reaction = db.UpdateReaction(reaction);
-            if (reaction == null) {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Database error");
-            }
+            reactionEntity.setValue(value);
         }
 
-		return new PutPostsPostIdReactionsResult(reaction);
-	}
+        // Save the author if created
+        authorRepository.save(authorEntity);
+        reactionRepository.save(reactionEntity);
 
-	class PutPostsPostIdReactionsResult {
-		public IReaction data = null;
-		public String message = null;
-
-		public PutPostsPostIdReactionsResult(IReaction data) {
-			this.data = data;
-		}
-
-		public PutPostsPostIdReactionsResult(String message) {
-			this.message = message;
-		}
+        return reactionEntity.toReaction();
 	}
 
 	@DeleteMapping("/posts/{postId}/reactions")
-	public ResponseEntity deletePostsPostIdReactions(@PathVariable("postId") String postId, HttpServletResponse resp) {
+	public ResponseEntity deletePostsPostIdReactions(@PathVariable("postId") String postId) {
+        Optional<PostEntity> optionalPostEntity = postRepository.findById(postId);
 
-        IIODatabaseObject db = MsStudenthelpApplication.DatabaseManager;
-        IPost post = db.GetPost(postId);
-        if (post == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        // If the post is not found, return a 404 error
+        if (optionalPostEntity.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found !");
         }
 
-        // TODO: Fetch the author from the OAuth token
-        String authorId = "author";
+        PostEntity postEntity = optionalPostEntity.get();
+        reactionRepository.deleteAllByPost(postEntity);
 
-        // Creating or updating the reaction depending on its existence
-        IReaction reaction = db.GetReaction(post, authorId);
-        if (reaction != null) {
-            db.DeleteReaction(reaction);
-        }
-
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

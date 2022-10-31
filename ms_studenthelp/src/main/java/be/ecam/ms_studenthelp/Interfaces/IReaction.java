@@ -1,13 +1,14 @@
 package be.ecam.ms_studenthelp.Interfaces;
 
+import be.ecam.ms_studenthelp.Object.Author;
+
 public interface IReaction {
 	public void setValue(int value);
 
-	public String getPostId();
-	public String getAuthorId();
+	public IPost getPost();
+	public Author getAuthor();
 	public int getValue();
 
-	public String toString();
 	public int toInt();
 }
 

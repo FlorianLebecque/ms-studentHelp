@@ -1,5 +1,6 @@
 package be.ecam.ms_studenthelp.Database.entities;
 
+import be.ecam.ms_studenthelp.Object.Reaction;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
@@ -8,21 +9,21 @@ import javax.persistence.*;
 @Table(name = "reactions")
 public class ReactionEntity {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
-    private String id;
+    private long id;
 
     @Column(name = "value")
     private int value;
 
     @NonNull
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "author_id", referencedColumnName = "id")  // Foreign key
     private AuthorEntity author;
 
     @NonNull
     @ManyToOne
-    @JoinColumn(name = "post_id", referencedColumnName = "id")  // Foreign key
+    @JoinColumn(name="post_id")
     private PostEntity post;
 
     protected ReactionEntity() {};
@@ -33,7 +34,7 @@ public class ReactionEntity {
         this.post = post;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
@@ -51,7 +52,7 @@ public class ReactionEntity {
         return post;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -65,5 +66,9 @@ public class ReactionEntity {
 
     public void setPost(@NonNull PostEntity post) {
         this.post = post;
+    }
+
+    public Reaction toReaction() {
+        return new Reaction(post.toPost(), author.toAuthor(), value);
     }
 }
