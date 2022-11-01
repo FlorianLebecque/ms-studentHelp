@@ -6,6 +6,7 @@ import be.ecam.ms_studenthelp.Database.repositories.PostRepository;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
 import be.ecam.ms_studenthelp.utils.*;
 import ch.qos.logback.core.read.ListAppender;
+import org.apache.tomcat.jni.Local;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,6 @@ public class Post implements IPost{
     @NonNull private LocalDateTime dateModified;
     @NonNull private Author author;
     @Nullable private IPost parent;
-    @NonNull private List<IPost> children;
 
     public Post(@NonNull String id,
                 @NonNull String content,
@@ -36,8 +36,7 @@ public class Post implements IPost{
                 @NonNull LocalDateTime datePosted,
                 @NonNull LocalDateTime dateModified,
                 @NonNull Author author,
-                @Nullable IPost parent,
-                @NonNull List<IPost> children) {
+                @Nullable IPost parent) {
         this.id = id;
         this.content = content;
         this.upVotes = upVotes;
@@ -46,7 +45,6 @@ public class Post implements IPost{
         this.dateModified = dateModified;
         this.author = author;
         this.parent = parent;
-        this.children = children;
     }
 
     public Post(@NonNull String content,
@@ -60,7 +58,6 @@ public class Post implements IPost{
         this.dateModified = LocalDateTime.now();
         this.author = author;
         this.parent = parent;
-        this.children = new ArrayList<>();
     }
 
     @Override
@@ -109,24 +106,21 @@ public class Post implements IPost{
     }
 
     @Override
-    @NonNull
-    public List<IPost> getChildren() {
-        return children;
-    }
-
-    @Override
     public void setContent(@NonNull String content) {
         this.content = content;
+        dateModified = LocalDateTime.now();
     }
 
     @Override
     public void setUpvotes(int upvotes) {
         this.upVotes = upvotes;
+        dateModified = LocalDateTime.now();
     }
 
     @Override
     public void setDownvotes(int downvotes) {
         this.downVotes = downvotes;
+        dateModified = LocalDateTime.now();
     }
 
     @Override
@@ -137,26 +131,25 @@ public class Post implements IPost{
     @Override
     public void setParent(IPost parent) {
         this.parent = parent;
-    }
-
-    @Override
-    public void setChildren(@NonNull List<IPost> children) {
-        this.children = children;
+        dateModified = LocalDateTime.now();
     }
 
     @Override
     public void incrementUpvotes(int upVotes) {
         this.upVotes += upVotes;
+        dateModified = LocalDateTime.now();
     }
 
     @Override
     public void incrementDownvotes(int downVotes) {
         this.downVotes += downVotes;
+        dateModified = LocalDateTime.now();
     }
 
     @Override
     public void decrementUpvotes(int upVotes) {
         this.upVotes -= upVotes;
+        dateModified = LocalDateTime.now();
 
         if (this.upVotes < 0) {
             this.upVotes = 0;
@@ -166,6 +159,7 @@ public class Post implements IPost{
     @Override
     public void decrementDownvotes(int downVotes) {
         this.downVotes -= downVotes;
+        dateModified = LocalDateTime.now();
 
         if (this.downVotes < 0) {
             this.downVotes = 0;

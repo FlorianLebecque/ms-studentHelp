@@ -15,14 +15,12 @@ public interface IPost {
     @NonNull LocalDateTime getDateModified();
     @NonNull String getContent();
     IPost getParent();
-    @NonNull List<IPost> getChildren();
 
     void setContent(@NonNull String content);
     void setUpvotes(int upvotes);
     void setDownvotes(int downvotes);
     void setDateModified(@NonNull LocalDateTime dateModified);
     void setParent(IPost parent);
-    void setChildren(@NonNull List<IPost> children);
 
     void incrementUpvotes(int upvotes);
     void incrementDownvotes(int downvotes);

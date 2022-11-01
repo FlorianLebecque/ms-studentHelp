@@ -30,7 +30,6 @@ public class CategoryController {
 
 		categories.forEach((CategoryEntity categoryEntity) -> { categoryTitles.add(categoryEntity.getTitle()); });
 
-		System.out.println(categoryTitles);
 		return new GetCategoriesResult(categoryTitles);
 	}
 }

@@ -8,17 +8,12 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "posts")
 public class PostEntity {
     @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
     @Column(name = "id", unique = true)
     private String id;
 
@@ -43,7 +38,7 @@ public class PostEntity {
     private LocalDateTime dateModified;
 
     @Nullable
-    @ManyToOne
+    @ManyToOne/*(cascade = CascadeType.ALL)*/
     @JoinColumn(name = "parent", referencedColumnName = "id")  // Foreign key
     private PostEntity parent;
 
@@ -55,6 +50,10 @@ public class PostEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<ReactionEntity> reactions;
 
+    @NonNull
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    private Set<PostEntity> children;
+
     protected PostEntity() {}
 
     public PostEntity(@NonNull String content,
@@ -62,6 +61,7 @@ public class PostEntity {
                       @NonNull int downVotes,
                       @NonNull LocalDateTime datePosted,
                       @NonNull LocalDateTime dateModified,
+                      @Nullable PostEntity parent,
                       @NonNull AuthorEntity author,
                       @NonNull Set<ReactionEntity> reactions) {
         id = UUID.randomUUID().toString();
@@ -70,8 +70,22 @@ public class PostEntity {
         this.downVotes = downVotes;
         this.datePosted = datePosted;
         this.dateModified = dateModified;
+        this.parent = parent;
         this.author = author;
         this.reactions = reactions;
+    }
+
+    public PostEntity(@NonNull String content,
+                      @NonNull AuthorEntity author) {
+        id = UUID.randomUUID().toString();
+        this.content = content;
+        this.upVotes = 0;
+        this.downVotes = 0;
+        this.datePosted = LocalDateTime.now();
+        this.dateModified = LocalDateTime.now();;
+        this.parent = null;
+        this.author = author;
+        this.reactions = new HashSet<>();
     }
 
     public String getId() {
@@ -115,20 +129,36 @@ public class PostEntity {
         return reactions;
     }
 
+    @NonNull
+    public Set<PostEntity> getChildren() {
+        return children;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
 
     public void setContent(@NonNull String content) {
         this.content = content;
+        this.dateModified = LocalDateTime.now();
     }
 
     public void setUpVotes(int upVotes) {
         this.upVotes = upVotes;
+        this.dateModified = LocalDateTime.now();
+
+        if (this.upVotes < 0) {
+            this.upVotes = 0;
+        }
     }
 
     public void setDownVotes(int downVotes) {
         this.downVotes = downVotes;
+        this.dateModified = LocalDateTime.now();
+
+        if (this.downVotes < 0) {
+            this.downVotes = 0;
+        }
     }
 
     public void setDatePosted(@NonNull LocalDateTime datePosted) {
@@ -145,10 +175,12 @@ public class PostEntity {
 
     public void setParent(@Nullable PostEntity parent) {
         this.parent = parent;
+        this.dateModified = LocalDateTime.now();
     }
 
     public void setReactions(@NonNull Set<ReactionEntity> reactions) {
         this.reactions = reactions;
+        this.dateModified = LocalDateTime.now();
     }
 
     public IPost toPost() {
@@ -162,8 +194,6 @@ public class PostEntity {
                 datePosted,
                 dateModified,
                 author.toAuthor(),
-                parent,
-                new ArrayList<>()
-                );
+                parent);
     }
 }

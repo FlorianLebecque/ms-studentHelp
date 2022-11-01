@@ -91,11 +91,13 @@ public class ThreadController {
                 firstPost.getDownvotes(),
                 firstPost.getDatePosted(),
                 firstPost.getDateModified(),
+                null, // No child when the thread is created
                 authorEntity,
                 new HashSet<>()
         );
 
         ThreadEntity threadEntity = new ThreadEntity(title, categoryEntity, postEntity);
+        authorRepository.save(authorEntity);
         threadRepository.save(threadEntity);
 
         return threadEntity.toForumThread();
