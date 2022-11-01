@@ -3,14 +3,11 @@ package be.ecam.ms_studenthelp.Database.entities;
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Object.ForumThread;
 import be.ecam.ms_studenthelp.Object.Tag;
-import org.hibernate.annotations.GenericGenerator;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -20,8 +17,6 @@ import java.util.stream.Collectors;
 @Table(name = "threads")
 public class ThreadEntity {
     @Id
-    // @GeneratedValue(generator="system-uuid")
-    // @GenericGenerator(name="system-uuid", strategy = "uuid")
     @Column(name = "id", unique = true)
     private String id;
 
@@ -63,7 +58,7 @@ public class ThreadEntity {
             boolean answered,
             @NonNull LocalDateTime datePosted,
             @NonNull LocalDateTime dateModified,
-            @Nullable PostEntity firstPost,
+            @NonNull PostEntity firstPost,
             @NonNull Set<TagEntity> tags) {
         this.id = id;
         this.title = title;
@@ -78,7 +73,7 @@ public class ThreadEntity {
     public ThreadEntity(
             @NonNull String title,
             @NonNull CategoryEntity category,
-            @Nullable PostEntity firstPost) {
+            @NonNull PostEntity firstPost) {
         this.id = UUID.randomUUID().toString();
         this.title = title;
         this.category = category;

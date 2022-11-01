@@ -1,7 +1,6 @@
 package be.ecam.ms_studenthelp.Database.repositories;
 
 import be.ecam.ms_studenthelp.Database.entities.AuthorEntity;
-import be.ecam.ms_studenthelp.Database.entities.ReactionEntity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

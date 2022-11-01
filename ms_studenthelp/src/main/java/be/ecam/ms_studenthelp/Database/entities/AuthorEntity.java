@@ -1,7 +1,6 @@
 package be.ecam.ms_studenthelp.Database.entities;
 
 import be.ecam.ms_studenthelp.Object.Author;
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
@@ -11,8 +10,6 @@ import java.util.UUID;
 @Table(name = "authors")
 public class AuthorEntity {
     @Id
-    // @GeneratedValue(generator="system-uuid")
-    // @GenericGenerator(name="id", strategy = "uuid")
     @Column(name = "id", unique = true)
     private String id;
 

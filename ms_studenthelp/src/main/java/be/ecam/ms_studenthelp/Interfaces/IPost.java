@@ -4,7 +4,6 @@ import be.ecam.ms_studenthelp.Object.Author;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public interface IPost {
     @NonNull String getId();

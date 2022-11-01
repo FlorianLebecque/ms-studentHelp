@@ -1,144 +1,143 @@
--- phpMyAdmin SQL Dump
--- version 5.0.2
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1:3306
--- Generation Time: Dec 17, 2021 at 08:49 AM
--- Server version: 8.0.21
--- PHP Version: 7.3.21
+-- MySQL Workbench Forward Engineering
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema ms_studenthelp
+-- -----------------------------------------------------
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+-- -----------------------------------------------------
+-- Schema ms_studenthelp
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `ms_studenthelp` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `ms_studenthelp` ;
 
---
--- Database: `ms_`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mssh_category`
---
-
-DROP TABLE IF EXISTS `mssh_category`;
-CREATE TABLE IF NOT EXISTS `mssh_category` (
-  `id` int NOT NULL,
-  `title` varchar(60) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mssh_elem`
---
-
-DROP TABLE IF EXISTS `mssh_elem`;
-CREATE TABLE IF NOT EXISTS `mssh_elem` (
-  `id` varchar(36) NOT NULL,
-  `authorId` varchar(60) NOT NULL,
-  `date` datetime NOT NULL,
-  `lastModif` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mssh_forumthread`
---
-
-DROP TABLE IF EXISTS `mssh_forumthread`;
-CREATE TABLE IF NOT EXISTS `mssh_forumthread` (
-  `id` varchar(36) NOT NULL,
-  `title` varchar(120) NOT NULL,
-  `category` int NOT NULL,
-  `answered` int NOT NULL DEFAULT '0',
-  `child` varchar(36) DEFAULT NULL,
+-- -----------------------------------------------------
+-- Table `ms_studenthelp`.`authors`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ms_studenthelp`.`authors` (
+  `id` VARCHAR(40) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `ft_cat` (`category`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------
 
---
--- Table structure for table `mssh_ft_tags`
---
+-- -----------------------------------------------------
+-- Table `ms_studenthelp`.`categories`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ms_studenthelp`.`categories` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `title_UNIQUE` (`title` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
-DROP TABLE IF EXISTS `mssh_ft_tags`;
-CREATE TABLE IF NOT EXISTS `mssh_ft_tags` (
-  `id` varchar(36) NOT NULL,
-  `tag` varchar(60) NOT NULL,
-  PRIMARY KEY (`id`,`tag`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------
+-- -----------------------------------------------------
+-- Table `ms_studenthelp`.`posts`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ms_studenthelp`.`posts` (
+  `id` VARCHAR(40) NOT NULL,
+  `content` VARCHAR(45) NOT NULL,
+  `upvotes` INT NOT NULL DEFAULT '0',
+  `downvotes` INT NOT NULL DEFAULT '0',
+  `date_posted` DATETIME NOT NULL,
+  `date_modified` DATETIME NOT NULL,
+  `author_id` VARCHAR(40) NOT NULL,
+  `parent` VARCHAR(40) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `idAuthor_idx` (`author_id` ASC) VISIBLE,
+  INDEX `parent_idx` (`parent` ASC) VISIBLE,
+  CONSTRAINT `author_id`
+    FOREIGN KEY (`author_id`)
+    REFERENCES `ms_studenthelp`.`authors` (`id`),
+  CONSTRAINT `parent`
+    FOREIGN KEY (`parent`)
+    REFERENCES `ms_studenthelp`.`posts` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
---
--- Table structure for table `mssh_post`
---
 
-DROP TABLE IF EXISTS `mssh_post`;
-CREATE TABLE IF NOT EXISTS `mssh_post` (
-  `id` varchar(36) NOT NULL,
-  `parent` varchar(36) DEFAULT NULL,
-  `content` varchar(500) NOT NULL,
-  KEY `elem_pt` (`id`),
-  KEY `pt_pt` (`parent`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+-- -----------------------------------------------------
+-- Table `ms_studenthelp`.`reactions`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ms_studenthelp`.`reactions` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `value` INT NOT NULL,
+  `author_id` VARCHAR(40) NOT NULL,
+  `post_id` VARCHAR(40) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `authorId_idx` (`author_id` ASC) VISIBLE,
+  INDEX `postId_idx` (`post_id` ASC) VISIBLE,
+  CONSTRAINT `reactions_author_id`
+    FOREIGN KEY (`author_id`)
+    REFERENCES `ms_studenthelp`.`authors` (`id`),
+  CONSTRAINT `reactions_post_id`
+    FOREIGN KEY (`post_id`)
+    REFERENCES `ms_studenthelp`.`posts` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 9
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------
 
---
--- Table structure for table `mssh_reactions`
---
+-- -----------------------------------------------------
+-- Table `ms_studenthelp`.`threads`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ms_studenthelp`.`threads` (
+  `id` VARCHAR(36) NOT NULL,
+  `title` VARCHAR(45) NOT NULL,
+  `answered` TINYINT NOT NULL DEFAULT '0',
+  `id_category` INT NOT NULL,
+  `date_posted` DATETIME NOT NULL,
+  `date_modified` DATETIME NOT NULL,
+  `first_post` VARCHAR(40) NOT NULL,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `idCategory_idx` (`id_category` ASC) VISIBLE,
+  INDEX `firstPost_idx` (`first_post` ASC) VISIBLE,
+  CONSTRAINT `first_post`
+    FOREIGN KEY (`first_post`)
+    REFERENCES `ms_studenthelp`.`posts` (`id`),
+  CONSTRAINT `id_category`
+    FOREIGN KEY (`id_category`)
+    REFERENCES `ms_studenthelp`.`categories` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
-DROP TABLE IF EXISTS `mssh_reactions`;
-CREATE TABLE IF NOT EXISTS `mssh_reactions` (
-  `postId` varchar(36) NOT NULL,
-  `authorId` varchar(60) NOT NULL,
-  `value` int NOT NULL,
-  UNIQUE KEY `pt_at_re` (`postId`,`authorId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Constraints for dumped tables
---
+-- -----------------------------------------------------
+-- Table `ms_studenthelp`.`tags`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ms_studenthelp`.`tags` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(45) NOT NULL,
+  `thread_id` VARCHAR(40) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `idThread_idx` (`thread_id` ASC) VISIBLE,
+  CONSTRAINT `idThread`
+    FOREIGN KEY (`thread_id`)
+    REFERENCES `ms_studenthelp`.`threads` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 13
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
---
--- Constraints for table `mssh_forumthread`
---
-ALTER TABLE `mssh_forumthread`
-  ADD CONSTRAINT `elem_ft` FOREIGN KEY (`id`) REFERENCES `mssh_elem` (`id`),
-  ADD CONSTRAINT `ft_cat` FOREIGN KEY (`category`) REFERENCES `mssh_category` (`id`);
 
---
--- Constraints for table `mssh_ft_tags`
---
-ALTER TABLE `mssh_ft_tags`
-  ADD CONSTRAINT `ft_tag` FOREIGN KEY (`id`) REFERENCES `mssh_forumthread` (`id`);
-
---
--- Constraints for table `mssh_post`
---
-ALTER TABLE `mssh_post`
-  ADD CONSTRAINT `elem_pt` FOREIGN KEY (`id`) REFERENCES `mssh_elem` (`id`),
-  ADD CONSTRAINT `pt_pt` FOREIGN KEY (`parent`) REFERENCES `mssh_post` (`id`);
-
---
--- Constraints for table `mssh_reactions`
---
-ALTER TABLE `mssh_reactions`
-  ADD CONSTRAINT `pt_re` FOREIGN KEY (`postId`) REFERENCES `mssh_post` (`id`);
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

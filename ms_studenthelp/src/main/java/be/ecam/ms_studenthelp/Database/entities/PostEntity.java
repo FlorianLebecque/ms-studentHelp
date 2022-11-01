@@ -2,7 +2,6 @@ package be.ecam.ms_studenthelp.Database.entities;
 
 import be.ecam.ms_studenthelp.Interfaces.IPost;
 import be.ecam.ms_studenthelp.Object.Post;
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

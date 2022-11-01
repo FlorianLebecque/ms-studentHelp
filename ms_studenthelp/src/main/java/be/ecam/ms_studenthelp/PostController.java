@@ -7,18 +7,15 @@ import be.ecam.ms_studenthelp.Database.repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
-import org.springframework.http.HttpStatus; //TO DO : manage HTTP responses
-import org.springframework.http.ResponseEntity; //TO DO : manage HTTP responses
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import be.ecam.ms_studenthelp.Interfaces.IPost;
-import be.ecam.ms_studenthelp.Object.Post;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController

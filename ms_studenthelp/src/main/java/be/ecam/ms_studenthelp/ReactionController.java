@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.html.Option;
 
 import be.ecam.ms_studenthelp.Database.entities.AuthorEntity;
 import be.ecam.ms_studenthelp.Database.entities.PostEntity;
@@ -12,7 +11,6 @@ import be.ecam.ms_studenthelp.Database.entities.ReactionEntity;
 import be.ecam.ms_studenthelp.Database.repositories.AuthorRepository;
 import be.ecam.ms_studenthelp.Database.repositories.PostRepository;
 import be.ecam.ms_studenthelp.Database.repositories.ReactionRepository;
-import be.ecam.ms_studenthelp.Object.Author;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
@@ -26,10 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import be.ecam.ms_studenthelp.Database.IIODatabaseObject;
 import be.ecam.ms_studenthelp.Object.Reaction;
-import be.ecam.ms_studenthelp.Interfaces.IPost;
-import be.ecam.ms_studenthelp.Interfaces.IReaction;
 
 @RestController
 public class ReactionController {
