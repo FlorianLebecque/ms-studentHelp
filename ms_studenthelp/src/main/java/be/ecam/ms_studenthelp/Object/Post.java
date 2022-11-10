@@ -1,18 +1,13 @@
 package be.ecam.ms_studenthelp.Object;
 
-import java.util.List;
-
-import be.ecam.ms_studenthelp.Database.repositories.PostRepository;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Post implements IPost{
-    @Autowired PostRepository postRepository;
     @NonNull private final String id;
     @NonNull private String content;
     private int upVotes = 0;

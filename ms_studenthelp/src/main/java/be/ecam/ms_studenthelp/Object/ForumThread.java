@@ -102,7 +102,7 @@ public class ForumThread implements IForumThread {
     }
 
     @Override
-    public Set<Tag> getTags() {
+    public @NotNull Set<Tag> getTags() {
         return tags;
     }
 

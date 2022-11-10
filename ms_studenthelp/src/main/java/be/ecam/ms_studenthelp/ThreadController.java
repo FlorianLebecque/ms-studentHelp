@@ -7,6 +7,7 @@ import be.ecam.ms_studenthelp.Database.repositories.TagRepository;
 import be.ecam.ms_studenthelp.Database.repositories.ThreadRepository;
 import be.ecam.ms_studenthelp.Object.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
@@ -109,16 +110,17 @@ public class ThreadController {
      * Return an existing Thread from is threadID (String)
      */
     @GetMapping("/threads/{threadId}")
-    public IForumThread getThreadsThreadId(@PathVariable("threadId") String threadId) {
+    public ResponseEntity<Object> getThreadsThreadId(@PathVariable("threadId") String threadId) {
         Optional<ThreadEntity> optionalThreadEntity = threadRepository.findById(threadId);
 
         // Return a 404 error if the thread does not exist
         if (optionalThreadEntity.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    String.format("Thread %s not found !", threadId));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(HttpStatus.BAD_REQUEST.toString());
+            //throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+            //        String.format("Thread %s not found !", threadId));
         }
 
-        return optionalThreadEntity.get().toForumThread();
+        return ResponseEntity.ok(optionalThreadEntity.get().toForumThread());
     }
 
     /**
@@ -210,7 +212,7 @@ public class ThreadController {
      * Get a list of published threads
      */
     @GetMapping("/threads")
-    public List<IForumThread> GetForumThreadPages() {
+    public List<ForumThread> GetForumThreadPages() {
         List<ThreadEntity> threadEntities = threadRepository.findAll();
 
         // Convert all the ThreadEntity to ForumThread

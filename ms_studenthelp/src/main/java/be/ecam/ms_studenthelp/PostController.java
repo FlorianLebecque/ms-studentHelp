@@ -4,6 +4,8 @@ import be.ecam.ms_studenthelp.Database.entities.AuthorEntity;
 import be.ecam.ms_studenthelp.Database.entities.PostEntity;
 import be.ecam.ms_studenthelp.Database.repositories.AuthorRepository;
 import be.ecam.ms_studenthelp.Database.repositories.PostRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
@@ -20,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class PostController {
+    @Autowired ObjectMapper objectMapper;
     @Autowired private PostRepository postRepository;
     @Autowired private AuthorRepository authorRepository;
 
@@ -29,7 +32,7 @@ public class PostController {
      *  @param postId Id of the post to get
      *  @return and {@link IPost}
      */
-    @GetMapping("/posts/{postId}")
+    @GetMapping(value = "/posts/{postId}", produces="application/json")
     public IPost GetPostByPostId(@PathVariable("postId") String postId) {
         Optional<PostEntity> optionalPostEntity = postRepository.findById(postId);
 
@@ -49,7 +52,7 @@ public class PostController {
      * @param body objet post in JSON or just a JSON like {"content": "also works"}
      * @return and {@link IPost}
      */
-    @PatchMapping("/posts/{postId}")
+    @PatchMapping(value = "/posts/{postId}", produces="application/json")
     public IPost PatchPostByPostId(@PathVariable("postId") String postId, @RequestBody String body) {
         Optional<PostEntity> optionalPostEntity = postRepository.findById(postId);
 
@@ -84,7 +87,7 @@ public class PostController {
      * @param body  The reply post with necessary fields to create a post
      * @return and {@link IPost}
      */
-    @PutMapping("/posts/{postId}/answers")
+    @PutMapping(value = "/posts/{postId}/answers", produces="application/json")
     public IPost ReplyPostByPostId(@PathVariable("postId") String postId, @RequestBody String body) {
         Optional<PostEntity> optionalPostEntity = postRepository.findById(postId);
 
@@ -119,7 +122,7 @@ public class PostController {
         authorRepository.save(authorEntity);
         postRepository.save(childPostEntity);
 
-        return postEntity.toPost();
+        return childPostEntity.toPost();
     }
 
     /**
@@ -128,8 +131,8 @@ public class PostController {
      * @param postId
      * @return
      */
-    @DeleteMapping("/posts/{postId}")
-    public IPost deletePostByPostId(@PathVariable("postId") String postId) {
+    @DeleteMapping(value = "/posts/{postId}", produces = "application/json")
+    public IPost deletePostByPostId(@PathVariable("postId") String postId) throws JsonProcessingException {
         Optional<PostEntity> optionalPostEntity = postRepository.findById(postId);
 
         // If the post does not exist, return a 404 error
@@ -150,8 +153,8 @@ public class PostController {
         return postEntity.toPost();
     }
 
-    @GetMapping("/posts")
-    public List<IPost> getAllPosts() {
+    @GetMapping(value = "/posts", produces = "application/json")
+    public List<IPost> getAllPosts() throws JsonProcessingException {
         List<PostEntity> postEntities = postRepository.findAll();
 
         // Convert PostEntity to Post
