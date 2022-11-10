@@ -4,6 +4,8 @@ import be.ecam.ms_studenthelp.Database.entities.AuthorEntity;
 import be.ecam.ms_studenthelp.Database.entities.PostEntity;
 import be.ecam.ms_studenthelp.Database.repositories.AuthorRepository;
 import be.ecam.ms_studenthelp.Database.repositories.PostRepository;
+import be.ecam.ms_studenthelp.utils.DatabaseUtils;
+import be.ecam.ms_studenthelp.utils.PostBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +36,7 @@ public class PostController {
      */
     @GetMapping(value = "/posts/{postId}", produces="application/json")
     public IPost GetPostByPostId(@PathVariable("postId") String postId) {
-        Optional<PostEntity> optionalPostEntity = postRepository.findById(postId);
-
-        // If the post does not exist, return a 404 error
-        if (optionalPostEntity.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found !");
-        }
-
-        return optionalPostEntity.get().toPost();
+        return DatabaseUtils.getPostFromDatabase(postId, postRepository).toPost();
     }
 
 
@@ -54,27 +49,16 @@ public class PostController {
      */
     @PatchMapping(value = "/posts/{postId}", produces="application/json")
     public IPost PatchPostByPostId(@PathVariable("postId") String postId, @RequestBody String body) {
-        Optional<PostEntity> optionalPostEntity = postRepository.findById(postId);
-
-        // If the post does not exist, return a 404 error
-        if (optionalPostEntity.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found !");
-        }
-
-        // Format the body in objet body_data to get attributes
-        JsonParser springParser = JsonParserFactory.getJsonParser();
-        Map<String,Object> body_data = springParser.parseMap(body);
-        String content = body_data.get("content").toString();
+        PostEntity postEntity = DatabaseUtils.getPostFromDatabase(postId, postRepository);
+        PostBody postBody = new PostBody(body);
 
         // If no content passed, return a bad request error
-        if (content == null) {
+        if (postBody.getContent() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A content must be set !");
         }
 
-        PostEntity postEntity = optionalPostEntity.get();
-
         // Update the content
-        postEntity.setContent(content);
+        postEntity.setContent(postBody.getContent());
         postRepository.save(postEntity);
 
         return postEntity.toPost();
@@ -89,32 +73,21 @@ public class PostController {
      */
     @PutMapping(value = "/posts/{postId}/answers", produces="application/json")
     public IPost ReplyPostByPostId(@PathVariable("postId") String postId, @RequestBody String body) {
-        Optional<PostEntity> optionalPostEntity = postRepository.findById(postId);
-
-        // If the post does not exist, return a 404 error
-        if (optionalPostEntity.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found !");
-        }
-
-        // Parse the JSON information
-        JsonParser springParser = JsonParserFactory.getJsonParser();
-        Map<String,Object> body_data = springParser.parseMap(body);
-        String authorId = body_data.get("authorId").toString();
-        String content = body_data.get("content").toString();
+        PostEntity postEntity = DatabaseUtils.getPostFromDatabase(postId, postRepository);
+        PostBody postBody = new PostBody(body);
 
         // Check if the authorId and content are passed
-        if ((content == null) ||(authorId == null)) {
+        if ((postBody.getContent() == null) ||(postBody.getAuthorId() == null)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Content and authorId must be passed !");
         }
 
         // Get the author if it exists, otherwise create a new one
-        Optional<AuthorEntity>optionalAuthorEntity = authorRepository.findById(authorId);
-        AuthorEntity authorEntity = optionalAuthorEntity.isEmpty() ?
-                new AuthorEntity(authorId) : optionalAuthorEntity.get();
-
-        PostEntity postEntity = optionalPostEntity.get();
-        PostEntity childPostEntity = new PostEntity(content, authorEntity);
+        Optional<AuthorEntity>optionalAuthorEntity = authorRepository.findById(
+                postBody.getAuthorId());
+        AuthorEntity authorEntity = DatabaseUtils.getAuthorFromDatabase(
+                postBody.getAuthorId(), authorRepository);
+        PostEntity childPostEntity = new PostEntity(postBody.getContent(), authorEntity);
 
         // Save information in the database
         // The post child is saved thanks to cascade.ALL
@@ -132,15 +105,8 @@ public class PostController {
      * @return
      */
     @DeleteMapping(value = "/posts/{postId}", produces = "application/json")
-    public IPost deletePostByPostId(@PathVariable("postId") String postId) throws JsonProcessingException {
-        Optional<PostEntity> optionalPostEntity = postRepository.findById(postId);
-
-        // If the post does not exist, return a 404 error
-        if (optionalPostEntity.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found !");
-        }
-
-        PostEntity postEntity = optionalPostEntity.get();
+    public IPost deletePostByPostId(@PathVariable("postId") String postId) {
+        PostEntity postEntity = DatabaseUtils.getPostFromDatabase(postId, postRepository);
 
         // You can't delete the first post, delete the thread instead
         if (postEntity.getParent() == null) {
@@ -154,7 +120,7 @@ public class PostController {
     }
 
     @GetMapping(value = "/posts", produces = "application/json")
-    public List<IPost> getAllPosts() throws JsonProcessingException {
+    public List<IPost> getAllPosts() {
         List<PostEntity> postEntities = postRepository.findAll();
 
         // Convert PostEntity to Post

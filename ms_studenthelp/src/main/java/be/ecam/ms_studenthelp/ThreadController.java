@@ -6,8 +6,10 @@ import be.ecam.ms_studenthelp.Database.repositories.CategoryRepository;
 import be.ecam.ms_studenthelp.Database.repositories.TagRepository;
 import be.ecam.ms_studenthelp.Database.repositories.ThreadRepository;
 import be.ecam.ms_studenthelp.Object.*;
+import be.ecam.ms_studenthelp.utils.DatabaseUtils;
+import be.ecam.ms_studenthelp.utils.ForumThreadBody;
+import be.ecam.ms_studenthelp.utils.PostBody;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +18,6 @@ import java.util.stream.Collectors;
 
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
-import org.springframework.boot.json.JsonParser;
-import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,48 +44,32 @@ public class ThreadController {
      */
     @PostMapping("/threads")
     public IForumThread PostThreads(@RequestBody String body){
-        JsonParser springParser = JsonParserFactory.getJsonParser();
-        Map<String,Object> body_data = springParser.parseMap(body);
-
-        // ForumThread info
-        String title = (String) body_data.get("title");
-        List<String> tags = new ArrayList<>(); // (List<String>) body_data.get("tags");
-        String category = (String) body_data.get("category");
-        Boolean answered = (Boolean) body_data.get("answered");
+        ForumThreadBody forumThreadBody = new ForumThreadBody(body);
 
         // If title, tags or category is not specified, return a 3xx error
-        if ((title == null) || (tags == null) || (category == null)) {
+        if ((forumThreadBody.getTitle() == null) || (forumThreadBody.getTags() == null) ||
+                (forumThreadBody.getCategory() == null)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad parameters !");
         }
 
-        if (answered == null) {
-            answered = false;
-        }
-
-        Optional<CategoryEntity> optionalCategoryEntity = categoryRepository.findByTitle(category);
-
-        if (optionalCategoryEntity.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    String.format("The category %s does not exists !", category));
-        }
-
-        CategoryEntity categoryEntity = optionalCategoryEntity.get();
+        CategoryEntity categoryEntity = DatabaseUtils.getCategoryFromDatabase(
+                forumThreadBody.getCategory(), categoryRepository);
 
         // Check if the first post is defined
-        if (!(body_data.get("firstPost") instanceof Map)) {
+        if (forumThreadBody.getFirstPost() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A first post must be defined !");
         }
 
-        IPost firstPost = postFromJson((HashMap<String, String>) body_data.get("firstPost"));
+        IPost firstPost = postFromPostBody(forumThreadBody.getFirstPost());
 
+        // Check if the first post is defined
         if (firstPost == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A first post must be defined !");
         }
 
-        Optional<AuthorEntity> optionalAuthorEntity = authorRepository.findById(firstPost.getAuthor().getId());
-        AuthorEntity authorEntity = optionalAuthorEntity.isEmpty() ?
-                new AuthorEntity(firstPost.getAuthor().getId()) : optionalAuthorEntity.get();
-
+        AuthorEntity authorEntity = DatabaseUtils.getAuthorFromDatabase(
+                firstPost.getAuthor().getId(),
+                authorRepository);
         PostEntity postEntity = new PostEntity(
                 firstPost.getContent(),
                 firstPost.getUpvotes(),
@@ -97,7 +81,10 @@ public class ThreadController {
                 new HashSet<>()
         );
 
-        ThreadEntity threadEntity = new ThreadEntity(title, categoryEntity, postEntity);
+        ThreadEntity threadEntity = new ThreadEntity(
+                forumThreadBody.getTitle(),
+                categoryEntity,
+                postEntity);
         authorRepository.save(authorEntity);
         threadRepository.save(threadEntity);
 
@@ -110,17 +97,9 @@ public class ThreadController {
      * Return an existing Thread from is threadID (String)
      */
     @GetMapping("/threads/{threadId}")
-    public ResponseEntity<Object> getThreadsThreadId(@PathVariable("threadId") String threadId) {
-        Optional<ThreadEntity> optionalThreadEntity = threadRepository.findById(threadId);
-
-        // Return a 404 error if the thread does not exist
-        if (optionalThreadEntity.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(HttpStatus.BAD_REQUEST.toString());
-            //throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-            //        String.format("Thread %s not found !", threadId));
-        }
-
-        return ResponseEntity.ok(optionalThreadEntity.get().toForumThread());
+    public IForumThread getThreadsThreadId(@PathVariable("threadId") String threadId) {
+        return DatabaseUtils.getForumThreadFromDatabase(threadId, threadRepository)
+                .toForumThread();
     }
 
     /**
@@ -131,32 +110,18 @@ public class ThreadController {
      */
     @PatchMapping("/threads/{threadId}")
     public IForumThread patchThreadsThreadId(@PathVariable("threadId") String threadId, @RequestBody String body) {
-        Optional<ThreadEntity> optionalThreadEntity = threadRepository.findById(threadId);
-
-        // If the thread does not exist, return a 404 error
-        if (optionalThreadEntity.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    String.format("Thread %s not found !", threadId));
-        }
-
-        ThreadEntity threadEntity = optionalThreadEntity.get();
-        JsonParser springParser = JsonParserFactory.getJsonParser();
-        Map<String,Object> body_data = springParser.parseMap(body);
-
-        // ForumThread info
-        String title = (String) body_data.get("title");
-        List<String> tags = (List<String>) body_data.get("tags");
-        String category = (String) body_data.get("category");
-        Boolean answered = (Boolean) body_data.get("answered");
+        ThreadEntity threadEntity = DatabaseUtils.getForumThreadFromDatabase(threadId,
+                threadRepository);
+        ForumThreadBody forumThreadBody = new ForumThreadBody(body);
 
         // Set new values for the current thread
-        if (title != null) {
-            threadEntity.setTitle(title);
+        if (forumThreadBody.getTitle() != null) {
+            threadEntity.setTitle(forumThreadBody.getTitle());
         }
-        if (tags != null) {
+        if (forumThreadBody.getTags() != null) {
             Set<TagEntity> tagEntities = new HashSet<>();
 
-            for (String tag : tags) {
+            for (String tag : forumThreadBody.getTags()) {
                 TagEntity tagEntity = tagRepository.findByTitleAndThread(tag, threadEntity);
 
                 tagEntities.add(tagEntity != null ? tagEntity : new TagEntity(tag, threadEntity));
@@ -165,20 +130,12 @@ public class ThreadController {
             threadEntity.setTags(tagEntities);
         }
 
-        if (category != null) {
-            Optional<CategoryEntity> optionalCategoryEntity = categoryRepository.findByTitle(category);
-
-            if (optionalCategoryEntity.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        String.format("The category %s does not exists !", category));
-            }
-
-            threadEntity.setCategory(optionalCategoryEntity.get());
+        if (forumThreadBody.getCategory() != null) {
+            threadEntity.setCategory(DatabaseUtils.getCategoryFromDatabase(
+                    forumThreadBody.getCategory(),
+                    categoryRepository));
         }
-
-        if (answered != null) {
-            threadEntity.setAnswered(answered);
-        }
+        threadEntity.setAnswered(forumThreadBody.isAnswered());
 
         threadRepository.save(threadEntity);
         return threadEntity.toForumThread();
@@ -191,18 +148,11 @@ public class ThreadController {
      */
     @DeleteMapping("/threads/{threadId}")
     public IForumThread DeleteForumThreadTitle(@PathVariable("threadId") String threadId) {
-        Optional<ThreadEntity> optionalThreadEntity = threadRepository.findById(threadId);
+        ThreadEntity threadEntity = DatabaseUtils.getForumThreadFromDatabase(
+                threadId,
+                threadRepository);
 
-        // If the thread does not exist, return a 404 error
-        if (optionalThreadEntity.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    String.format("Thread %s not found !", threadId));
-        }
-
-        // Delete the thread from the database
-        ThreadEntity threadEntity = optionalThreadEntity.get();
-        threadRepository.deleteById(optionalThreadEntity.get().getId());
-
+        threadRepository.deleteById(threadEntity.getId());
         return threadEntity.toForumThread();
     }
 
@@ -233,14 +183,11 @@ public class ThreadController {
                 ).collect(Collectors.toList());
     }
 
-    private static IPost postFromJson(@NonNull Map<String, String> jsonPost) {
-        String content = jsonPost.get("content");
-        String authorId = jsonPost.get("authorId");
-
-        if ((content == null) || (authorId == null)) {
+    private static IPost postFromPostBody(@NonNull PostBody postBody) {
+        if ((postBody.getContent() == null) || (postBody.getAuthorId() == null)) {
             return null;
         }
 
-        return new Post(content, new Author(authorId), null);
+        return new Post(postBody.getContent(), new Author(postBody.getAuthorId()), null);
     }
 }
