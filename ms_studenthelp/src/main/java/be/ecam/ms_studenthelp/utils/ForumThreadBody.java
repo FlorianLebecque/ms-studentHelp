@@ -6,6 +6,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +51,7 @@ public class ForumThreadBody {
         answered = body_data.get("answered") != null && (Boolean) body_data.get("answered");
 
         if (body_data.get("firstPost") != null) {
-            firstPost = new PostBody((String) body_data.get("firstPost"));
+            firstPost = new PostBody((HashMap<String, String>) body_data.get("firstPost"));
         } else {
             firstPost = null;
         }

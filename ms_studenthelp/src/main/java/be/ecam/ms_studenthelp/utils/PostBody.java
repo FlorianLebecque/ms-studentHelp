@@ -4,6 +4,7 @@ import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.lang.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /*
@@ -32,6 +33,11 @@ public class PostBody {
 
         authorId = body_data.get("authorId").toString();
         content = body_data.get("content").toString();
+    }
+
+    public PostBody(HashMap<String, String> body) {
+        authorId = body.get("authorId").toString();
+        content = body.get("content").toString();
     }
 
     public @Nullable String getAuthorId() {

@@ -6,16 +6,11 @@ import be.ecam.ms_studenthelp.Database.repositories.AuthorRepository;
 import be.ecam.ms_studenthelp.Database.repositories.PostRepository;
 import be.ecam.ms_studenthelp.utils.DatabaseUtils;
 import be.ecam.ms_studenthelp.utils.PostBody;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JsonParser;
-import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -24,7 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class PostController {
-    @Autowired ObjectMapper objectMapper;
     @Autowired private PostRepository postRepository;
     @Autowired private AuthorRepository authorRepository;
 
