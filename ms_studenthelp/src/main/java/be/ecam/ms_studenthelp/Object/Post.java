@@ -1,127 +1,156 @@
 package be.ecam.ms_studenthelp.Object;
 
-import java.util.List;
-
 import be.ecam.ms_studenthelp.Interfaces.IPost;
-import be.ecam.ms_studenthelp.utils.*;
-//import jdk.internal.vm.annotation.ForceInline;
-//import jdk.vm.ci.meta.Local;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.lang.NonNull;
 
-import java.util.ArrayList;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class Post implements IPost{
-    /**
-     * The Post object represents a post inside a parent thread. 
-     * He can have answers that will be referenced in his 'children' list.
-     * 2 ways to construct a Post object:
-     *  CREATE: when you create a new Post
-     *      @param {String} _authorId
-     *      @param {String} _content
-     *      Other @parameters must be defined by the setters
-     *  LOAD: when you load an existing Post from the database
-     *      @param {String} id_
-     *      @param {String} authorId_
-     *      @param {Stirg} content_
-     *      @param {LocalDateTime} date_
-     *      @param {LocalDateTime} LastModif_
-     *      @param {IPost} parent_
-     */
+    @NonNull private final String id;
+    @NonNull private String content;
+    private int upVotes = 0;
+    private int downVotes = 0;
+    @NonNull private final LocalDateTime datePosted;
+    @NonNull private LocalDateTime dateModified;
+    @NonNull private Author author;
+    @Nullable private IPost parent;
 
-    private final String id;
-    private final String authorId;
-    public LocalDateTime date;
-    public LocalDateTime lastModif;
-    public String content;
-    public IPost parent;
-    public List<IPost> children = new ArrayList<IPost>();
-
-    //create
-    public Post(String _authorId,String _content){
-        id    = GuidGenerator.GetNewUUIDString();
-        authorId = _authorId;
-        date  = LocalDateTime.now();
-        lastModif = date;
-        content = _content;
+    public Post(@NonNull String id,
+                @NonNull String content,
+                int upVotes,
+                int downVotes,
+                @NonNull LocalDateTime datePosted,
+                @NonNull LocalDateTime dateModified,
+                @NonNull Author author,
+                @Nullable IPost parent) {
+        this.id = id;
+        this.content = content;
+        this.upVotes = upVotes;
+        this.downVotes = downVotes;
+        this.datePosted = datePosted;
+        this.dateModified = dateModified;
+        this.author = author;
+        this.parent = parent;
     }
 
-    //load
-    public Post(String id_,String authorId_,String content_ ,LocalDateTime date_,LocalDateTime lastModif_ ,IPost parent_){
-        id = id_;
-        authorId = authorId_;
-        date = date_;
-        lastModif = date_;
-        content = content_;
-        parent = parent_;
+    public Post(@NonNull String content,
+                @NonNull Author author,
+                @Nullable IPost parent) {
+        this.id = UUID.randomUUID().toString();
+        this.content = content;
+        this.upVotes = 0;
+        this.downVotes = 0;
+        this.datePosted = LocalDateTime.now();
+        this.dateModified = LocalDateTime.now();
+        this.author = author;
+        this.parent = parent;
     }
 
-    /// ---SETTERS--- ///
-
-    public void setContent(String _content){
-        content = _content;
-    }
-    
-    public void setParent(IPost _parent){
-        parent = _parent;
-    }
-
-    public void setChildren(List<IPost> children_){
-        children = children_;
-    }
-
-    /// ------------- ///
-
-
-    /// ---GETTERS--- ///
-    public String getContent() {
-        return content;
-    }
-
+    @Override
+    @NonNull
     public String getId() {
         return id;
     }
 
-    public String getAuthorId() {
-        return authorId;
+    @Override
+    @NonNull
+    public Author getAuthor() {
+        return author;
     }
 
+    @Override
+    public int getUpvotes() {
+        return upVotes;
+    }
+
+    @Override
+    public int getDownvotes() {
+        return downVotes;
+    }
+
+    @Override
+    @NonNull
     public LocalDateTime getDatePosted() {
-        return date;
+        return datePosted;
     }
 
+    @Override
+    @NonNull
+    public LocalDateTime getDateModified() {
+        return dateModified;
+    }
+
+    @Override
+    @NonNull
+    public String getContent() {
+        return content;
+    }
+
+    @Override
     public IPost getParent() {
         return parent;
     }
 
-    public List<IPost> getChildren() {
-        return children;
+    @Override
+    public void setContent(@NonNull String content) {
+        this.content = content;
+        dateModified = LocalDateTime.now();
     }
 
-    public LocalDateTime getLastModif() {
-        return lastModif;
-    }
-    /// ------------- ///
-
-    public void UpdateContent(String _content){
-        content     = _content;
-        UpdateDate();
+    @Override
+    public void setUpvotes(int upvotes) {
+        this.upVotes = upvotes;
+        dateModified = LocalDateTime.now();
     }
 
-
-    public void UpdateDate(){
-
-        lastModif  = LocalDateTime.now();
+    @Override
+    public void setDownvotes(int downvotes) {
+        this.downVotes = downvotes;
+        dateModified = LocalDateTime.now();
     }
 
-
-    public void Delete(){
-        UpdateContent("--deleted--");
-        UpdateDate();
-    }
-  
-    //To create a reply: create a new Post before using function Reply(IPost reply) which defines the new Post as beeing the reply
-    public void Reply(IPost reply){
-        reply.setParent(this);
+    @Override
+    public void setDateModified(@NonNull LocalDateTime dateModified) {
+        this.dateModified = dateModified;
     }
 
+    @Override
+    public void setParent(IPost parent) {
+        this.parent = parent;
+        dateModified = LocalDateTime.now();
+    }
+
+    @Override
+    public void incrementUpvotes(int upVotes) {
+        this.upVotes += upVotes;
+        dateModified = LocalDateTime.now();
+    }
+
+    @Override
+    public void incrementDownvotes(int downVotes) {
+        this.downVotes += downVotes;
+        dateModified = LocalDateTime.now();
+    }
+
+    @Override
+    public void decrementUpvotes(int upVotes) {
+        this.upVotes -= upVotes;
+        dateModified = LocalDateTime.now();
+
+        if (this.upVotes < 0) {
+            this.upVotes = 0;
+        }
+    }
+
+    @Override
+    public void decrementDownvotes(int downVotes) {
+        this.downVotes -= downVotes;
+        dateModified = LocalDateTime.now();
+
+        if (this.downVotes < 0) {
+            this.downVotes = 0;
+        }
+    }
 }

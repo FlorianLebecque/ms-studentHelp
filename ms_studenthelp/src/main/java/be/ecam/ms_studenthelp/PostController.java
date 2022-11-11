@@ -1,18 +1,26 @@
 package be.ecam.ms_studenthelp;
 
-import org.springframework.boot.json.JsonParser;
-import org.springframework.boot.json.JsonParserFactory;
-import org.springframework.http.HttpStatus; //TO DO : manage HTTP responses
-import org.springframework.http.ResponseEntity; //TO DO : manage HTTP responses
+import be.ecam.ms_studenthelp.Database.entities.AuthorEntity;
+import be.ecam.ms_studenthelp.Database.entities.PostEntity;
+import be.ecam.ms_studenthelp.Database.repositories.AuthorRepository;
+import be.ecam.ms_studenthelp.Database.repositories.PostRepository;
+import be.ecam.ms_studenthelp.utils.DatabaseUtils;
+import be.ecam.ms_studenthelp.utils.PostBody;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import be.ecam.ms_studenthelp.Interfaces.IPost;
-import be.ecam.ms_studenthelp.Object.Post;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class PostController {
+    @Autowired private PostRepository postRepository;
+    @Autowired private AuthorRepository authorRepository;
 
     /**
      *  ENDPOINT GET post by postId
@@ -20,13 +28,9 @@ public class PostController {
      *  @param postId Id of the post to get
      *  @return and {@link IPost}
      */
-    @GetMapping("/posts/{postId}")
+    @GetMapping(value = "/posts/{postId}", produces="application/json")
     public IPost GetPostByPostId(@PathVariable("postId") String postId) {
-
-        // Get targeted post in DB
-        IPost post = MsStudenthelpApplication.DatabaseManager.GetPost(postId);
-
-        return post;
+        return DatabaseUtils.getPostFromDatabase(postId, postRepository).toPost();
     }
 
 
@@ -37,20 +41,21 @@ public class PostController {
      * @param body objet post in JSON or just a JSON like {"content": "also works"}
      * @return and {@link IPost}
      */
-    @PatchMapping("/posts/{postId}")
+    @PatchMapping(value = "/posts/{postId}", produces="application/json")
     public IPost PatchPostByPostId(@PathVariable("postId") String postId, @RequestBody String body) {
+        PostEntity postEntity = DatabaseUtils.getPostFromDatabase(postId, postRepository);
+        PostBody postBody = new PostBody(body);
 
-        // Format the body in objet body_data to get attributes
-        JsonParser springParser = JsonParserFactory.getJsonParser();
-        Map<String,Object> body_data = springParser.parseMap(body);
-        String content = body_data.get("content").toString();
+        // If no content passed, return a bad request error
+        if (postBody.getContent() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A content must be set !");
+        }
 
-        // Update content's post in DB
-        IPost post = MsStudenthelpApplication.DatabaseManager.GetPost(postId);
-        post.setContent(content);
-        MsStudenthelpApplication.DatabaseManager.UpdatePost(post);
+        // Update the content
+        postEntity.setContent(postBody.getContent());
+        postRepository.save(postEntity);
 
-        return post;
+        return postEntity.toPost();
     }
 
     /**
@@ -60,17 +65,31 @@ public class PostController {
      * @param body  The reply post with necessary fields to create a post
      * @return and {@link IPost}
      */
-    @PutMapping("/posts/{postId}/answers")
+    @PutMapping(value = "/posts/{postId}/answers", produces="application/json")
     public IPost ReplyPostByPostId(@PathVariable("postId") String postId, @RequestBody String body) {
-        JsonParser springParser = JsonParserFactory.getJsonParser();
-        Map<String,Object> body_data = springParser.parseMap(body);
-        String authorId = body_data.get("authorId").toString();
-        String content = body_data.get("content").toString();
-        IPost post = new Post(authorId, content);
-        IPost postToReply = MsStudenthelpApplication.DatabaseManager.GetPost(postId);
-        postToReply.Reply(post);
-        MsStudenthelpApplication.DatabaseManager.CreatePost(post);
-        return post;
+        PostEntity postEntity = DatabaseUtils.getPostFromDatabase(postId, postRepository);
+        PostBody postBody = new PostBody(body);
+
+        // Check if the authorId and content are passed
+        if ((postBody.getContent() == null) ||(postBody.getAuthorId() == null)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Content and authorId must be passed !");
+        }
+
+        // Get the author if it exists, otherwise create a new one
+        Optional<AuthorEntity>optionalAuthorEntity = authorRepository.findById(
+                postBody.getAuthorId());
+        AuthorEntity authorEntity = DatabaseUtils.getAuthorFromDatabase(
+                postBody.getAuthorId(), authorRepository);
+        PostEntity childPostEntity = new PostEntity(postBody.getContent(), authorEntity);
+
+        // Save information in the database
+        // The post child is saved thanks to cascade.ALL
+        childPostEntity.setParent(postEntity);
+        authorRepository.save(authorEntity);
+        postRepository.save(childPostEntity);
+
+        return childPostEntity.toPost();
     }
 
     /**
@@ -79,11 +98,29 @@ public class PostController {
      * @param postId
      * @return
      */
-    @DeleteMapping("/posts/{postId}")
+    @DeleteMapping(value = "/posts/{postId}", produces = "application/json")
     public IPost deletePostByPostId(@PathVariable("postId") String postId) {
-        IPost post = MsStudenthelpApplication.DatabaseManager.GetPost(postId);
-        post.setContent("Deleted post");
-        MsStudenthelpApplication.DatabaseManager.UpdatePost(post);
-        return post;
+        PostEntity postEntity = DatabaseUtils.getPostFromDatabase(postId, postRepository);
+
+        // You can't delete the first post, delete the thread instead
+        if (postEntity.getParent() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "You can't delete the first post !");
+        }
+
+        postRepository.deleteById(postId);
+
+        return postEntity.toPost();
+    }
+
+    @GetMapping(value = "/posts", produces = "application/json")
+    public List<IPost> getAllPosts() {
+        List<PostEntity> postEntities = postRepository.findAll();
+
+        // Convert PostEntity to Post
+        return postEntities
+                .stream()
+                .map(PostEntity::toPost)
+                .collect(Collectors.toList());
     }
 }

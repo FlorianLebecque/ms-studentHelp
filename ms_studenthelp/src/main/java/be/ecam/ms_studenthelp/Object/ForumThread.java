@@ -1,138 +1,152 @@
 package be.ecam.ms_studenthelp.Object;
 
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 import java.time.LocalDateTime;
 
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
-import be.ecam.ms_studenthelp.utils.GuidGenerator;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.lang.NonNull;
 
 public class ForumThread implements IForumThread {
-
+    @NonNull
     private final String id;
-    private final String authorId;
 
-    private LocalDateTime date;
-    private LocalDateTime lastModif;
-
-
+    @NonNull
     private String title;
-    private String category;
-    private List<String> tags;
     private boolean answered;
 
-    private IPost child;
+    @NonNull
+    private Category category;
 
+    @NonNull
+    private final LocalDateTime datePosted;
+
+    @NonNull
+    private LocalDateTime dateModified;
+    @NonNull private IPost firstPost;
+    private Set<Tag> tags;
 
     //load a Thread
-    public ForumThread(String id_,String authorId_,String title_ ,String category_,List<String> tags_,LocalDateTime date_,LocalDateTime lastModif_,Boolean answered_,IPost child_){
-        id       = id_;
-        authorId = authorId_;
-
-        date = date_;
-        lastModif = lastModif_;
-
-        title = title_;
-        category = category_;
-        tags = tags_;
-        answered = answered_;
-
-        child = child_;
+    public ForumThread(@NonNull String id,
+                       @NonNull String title,
+                       boolean answered,
+                       @NonNull Category category,
+                       @NonNull LocalDateTime datePosted,
+                       @NonNull LocalDateTime dateModified,
+                       @NonNull IPost firstPost,
+                       Set<Tag> tags) {
+        this.id = id;
+        this.title = title;
+        this.answered = answered;
+        this.category = category;
+        this.datePosted = datePosted;
+        this.dateModified = dateModified;
+        this.firstPost = firstPost;
+        this.tags = tags;
     }
 
-    //create a Thread
-    public ForumThread(String title_,String authorId_,String category_,IPost child_,boolean answered_){
-        id       = GuidGenerator.GetNewUUIDString();
-        authorId = authorId_;
-        title    = title_;
-        tags     = new ArrayList<String>();
-        date     = LocalDateTime.now();
-        category = category_;
-        answered = answered;
-        child    = child_;
-    }
-
-
-    public void Reply(IPost reply){
-        child = reply;
-    }
-
-    public void UpdateTitle(String title_){
-        title = title_;
-
-        lastModif = LocalDateTime.now();
-    }
-
-    public void UpdateCategory(String category_){
-        category = category_;
-
-        lastModif = LocalDateTime.now();
-    }
-
-    public void UpdateAnswered(boolean answered_) {
-        answered = answered_;
-    }
-
-    public void Delete(){
-        child.Delete();
-    }
-    public void AddTags(String tag){
-        tags.add(tag);
-    }
-    public void AddTags(List<String> tag){
-        for(String n : tag)
-            tags.add(n);
+    public ForumThread(@NonNull String title,
+                       @NonNull Category category,
+                       @NonNull IPost firstPost) {
+        this.id = UUID.randomUUID().toString();
+        this.title = title;
+        this.answered = false;
+        this.category = category;
+        this.datePosted = LocalDateTime.now();
+        this.dateModified = LocalDateTime.now();
+        this.firstPost = firstPost;
+        this.tags = new HashSet<>();
     }
 
     @Override
-    public String toString() {
-        return "Thread{" +
-                "id=" + id +
-                ", title=" + title +
-                ", tags=" + tags +
-                ", authorId=" + authorId +
-                ", date=" + date +
-                ", category=" + category +
-                ", answered=" + answered +
-                '}';
-    }
-
-    public String getAuthorId() {
-        return authorId;
-    }
-
+    @NonNull
     public String getId() {
         return id;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
+    @Override
+    @NonNull
     public String getTitle() {
         return title;
     }
 
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public IPost getChild() {
-        return child;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public LocalDateTime getModification() {
-        return lastModif;
-    }
-
-    public boolean getAnswer(){
+    @Override
+    public boolean isAnswered() {
         return answered;
     }
 
+    @Override
+    @NonNull
+    public Category getCategory() {
+        return category;
+    }
+
+    @Override
+    @NonNull
+    public LocalDateTime getDatePosted() {
+        return datePosted;
+    }
+
+    @Override
+    @NonNull
+    public LocalDateTime getDateModified() {
+        return dateModified;
+    }
+
+    @Override
+    @NotNull
+    public IPost getFirstPost() {
+        return firstPost;
+    }
+
+    @Override
+    public @NotNull Set<Tag> getTags() {
+        return tags;
+    }
+
+    @Override
+    public void setTitle(@NonNull String title) {
+        this.title = title;
+    }
+
+    @Override
+    public void setAnswered(boolean answered) {
+        this.answered = answered;
+    }
+
+    @Override
+    public void setCategory(@NonNull Category category) {
+        this.category = category;
+    }
+
+    @Override
+    public void setDateModified(@NonNull LocalDateTime dateModified) {
+        this.dateModified = dateModified;
+    }
+
+    @Override
+    public void setFirstPost(@NotNull IPost firstPost) {
+        this.firstPost = firstPost;
+    }
+
+    @Override
+    public void setTags(@NotNull Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    @Override
+    public String toString() {
+        return "Thread(" +
+                "ID: " + id + "\n" +
+                "Title: " + title + "\n" +
+                "Answered: " + answered + "\n" +
+                "Category: " + category.getTitle() + "\n" +
+                "Date posted: " + datePosted + "\n" +
+                "Date modified: " + dateModified + "\n" +
+                "First post: " + firstPost.getContent() + "\n" +
+                "Tags: " + tags + "\n" +
+                ")";
+    }
 }

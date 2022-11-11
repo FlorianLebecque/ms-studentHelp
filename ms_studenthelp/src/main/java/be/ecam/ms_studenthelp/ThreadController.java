@@ -1,33 +1,35 @@
 package be.ecam.ms_studenthelp;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import be.ecam.ms_studenthelp.Database.entities.*;
+import be.ecam.ms_studenthelp.Database.repositories.AuthorRepository;
+import be.ecam.ms_studenthelp.Database.repositories.CategoryRepository;
+import be.ecam.ms_studenthelp.Database.repositories.TagRepository;
+import be.ecam.ms_studenthelp.Database.repositories.ThreadRepository;
+import be.ecam.ms_studenthelp.Object.*;
+import be.ecam.ms_studenthelp.utils.DatabaseUtils;
+import be.ecam.ms_studenthelp.utils.ForumThreadBody;
+import be.ecam.ms_studenthelp.utils.PostBody;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 import be.ecam.ms_studenthelp.Interfaces.IForumThread;
 import be.ecam.ms_studenthelp.Interfaces.IPost;
-import be.ecam.ms_studenthelp.Object.ForumThread;
-import be.ecam.ms_studenthelp.Object.Post;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.boot.json.JsonParser;
-import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
 public class ThreadController {
+    private @Autowired ThreadRepository threadRepository;
+    private @Autowired CategoryRepository categoryRepository;
+    private @Autowired AuthorRepository authorRepository;
+    private @Autowired TagRepository tagRepository;
 
     /**
      * POST /threads
@@ -42,44 +44,51 @@ public class ThreadController {
      */
     @PostMapping("/threads")
     public IForumThread PostThreads(@RequestBody String body){
-        JsonParser springParser = JsonParserFactory.getJsonParser();
-        Map<String,Object> body_data = springParser.parseMap(body);
+        ForumThreadBody forumThreadBody = new ForumThreadBody(body);
 
-        // ForumThread info
-        String title = (String) body_data.get("title");
-        List<String> tags = (List<String>) body_data.get("tags");
-        String category = (String) body_data.get("category");
-        Boolean answered = (Boolean) body_data.get("answered");
-
-        if (title == null || tags == null || category == null) {
-            return null; // TODO: proper error handling, Bad Request
-        }
-        if (answered == null) {
-            answered = false;
+        // If title, tags or category is not specified, return a 3xx error
+        if ((forumThreadBody.getTitle() == null) || (forumThreadBody.getTags() == null) ||
+                (forumThreadBody.getCategory() == null)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad parameters !");
         }
 
-        // child Post info
-        Map<String,String> first_post = (Map<String,String>) body_data.get("first_post");
-        if (first_post == null) {
-            return null; // TODO: proper error handling, Bad Request
-        }
-        String content = first_post.get("content");
+        CategoryEntity categoryEntity = DatabaseUtils.getCategoryFromDatabase(
+                forumThreadBody.getCategory(), categoryRepository);
 
-        if (content == null) {
-            return null; // TODO: proper error handling, Bad Request
+        // Check if the first post is defined
+        if (forumThreadBody.getFirstPost() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A first post must be defined !");
         }
 
-        String authorID = "Someone"; // TODO : the author is the authenticated user
+        IPost firstPost = postFromPostBody(forumThreadBody.getFirstPost());
 
+        // Check if the first post is defined
+        if (firstPost == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A first post must be defined !");
+        }
 
-        IPost post = new Post(authorID, content);
-        IForumThread thread = new ForumThread(title, authorID, category, post, answered);
-        thread.AddTags(tags);
+        AuthorEntity authorEntity = DatabaseUtils.getAuthorFromDatabase(
+                firstPost.getAuthor().getId(),
+                authorRepository);
+        PostEntity postEntity = new PostEntity(
+                firstPost.getContent(),
+                firstPost.getUpvotes(),
+                firstPost.getDownvotes(),
+                firstPost.getDatePosted(),
+                firstPost.getDateModified(),
+                null, // No child when the thread is created
+                authorEntity,
+                new HashSet<>()
+        );
 
-        MsStudenthelpApplication.DatabaseManager.CreatePost(post);
-        MsStudenthelpApplication.DatabaseManager.CreateForumThread(thread);
+        ThreadEntity threadEntity = new ThreadEntity(
+                forumThreadBody.getTitle(),
+                categoryEntity,
+                postEntity);
+        authorRepository.save(authorEntity);
+        threadRepository.save(threadEntity);
 
-        return thread;
+        return threadEntity.toForumThread();
     }
 
     /**
@@ -89,8 +98,8 @@ public class ThreadController {
      */
     @GetMapping("/threads/{threadId}")
     public IForumThread getThreadsThreadId(@PathVariable("threadId") String threadId) {
-        IForumThread thread = MsStudenthelpApplication.DatabaseManager.GetForumThread(threadId);
-        return thread;
+        return DatabaseUtils.getForumThreadFromDatabase(threadId, threadRepository)
+                .toForumThread();
     }
 
     /**
@@ -101,36 +110,35 @@ public class ThreadController {
      */
     @PatchMapping("/threads/{threadId}")
     public IForumThread patchThreadsThreadId(@PathVariable("threadId") String threadId, @RequestBody String body) {
-        IForumThread thread = MsStudenthelpApplication.DatabaseManager.GetForumThread(threadId);
+        ThreadEntity threadEntity = DatabaseUtils.getForumThreadFromDatabase(threadId,
+                threadRepository);
+        ForumThreadBody forumThreadBody = new ForumThreadBody(body);
 
-        if (thread == null) {
-            return null; // TODO: proper error handling, Not Found
+        // Set new values for the current thread
+        if (forumThreadBody.getTitle() != null) {
+            threadEntity.setTitle(forumThreadBody.getTitle());
+        }
+        if (forumThreadBody.getTags() != null) {
+            Set<TagEntity> tagEntities = new HashSet<>();
+
+            for (String tag : forumThreadBody.getTags()) {
+                TagEntity tagEntity = tagRepository.findByTitleAndThread(tag, threadEntity);
+
+                tagEntities.add(tagEntity != null ? tagEntity : new TagEntity(tag, threadEntity));
+            }
+
+            threadEntity.setTags(tagEntities);
         }
 
-        JsonParser springParser = JsonParserFactory.getJsonParser();
-        Map<String,Object> body_data = springParser.parseMap(body);
+        if (forumThreadBody.getCategory() != null) {
+            threadEntity.setCategory(DatabaseUtils.getCategoryFromDatabase(
+                    forumThreadBody.getCategory(),
+                    categoryRepository));
+        }
+        threadEntity.setAnswered(forumThreadBody.isAnswered());
 
-        // ForumThread info
-        String title = (String) body_data.get("title");
-        List<String> tags = (List<String>) body_data.get("tags");
-        String category = (String) body_data.get("category");
-        Boolean answered = (Boolean) body_data.get("answered");
-
-        if (title != null) {
-            thread.UpdateTitle(title);
-        }
-        if (tags != null) {
-            thread.AddTags(tags);
-        }
-        if (category != null) {
-            thread.UpdateCategory(category);
-        }
-        if (answered != null) {
-            thread.UpdateAnswered(answered);
-        }
-
-        MsStudenthelpApplication.DatabaseManager.UpdateForumThread(thread);
-        return thread;
+        threadRepository.save(threadEntity);
+        return threadEntity.toForumThread();
     }
 
     /**
@@ -140,33 +148,46 @@ public class ThreadController {
      */
     @DeleteMapping("/threads/{threadId}")
     public IForumThread DeleteForumThreadTitle(@PathVariable("threadId") String threadId) {
-        IForumThread thread = MsStudenthelpApplication.DatabaseManager.GetForumThread(threadId);
-        if (thread == null) {
-            return null; // Idempotency, if it doesn't exist, it is deleted
-        }
-        thread.UpdateTitle("Deleted");
-        MsStudenthelpApplication.DatabaseManager.UpdateForumThread(thread);
+        ThreadEntity threadEntity = DatabaseUtils.getForumThreadFromDatabase(
+                threadId,
+                threadRepository);
 
-        IPost post = thread.getChild();
-        if (post == null) {
-            return null; // Idempotency, if it doesn't exist, it is deleted
-        }
-        MsStudenthelpApplication.DatabaseManager.UpdatePost(post);
-
-        return null;
+        threadRepository.deleteById(threadEntity.getId());
+        return threadEntity.toForumThread();
     }
 
-    /**
+    /*
      * GET /threads
      * https://beta.bachelay.eu/ms-studentHelp/#/operations/get-threads
      * Get a list of published threads
      */
-    /*
     @GetMapping("/threads")
-    public List<IForumThread> GetForumThreadPages(@PathVariable("nbr_per_page") int nbr_per_page, @PathVariable("page_index") int page_index) {
-        List<IForumThread> ft_list = MsStudenthelpApplication.DatabaseManager.GetForumThreads(nbr_per_page,page_index);
-        return ft_list;
-    }
-    */
+    public List<ForumThread> GetForumThreadPages() {
+        List<ThreadEntity> threadEntities = threadRepository.findAll();
 
+        // Convert all the ThreadEntity to ForumThread
+        return threadEntities
+                .stream()
+                .map(object -> new ForumThread(
+                        object.getId(),
+                        object.getTitle(),
+                        object.getAnswered(),
+                        object.getCategory().toCategory(),
+                        object.getDatePosted(),
+                        object.getDateModified(),
+                        object.getFirstPost().toPost(),
+                        object.getTags()
+                                .stream()
+                                .map(tag -> new Tag(tag.getId(), tag.getTitle()))
+                                .collect(Collectors.toSet()))
+                ).collect(Collectors.toList());
+    }
+
+    private static IPost postFromPostBody(@NonNull PostBody postBody) {
+        if ((postBody.getContent() == null) || (postBody.getAuthorId() == null)) {
+            return null;
+        }
+
+        return new Post(postBody.getContent(), new Author(postBody.getAuthorId()), null);
+    }
 }
