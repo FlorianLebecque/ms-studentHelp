@@ -1,18 +1,22 @@
 package be.ecam.ms_studenthelp.utils;
+import java.util.*;
 
 import be.ecam.ms_studenthelp.Database.entities.AuthorEntity;
 import be.ecam.ms_studenthelp.Database.entities.CategoryEntity;
 import be.ecam.ms_studenthelp.Database.entities.PostEntity;
 import be.ecam.ms_studenthelp.Database.entities.ThreadEntity;
+import be.ecam.ms_studenthelp.Database.entities.TagEntity;
 import be.ecam.ms_studenthelp.Database.repositories.AuthorRepository;
 import be.ecam.ms_studenthelp.Database.repositories.CategoryRepository;
 import be.ecam.ms_studenthelp.Database.repositories.PostRepository;
 import be.ecam.ms_studenthelp.Database.repositories.ThreadRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import be.ecam.ms_studenthelp.Database.repositories.TagRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 public class DatabaseUtils {

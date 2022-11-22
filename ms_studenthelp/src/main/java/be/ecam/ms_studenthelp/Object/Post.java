@@ -35,6 +35,7 @@ public class Post implements IPost{
         this.parent = parent;
     }
 
+
     public Post(@NonNull String content,
                 @NonNull Author author,
                 @Nullable IPost parent) {

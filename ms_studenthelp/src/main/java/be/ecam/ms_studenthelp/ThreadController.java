@@ -156,7 +156,9 @@ public class ThreadController {
         return threadEntity.toForumThread();
     }
 
-    /*
+
+
+    /**
      * GET /threads
      * https://beta.bachelay.eu/ms-studentHelp/#/operations/get-threads
      * Get a list of published threads
@@ -182,6 +184,58 @@ public class ThreadController {
                                 .collect(Collectors.toSet()))
                 ).collect(Collectors.toList());
     }
+
+
+    /**
+     * GET /threads/tags/{threadId}
+     * https://beta.bachelay.eu/ms-studentHelp/#/operations/get-tags
+     * Get a list of the tags linked to a specific thread
+     */
+    @GetMapping("/tags/{threadId}")
+    public Set<Tag> getThreadsThreadIdTags(@PathVariable("threadId") String threadId) {
+
+        return DatabaseUtils.getForumThreadFromDatabase(threadId, threadRepository).toForumThread().getTags();
+    }
+
+
+    /**
+     * POST /threads/{Title}/{threadId}
+     * https://beta.bachelay.eu/ms-studentHelp/#/operations/post-tag
+     * Post a new tag to a specific thread
+     */
+    @PostMapping("/tags/{title}/{threadId}")
+    public Set<Tag> postTagThreadId(@PathVariable("title") String title,@PathVariable("threadId") String threadId) {
+        ThreadEntity threadEntity = DatabaseUtils.getForumThreadFromDatabase(threadId, threadRepository);
+        TagEntity tag = new TagEntity(title, threadEntity);
+        Set<TagEntity> tagEntities = new HashSet<>();
+        tagEntities.add(tag);
+        threadEntity.setTags(tagEntities);
+        threadRepository.save(threadEntity);
+        return threadEntity.toForumThread().getTags();
+    }
+
+
+    /**
+     * DELETE /threads/{threadId}
+     * https://beta.bachelay.eu/ms-studentHelp/#/operations/delete-threads
+     * Delete a tag from a specific thread.
+     */
+    @DeleteMapping("/tags/{tagtitle}/{threadId}")
+    public Set<Tag> DeleteTagFromThread(@PathVariable("tagtitle") String tagtitle ,@PathVariable("threadId") String threadId) {
+        /*
+        TODO : Verify why the thread is deleted
+        ThreadEntity threadEntity = DatabaseUtils.getForumThreadFromDatabase(threadId, threadRepository);
+        TagEntity tag = tagRepository.findByTitleAndThread(tagtitle, threadEntity);
+        tagRepository.deleteById(tag.getId());
+        return threadEntity.toForumThread().getTags();
+        */
+        ThreadEntity threadEntity = DatabaseUtils.getForumThreadFromDatabase(threadId, threadRepository);
+        return threadEntity.toForumThread().getTags();
+    }
+
+
+
+
 
     private static IPost postFromPostBody(@NonNull PostBody postBody) {
         if ((postBody.getContent() == null) || (postBody.getAuthorId() == null)) {
