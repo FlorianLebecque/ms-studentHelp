@@ -156,6 +156,10 @@ public class ThreadEntity {
         this.dateModified = LocalDateTime.now();
     }
 
+    public void addTag(TagEntity tag) {
+        this.tags.add(tag);
+    }
+
     public IForumThread toForumThread() {
         Set<Tag> tags = this.tags
                 .stream()

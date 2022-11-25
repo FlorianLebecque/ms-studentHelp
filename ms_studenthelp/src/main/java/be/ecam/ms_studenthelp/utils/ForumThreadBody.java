@@ -65,6 +65,7 @@ public class ForumThreadBody {
         return tags;
     }
 
+
     public @Nullable String getCategory() {
         return category;
     }

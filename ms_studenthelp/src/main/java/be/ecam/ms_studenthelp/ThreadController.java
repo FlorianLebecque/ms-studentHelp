@@ -7,6 +7,7 @@ import be.ecam.ms_studenthelp.Database.repositories.TagRepository;
 import be.ecam.ms_studenthelp.Database.repositories.ThreadRepository;
 import be.ecam.ms_studenthelp.Object.*;
 import be.ecam.ms_studenthelp.utils.DatabaseUtils;
+import be.ecam.ms_studenthelp.utils.ForumTagBody;
 import be.ecam.ms_studenthelp.utils.ForumThreadBody;
 import be.ecam.ms_studenthelp.utils.PostBody;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,7 +192,7 @@ public class ThreadController {
      * https://beta.bachelay.eu/ms-studentHelp/#/operations/get-tags
      * Get a list of the tags linked to a specific thread
      */
-    @GetMapping("/tags/{threadId}")
+    @GetMapping("/threads/{threadId}/tags")
     public Set<Tag> getThreadsThreadIdTags(@PathVariable("threadId") String threadId) {
 
         return DatabaseUtils.getForumThreadFromDatabase(threadId, threadRepository).toForumThread().getTags();
@@ -203,14 +204,22 @@ public class ThreadController {
      * https://beta.bachelay.eu/ms-studentHelp/#/operations/post-tag
      * Post a new tag to a specific thread
      */
-    @PostMapping("/tags/{title}/{threadId}")
-    public Set<Tag> postTagThreadId(@PathVariable("title") String title,@PathVariable("threadId") String threadId) {
+    @PostMapping("/threads/{threadId}/tags")
+    public Set<Tag> postTagThreadId(@PathVariable("threadId") String threadId, @RequestBody String body) {
         ThreadEntity threadEntity = DatabaseUtils.getForumThreadFromDatabase(threadId, threadRepository);
-        TagEntity tag = new TagEntity(title, threadEntity);
-        Set<TagEntity> tagEntities = new HashSet<>();
-        tagEntities.add(tag);
-        threadEntity.setTags(tagEntities);
-        threadRepository.save(threadEntity);
+        ForumTagBody forumTagBody = ForumTagBody.fromBody(body);
+        String tag = forumTagBody.getTag();
+
+        if (tag != null) {
+            TagEntity tagEntity = new TagEntity(tag, threadEntity);
+
+            threadEntity.addTag(tagEntity);
+            threadRepository.save(threadEntity);
+
+        } else if (forumTagBody.getTag() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No tag mentioned !");
+        }
+
         return threadEntity.toForumThread().getTags();
     }
 
@@ -220,17 +229,15 @@ public class ThreadController {
      * https://beta.bachelay.eu/ms-studentHelp/#/operations/delete-threads
      * Delete a tag from a specific thread.
      */
-    @DeleteMapping("/tags/{tagtitle}/{threadId}")
+    @DeleteMapping("/threads/{threadId}/tags/{tagtitle}")
     public Set<Tag> DeleteTagFromThread(@PathVariable("tagtitle") String tagtitle ,@PathVariable("threadId") String threadId) {
-        /*
-        TODO : Verify why the thread is deleted
+
         ThreadEntity threadEntity = DatabaseUtils.getForumThreadFromDatabase(threadId, threadRepository);
         TagEntity tag = tagRepository.findByTitleAndThread(tagtitle, threadEntity);
         tagRepository.deleteById(tag.getId());
+
         return threadEntity.toForumThread().getTags();
-        */
-        ThreadEntity threadEntity = DatabaseUtils.getForumThreadFromDatabase(threadId, threadRepository);
-        return threadEntity.toForumThread().getTags();
+
     }
 
 

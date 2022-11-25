@@ -18,7 +18,7 @@ public class TagEntity {
     private String title;
 
     @NonNull
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "thread_id", referencedColumnName = "id")
     private ThreadEntity thread;
 
